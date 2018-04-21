@@ -5,14 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BoardGremiumCore"
         mc:Ignorable="d"
-        Title="MainWindow" >
-    <Grid Name="MainGrid">
-        <!--<ComboBox Name="GameSelection" Text="Select a game" Width="200" Height="20" Margin="300,182,261.6,305.2" IsReadOnly="True" IsEditable="True">
+        Title="BoardGremium" WindowState="Maximized">
+    <Grid Name="MainGrid" RenderTransformOrigin="0.5,0.5" Margin="1,0,-3,-12">
+        <Grid.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform/>
+                <SkewTransform/>
+                <RotateTransform Angle="-0.237"/>
+                <TranslateTransform/>
+            </TransformGroup>
+        </Grid.RenderTransform>
+        <Button Content="StartButton" HorizontalAlignment="Left" Margin="1000,450,0,0" VerticalAlignment="Top" Width="75" Name="StartButton" Click="Start_Click"/>
+        <ComboBox Name="GameSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,450,0,0" Text="Select a game" Width="200" Height="20"  IsReadOnly="True" IsEditable="True">
             <ComboBoxItem Content="Tablut"></ComboBoxItem>
             <ComboBoxItem Content="NextGame"></ComboBoxItem>
-        </ComboBox>-->
-        <!--<Button Width="80" Height="20" Margin="534,182,147.6,305.2">
-            <TextBlock Text="Start"/>
-        </Button>-->
+        </ComboBox>
     </Grid>
 </Window>

@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Games;
+using AbstractGame;
 
 namespace BoardGremiumCore
 {
@@ -20,43 +22,42 @@ namespace BoardGremiumCore
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Game game;
+
+        
         public MainWindow()
         {
             InitializeComponent();
-            drawMainWindow();
+            DrawMainWindow();
         }
 
-        private void drawMainWindow()
+        private void DrawMainWindow()
         {
-            this.WindowState = WindowState.Maximized;
-            this.Title = "BoardGremium";
-            //gameSelection combobox
-            ComboBox gameSelection = new ComboBox();
-            gameSelection.Name = "GameSelection";
-            gameSelection.Width = 200;
-            gameSelection.Height = 20;
-            gameSelection.IsEditable = true;
-            gameSelection.IsReadOnly = true;
-            gameSelection.Text = "Select a Game";
-            gameSelection.Margin = new Thickness(300, 182, 261, 305);
-            //set games to choose
-            ComboBoxItem cbi = new ComboBoxItem();
-            cbi.Content = "Tablut";
-            gameSelection.Items.Add(cbi);
-            cbi = new ComboBoxItem();
-            cbi.Content = "NextGame";
-            gameSelection.Items.Add(cbi);
-            MainGrid.Children.Add(gameSelection);
-            //create start game button
-            Button btn = new Button();
-            btn.Width = 80;
-            btn.Height = 20;
-            //534,182,147.6,305.2
-            btn.Margin = new Thickness(534, 182, 147, 305);
-            TextBlock tb = new TextBlock();
-            tb.Text = "Start";
-            btn.Content = tb;
-            MainGrid.Children.Add(btn);
+            
+        }
+
+        private void LoadBoardForGame(string titleOfGame)
+        {
+            MainGrid.Children.Clear();
+            this.Title = titleOfGame;
+            
+            if(titleOfGame == "Tablut") 
+            {
+                game = new TablutGame("F:\\Informatyka\\Repositories\\BoardGremium\\BoardGremiumCore\\viewObjects", "", "", "");
+                Image image = new Image();
+                BitmapImage bi3 = new BitmapImage();
+                bi3.BeginInit();
+                bi3.UriSource = new Uri("F:\\Informatyka\\Repositories\\BoardGremium\\BoardGremiumCore\\viewObjects", UriKind.Absolute);
+                bi3.EndInit();
+                image.Stretch = Stretch.Fill;
+                image.Source = bi3;
+            }
+
+        }
+
+        private void Start_Click(object sender, RoutedEventArgs e)
+        {
+            if(GameSelectionCB.Text != "Select a game") LoadBoardForGame(GameSelectionCB.Text);
         }
     }
 }
