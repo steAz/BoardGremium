@@ -43,14 +43,15 @@ namespace BoardGremiumCore
             
             if(titleOfGame == "Tablut") 
             {
-                game = new TablutGame("F:\\Informatyka\\Repositories\\BoardGremium\\BoardGremiumCore\\viewObjects", "", "", "");
+                game = new TablutGame("F:\\Informatyka\\Repositories\\BoardGremium\\BoardGremiumCore\\viewObjects\\Tablut.jpg", "", "", "");
                 Image image = new Image();
-                BitmapImage bi3 = new BitmapImage();
-                bi3.BeginInit();
-                bi3.UriSource = new Uri("F:\\Informatyka\\Repositories\\BoardGremium\\BoardGremiumCore\\viewObjects", UriKind.Absolute);
-                bi3.EndInit();
+                BitmapImage bI = new BitmapImage();
+                bI.BeginInit();
+                bI.UriSource = new Uri("F:\\Informatyka\\Repositories\\BoardGremium\\BoardGremiumCore\\viewObjects\\Tablut.jpg", UriKind.Absolute);
+                bI.EndInit();
                 image.Stretch = Stretch.Fill;
-                image.Source = bi3;
+                image.Source = bI;
+                MainGrid.Children.Add(image);
             }
 
         }
