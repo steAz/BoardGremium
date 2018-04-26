@@ -8,20 +8,15 @@ namespace AbstractGame
 {
     public class BoardState
     {
-        public Enum[,] BoardObjects { get;}
+        public Field[,] BoardFields { get; }
         public int Height { get; }
         public int Width { get; }
 
         public BoardState(int width, int height)
         {
-            BoardObjects = new Enum[height,width];
+            BoardFields = new Field[height,width];
             this.Height = height;
             this.Width = width;
-        }
-
-        public void SetField(int x, int y, Enum fieldState)
-        {
-            BoardObjects[y,x] = fieldState;
         }
     }
 }

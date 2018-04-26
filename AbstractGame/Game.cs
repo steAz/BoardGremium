@@ -45,5 +45,7 @@ namespace AbstractGame
         /// <param name="initial">initial BoardState</param>
         /// <returns></returns>
         public abstract List<BoardState> GetPossibleBoardStates(BoardState initial);
+
+        
     }
 }
