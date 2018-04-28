@@ -9,7 +9,7 @@ namespace AbstractGame
     /// <summary>
     /// class representing single field on board
     /// </summary>
-    public class Field
+    public class Field : ICloneable
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -46,6 +46,11 @@ namespace AbstractGame
         {
             Y += valueToAdd;
         }
-        
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
     }
 }
