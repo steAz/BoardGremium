@@ -16,6 +16,9 @@ namespace AbstractGame
         public int BoardWidth { get; }
         public int BoardHeight { get; }
         public BoardState currentBoardState { get; set; }
+        public PlayerEnum currentPlayer { get; set; }
+        public Enum HumanPlayerFieldType { get; set; } //e.g whitePawn/blackPawn
+        public Enum BotPlayerFieldType { get; set; }
         //image of empty board
         public string BoardImageName { get; set; }
         /// <summary>
@@ -36,9 +39,9 @@ namespace AbstractGame
 
         public abstract BoardState StartingPosition();
         /// <summary>
-        /// returns true if one of players has won the game, false otherwise
+        /// returns true if player has won the game, false otherwise
         /// </summary>
-        public abstract bool IsGameOver();
+        public abstract bool IsGameWon(BoardState bs, PlayerEnum forPlayer);
         /// <summary>
         /// Method returns list of boardStates that could be obtained from initial boardState by performing one move
         /// </summary>

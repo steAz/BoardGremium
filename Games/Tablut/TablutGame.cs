@@ -20,6 +20,9 @@ namespace Games
             ItemToGraphicsDict.Add(TablutFieldType.KING, kingPath);
             ItemToGraphicsDict.Add(TablutFieldType.EMPTY_FIELD, null);
             this.currentBoardState = StartingPosition();
+            //for now hardcoded white for player, black for bot
+            this.HumanPlayerFieldType = TablutFieldType.WHITE_PAWN;
+            this.BotPlayerFieldType = TablutFieldType.BLACK_PAWN;
 
         }
         public override List<BoardState> GetPossibleBoardStates(BoardState initial, PlayerEnum playerType)
@@ -77,14 +80,14 @@ namespace Games
             int currentX, currentY;
             currentX = pawn.X;
             currentY = pawn.Y;
-            int maximumPossibleRange = calculateMaximumPossibleRange(initialBS, pawn, direction);
+            int maximumPossibleRange = CalculateMaximumPossibleRange(initialBS, pawn, direction);
             BoardState currentBoardState;
             Field currentField;
             for(int i = 1; i <= maximumPossibleRange; i++)
             {
                 currentBoardState = (BoardState)initialBS.Clone();
                 currentField = currentBoardState.BoardFields[pawn.Y, pawn.X];
-                movePawn(currentBoardState, currentField, direction, i);
+                MovePawn(currentBoardState, currentField, direction, i);
                 result.Add(currentBoardState);
             }
             return result;
@@ -92,7 +95,7 @@ namespace Games
         /// <summary>
         /// returns maximum number of fields a pawn can go in a direction
         /// </summary>
-        private int calculateMaximumPossibleRange(BoardState initial, Field pawn, DirectionEnum direction)
+        private int CalculateMaximumPossibleRange(BoardState initial, Field pawn, DirectionEnum direction)
         {
             int result = 0;
             switch (direction)
@@ -150,7 +153,7 @@ namespace Games
         }
         //TODO this method can be abstract in Game class
         // changes BoardState inside of method
-        public void movePawn(BoardState board, Field field, DirectionEnum direction, int numberOfFields)
+        public void MovePawn(BoardState board, Field field, DirectionEnum direction, int numberOfFields)
         {
             int xCoord, yCoord;
             xCoord = field.X;
@@ -184,25 +187,132 @@ namespace Games
             }
             board.BoardFields[yCoord, xCoord].Type = field.Type;
             field.Type = TablutFieldType.EMPTY_FIELD;
+            TakeEnemyPawns(board, board.BoardFields[yCoord, xCoord]);
         }
-
-
-        private bool hasWhitePlayerWon(BoardState currentBs)
+        /// <summary>
+        /// method called after performing move on boardstate, then this method is taking enemy pawns off the board
+        ///if it's necessary
+        /// </summary>
+        private void TakeEnemyPawns(BoardState bs, Field targetField)
         {
-            throw new NotImplementedException();
+            TakePawnAtDirection(bs, targetField, DirectionEnum.UP);
+            TakePawnAtDirection(bs, targetField, DirectionEnum.DOWN);
+            TakePawnAtDirection(bs, targetField, DirectionEnum.LEFT);
+            TakePawnAtDirection(bs, targetField, DirectionEnum.RIGHT);
         }
-
-        private bool hasBlackPlayerWon(BoardState currentBs)
+        /// <summary>
+        /// Checks if pawn adjecent to our at direction has to be taken and eventually takes it
+        /// </summary>
+        private void TakePawnAtDirection(BoardState bs, Field ourField, DirectionEnum direction)
         {
-            throw new NotImplementedException();
+            TablutFieldType enemyPawnType;
+            if ((TablutFieldType)ourField.Type == TablutFieldType.BLACK_PAWN)
+            {
+                //just white pawn because taking off the king is checked in checking
+                //end of the game, which is called before taking pawns off
+                enemyPawnType = TablutFieldType.WHITE_PAWN;
+            }
+            else
+            {
+                //King cannot capture
+                if ((TablutFieldType)ourField.Type == TablutFieldType.KING)
+                    return;
+                else enemyPawnType = TablutFieldType.BLACK_PAWN;
+            }
+            Field adjecentField = bs.AdjecentField(ourField, direction);
+            Field nextField;
+            if (adjecentField != null && (TablutFieldType)adjecentField.Type == enemyPawnType)
+            {
+                nextField = bs.AdjecentField(adjecentField, direction);
+                if (enemyPawnType == TablutFieldType.WHITE_PAWN)
+                {
+                    if (nextField != null && (TablutFieldType)nextField.Type == TablutFieldType.BLACK_PAWN)
+                    {
+                        //take off if not a king
+                        if ((TablutFieldType)adjecentField.Type == TablutFieldType.WHITE_PAWN)
+                        {
+                            adjecentField.Type = TablutFieldType.EMPTY_FIELD;
+                        }
+                    }
+                }
+                else
+                {
+                    if (nextField != null && (TablutFieldType)nextField.Type == TablutFieldType.WHITE_PAWN)
+                    {
+                        adjecentField.Type = TablutFieldType.EMPTY_FIELD;
+                    }
+                }
+            }
         }
 
-
-        public override bool IsGameOver()
+        public override bool IsGameWon(BoardState bs, PlayerEnum forPlayer)
         {
-            throw new NotImplementedException();
+            if(forPlayer == PlayerEnum.HUMAN_PLAYER)
+            {
+                if ((TablutFieldType)HumanPlayerFieldType == TablutFieldType.WHITE_PAWN)
+                    return HasWhitePlayerWon(bs);
+                else return HasBlackPlayerWon(bs);
+            }else
+            {
+                if ((TablutFieldType)BotPlayerFieldType == TablutFieldType.WHITE_PAWN)
+                    return HasWhitePlayerWon(bs);
+                else return HasBlackPlayerWon(bs);
+            }
+        }
+        private bool HasWhitePlayerWon(BoardState bs)
+        {
+            Field[,] boardFields = bs.BoardFields;
+            if((TablutFieldType)boardFields[0,0].Type == TablutFieldType.KING
+                || (TablutFieldType)boardFields[0, BoardWidth - 1].Type == TablutFieldType.KING
+                || (TablutFieldType)boardFields[BoardHeight - 1, 0].Type == TablutFieldType.KING
+                || (TablutFieldType)boardFields[BoardHeight - 1, BoardWidth - 1].Type == TablutFieldType.KING)
+            {
+                return true;
+            }else
+                return false;
         }
 
+        private bool HasBlackPlayerWon(BoardState bs)
+        {
+            Field kingField = bs.BoardFields[4,4];
+            bool kingFound = false;
+            for(int i=0; i < bs.Height; i++)
+            {
+                for(int j=0; j < bs.Height; j++)
+                {
+                    if((TablutFieldType)bs.BoardFields[i,j].Type == TablutFieldType.KING)
+                    {
+                        kingField = bs.BoardFields[i, j];
+                        kingFound = true;
+                        break;
+                    }
+                }
+                if (kingFound)
+                    break;
+            }
+            Field adjecentUp, adjecentDown, adjecentRight, adjecentLeft;
+            adjecentUp = bs.AdjecentField(kingField, DirectionEnum.UP);
+            adjecentDown = bs.AdjecentField(kingField, DirectionEnum.DOWN);
+            adjecentLeft = bs.AdjecentField(kingField, DirectionEnum.LEFT);
+            adjecentRight = bs.AdjecentField(kingField, DirectionEnum.RIGHT);
+            if((adjecentUp == null || isFieldStoppingKing(adjecentUp))
+                && (adjecentDown == null || isFieldStoppingKing(adjecentDown))
+                && (adjecentRight == null || isFieldStoppingKing(adjecentRight))
+                && (adjecentLeft == null || isFieldStoppingKing(adjecentLeft)))
+            {
+                return true;
+            }
+            return false;
+        }
+        //this is to refactor to TablutField class inheriting from Field class
+        private bool isFieldStoppingKing(Field f)
+        {
+            //throne field
+            if (f.X == BoardWidth / 2 && f.Y == BoardHeight / 2) return true;
+            //black pawn
+            if ((TablutFieldType)f.Type == TablutFieldType.BLACK_PAWN) return true;
+            return false;
+        }
         public override BoardState StartingPosition()
         {
             BoardState startingBoardState = new BoardState(BoardWidth,BoardHeight);
