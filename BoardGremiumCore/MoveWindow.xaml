@@ -1,0 +1,28 @@
+﻿<Window x:Class="BoardGremiumCore.MoveWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BoardGremiumCore"
+        mc:Ignorable="d"
+          Title="Move" Height="320" Width="220">
+    <StackPanel Margin="10,10,14,10">
+        <Label FontWeight="Bold">Select number of moves</Label>
+        <RadioButton Name="MoveI" GroupName="moves">1</RadioButton>
+        <RadioButton Name="MoveII" GroupName="moves">2</RadioButton>
+        <RadioButton Name="MoveIII" GroupName="moves">3</RadioButton>
+        <RadioButton Name="MoveIV" GroupName="moves">4</RadioButton>
+        <RadioButton Name="MoveV" GroupName="moves">5</RadioButton>
+        <RadioButton Name="MoveVI" GroupName="moves">6</RadioButton>
+        <RadioButton Name="MoveVII" GroupName="moves">7</RadioButton>
+        <RadioButton Name="MoveVIII" GroupName="moves">8</RadioButton>
+
+        <Label FontWeight="Bold">In which way you want to go?</Label>
+        <RadioButton Name="WayDOWN" GroupName="way">Down</RadioButton>
+        <RadioButton Name="WayUP" GroupName="way">Up</RadioButton>
+        <RadioButton Name="WayLeft" GroupName="way">Left</RadioButton>
+        <RadioButton Name="WayRight" GroupName="way">Right</RadioButton>
+        
+        <Button Content="Accept move" Margin="40, 10,0,0" HorizontalAlignment="Left" Width="100" x:Name="AcceptMove" Click="AcceptMove_Click"/>
+    </StackPanel>
+</Window>

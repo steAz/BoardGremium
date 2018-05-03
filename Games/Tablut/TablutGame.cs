@@ -15,10 +15,13 @@ namespace Games
         public TablutGame(string boardPath, string whitePawnPath, string blackPawnPath, string kingPath) 
             :base(BOARD_WIDTH, BOARD_HEIGHT, boardPath)
         {
-            ItemToGraphicsDict.Add(TablutFieldType.WHITE_PAWN, whitePawnPath);
-            ItemToGraphicsDict.Add(TablutFieldType.BLACK_PAWN, blackPawnPath);
-            ItemToGraphicsDict.Add(TablutFieldType.KING, kingPath);
-            ItemToGraphicsDict.Add(TablutFieldType.EMPTY_FIELD, null);
+            ItemToGraphicsDict = new Dictionary<Enum, string>
+            {
+                { TablutFieldType.WHITE_PAWN, whitePawnPath },
+                { TablutFieldType.BLACK_PAWN, blackPawnPath },
+                { TablutFieldType.KING, kingPath },
+                { TablutFieldType.EMPTY_FIELD, null }
+            };
             this.currentBoardState = StartingPosition();
             //for now hardcoded white for player, black for bot
             this.HumanPlayerFieldType = TablutFieldType.WHITE_PAWN;

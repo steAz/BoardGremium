@@ -24,7 +24,7 @@ namespace AbstractGame
         /// <summary>
         /// dictionary holding mapping: boardItem -> itemGraphics e.g WHITE_PAWN -> pawn.jpg
         /// </summary>
-        public Dictionary<Enum, string> ItemToGraphicsDict { get; }
+        public Dictionary<Enum, string> ItemToGraphicsDict { get; set; }
         /// <summary>
         /// returns starting boardState for the game
         /// </summary>
