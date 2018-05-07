@@ -49,6 +49,9 @@ namespace AbstractGame
         /// <returns></returns>
         public abstract List<BoardState> GetPossibleBoardStates(BoardState initial, PlayerEnum playerType);
 
-        
+        public abstract int CalculateMaximumPossibleRange(BoardState initial, Field pawn, DirectionEnum direction);
+        public abstract void MovePawn(BoardState board, Field field, DirectionEnum direction, int numberOfFields);
+
+
     }
 }

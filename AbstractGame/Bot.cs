@@ -6,10 +6,18 @@ using System.Threading.Tasks;
 
 namespace AbstractGame
 {
-    public abstract class Bot
+    public class Bot
     {
         private Game Game { get; }
-        public abstract int Heuristics(BoardState bs);
+        public int Heuristics(BoardState bs)
+        {
+            return 0;
+        }
+
+        public Bot(Game game)
+        {
+            this.Game = game;
+        }
         /// <summary>
         /// The simplest implementation of makingMove - pics random possible move and returns it
         /// </summary>
@@ -18,6 +26,7 @@ namespace AbstractGame
             List<BoardState> possibleMoves = Game.GetPossibleBoardStates(startingBoardState, PlayerEnum.BOT_PLAYER);
             Random rnd = new Random();
             int randNumber = rnd.Next(possibleMoves.Count);
+            System.Threading.Thread.Sleep(1000);
             return possibleMoves[randNumber];
         }
     }

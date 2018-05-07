@@ -12,7 +12,7 @@ namespace Games
     {
         public static int BOARD_WIDTH = 9;
         public static int BOARD_HEIGHT = 9;
-        public TablutGame(string boardPath, string whitePawnPath, string blackPawnPath, string kingPath) 
+        public TablutGame(string boardPath, string whitePawnPath, string blackPawnPath, string kingPath, TablutFieldType humanPawn) 
             :base(BOARD_WIDTH, BOARD_HEIGHT, boardPath)
         {
             ItemToGraphicsDict = new Dictionary<Enum, string>
@@ -24,8 +24,11 @@ namespace Games
             };
             this.currentBoardState = StartingPosition();
             //for now hardcoded white for player, black for bot
-            this.HumanPlayerFieldType = TablutFieldType.WHITE_PAWN;
-            this.BotPlayerFieldType = TablutFieldType.BLACK_PAWN;
+            this.HumanPlayerFieldType = humanPawn;
+            if(humanPawn.Equals(TablutFieldType.WHITE_PAWN))
+                this.BotPlayerFieldType = TablutFieldType.BLACK_PAWN;
+            else
+                this.BotPlayerFieldType = TablutFieldType.WHITE_PAWN;
 
         }
         public override List<BoardState> GetPossibleBoardStates(BoardState initial, PlayerEnum playerType)
@@ -33,9 +36,9 @@ namespace Games
             TablutFieldType pawnType;
             //for now we assume player playes white pawns, and bot plays black
             if (playerType == PlayerEnum.BOT_PLAYER)
-                pawnType = TablutFieldType.BLACK_PAWN;
-            else 
-                pawnType = TablutFieldType.WHITE_PAWN;
+                pawnType = (TablutFieldType)BotPlayerFieldType;
+            else
+                pawnType = (TablutFieldType)HumanPlayerFieldType;
             List<BoardState> result = new List<BoardState>();
             for (int i = 0; i < BOARD_HEIGHT; i++)
             {
@@ -98,7 +101,7 @@ namespace Games
         /// <summary>
         /// returns maximum number of fields a pawn can go in a direction
         /// </summary>
-        private int CalculateMaximumPossibleRange(BoardState initial, Field pawn, DirectionEnum direction)
+        public override int CalculateMaximumPossibleRange(BoardState initial, Field pawn, DirectionEnum direction)
         {
             int result = 0;
             switch (direction)
@@ -107,7 +110,7 @@ namespace Games
                     {
                         for(int i=0; i < pawn.Y; i++)
                         {
-                            if ((TablutFieldType)initial.BoardFields[pawn.X, pawn.Y - i - 1].Type == TablutFieldType.EMPTY_FIELD)
+                            if (((TablutFieldType)initial.BoardFields[pawn.Y - i - 1, pawn.X].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -119,7 +122,7 @@ namespace Games
                     {
                         for(int i=0; i < BOARD_HEIGHT - 1 - pawn.Y; i++)
                         {
-                            if((TablutFieldType)initial.BoardFields[pawn.X, pawn.Y + i + 1].Type == TablutFieldType.EMPTY_FIELD)
+                            if(((TablutFieldType)initial.BoardFields[pawn.Y + i + 1, pawn.X].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -131,7 +134,7 @@ namespace Games
                     {
                         for(int i=0; i < pawn.X; i++)
                         {
-                            if ((TablutFieldType)initial.BoardFields[pawn.X - i - 1, pawn.Y].Type == TablutFieldType.EMPTY_FIELD)
+                            if (((TablutFieldType)initial.BoardFields[pawn.Y, pawn.X - i - 1].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -143,7 +146,7 @@ namespace Games
                     {
                         for(int i=0; i < BOARD_WIDTH - 1 - pawn.X; i++)
                         {
-                            if ((TablutFieldType)initial.BoardFields[pawn.X + i + 1, pawn.Y].Type == TablutFieldType.EMPTY_FIELD)
+                            if (((TablutFieldType)initial.BoardFields[pawn.Y, pawn.X + i + 1].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -156,11 +159,18 @@ namespace Games
         }
         //TODO this method can be abstract in Game class
         // changes BoardState inside of method
-        public void MovePawn(BoardState board, Field field, DirectionEnum direction, int numberOfFields)
+        public override void MovePawn(BoardState board, Field field, DirectionEnum direction, int numberOfFields)
         {
             int xCoord, yCoord;
             xCoord = field.X;
             yCoord = field.Y;
+            TablutFieldType type = TablutFieldType.KING;
+            if (((TablutFieldType)field.Type).Equals(TablutFieldType.BLACK_PAWN))
+                type = TablutFieldType.BLACK_PAWN;
+            else if (((TablutFieldType)field.Type).Equals(TablutFieldType.WHITE_PAWN))
+                type = TablutFieldType.WHITE_PAWN;
+            else if (((TablutFieldType)field.Type).Equals(TablutFieldType.KING))
+                type = TablutFieldType.KING;
             switch (direction)
             {
                 case DirectionEnum.UP:
@@ -188,7 +198,7 @@ namespace Games
                         break;
                     }
             }
-            board.BoardFields[yCoord, xCoord].Type = field.Type;
+            board.BoardFields[yCoord, xCoord].Type = type;
             field.Type = TablutFieldType.EMPTY_FIELD;
             TakeEnemyPawns(board, board.BoardFields[yCoord, xCoord]);
         }
@@ -281,7 +291,7 @@ namespace Games
             bool kingFound = false;
             for(int i=0; i < bs.Height; i++)
             {
-                for(int j=0; j < bs.Height; j++)
+                for(int j=0; j < bs.Width; j++)
                 {
                     if((TablutFieldType)bs.BoardFields[i,j].Type == TablutFieldType.KING)
                     {

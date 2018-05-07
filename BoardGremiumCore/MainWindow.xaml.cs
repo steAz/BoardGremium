@@ -23,10 +23,11 @@ namespace BoardGremiumCore
     public partial class MainWindow : Window
     {
         public Game game;
+        public Bot bot;
         /// <summary>
         /// Mapping, where images are reflected to pawns
         /// </summary>
-        public Dictionary<Enum, Image> PawnsToImagesDict { get; set; }
+        //public Dictionary<Enum, Image> PawnsToImagesDict { get; set; }
 
         public MainWindow()
         {
@@ -44,7 +45,7 @@ namespace BoardGremiumCore
             return image;
         }
 
-        private void PrepareGraphics(string boardPath, string redPath, string blackPath, string kingPath)
+        private void PrepareGraphics(string boardPath)
         {
             Image boardImage = new Image { Stretch = Stretch.Fill, HorizontalAlignment = HorizontalAlignment.Left };
             BitmapImage btImage = new BitmapImage();
@@ -61,62 +62,62 @@ namespace BoardGremiumCore
             switch (field.X)
             {
                 case 0:
-                    xCoord = 175;
+                    xCoord = 265;
                     break;
                 case 1:
-                    xCoord = 280;
+                    xCoord = 420;
                     break;
                 case 2:
-                    xCoord = 385;
+                    xCoord = 575;
                     break;
                 case 3:
-                    xCoord = 490;
+                    xCoord = 735;
                     break;
                 case 4:
-                    xCoord = 595;
+                    xCoord = 890;
                     break;
                 case 5:
-                    xCoord = 701;
+                    xCoord = 1050;
                     break;
                 case 6:
-                    xCoord = 805;
+                    xCoord = 1208;
                     break;
                 case 7:
-                    xCoord = 910;
+                    xCoord = 1365;
                     break;
                 case 8:
-                    xCoord = 1015;
+                    xCoord = 1520;
                     break;
             }
 
             switch (field.Y)
             {
                 case 0:
-                    yCoord = 103;
+                    yCoord = 142;
                     break;
                 case 1:
-                    yCoord = 164;
+                    yCoord = 226;
                     break;
                 case 2:
-                    yCoord = 225;
+                    yCoord = 312;
                     break;
                 case 3:
-                    yCoord = 286;
+                    yCoord = 394;
                     break;
                 case 4:
-                    yCoord = 348;
+                    yCoord = 477;
                     break;
                 case 5:
-                    yCoord = 409;
+                    yCoord = 560;
                     break;
                 case 6:
-                    yCoord = 470;
+                    yCoord = 645;
                     break;
                 case 7:
-                    yCoord = 532;
+                    yCoord = 730;
                     break;
                 case 8:
-                    yCoord = 593;
+                    yCoord = 815;
                     break;
             }
 
@@ -132,7 +133,7 @@ namespace BoardGremiumCore
                 }
 
                 Image image = GetImage(path);
-                Button button = new Button()
+                BoardButton button = new BoardButton()
                 {
                     Width = MainGrid.ActualWidth / 14,
                     Height = MainGrid.ActualHeight / 14,
@@ -140,6 +141,7 @@ namespace BoardGremiumCore
                     HorizontalAlignment = HorizontalAlignment.Left,
                     Content = GetImage(path),
                     Name = "checker" + counterOfButtons,
+                    RepresentedField = field
                 };
                 counterOfButtons++;
 
@@ -152,14 +154,65 @@ namespace BoardGremiumCore
 
         private void CheckerClick(object sender, EventArgs e)
         {
-            Button clicked = (Button)sender;
-            MessageBox.Show("Button's name is: " + clicked.Name);
+            BoardButton clicked = (BoardButton)sender;
+            //MessageBox.Show("Button's name is: " + clicked.Name);
             MoveWindow mw = new MoveWindow(game);
             mw.ShowDialog();
-            MessageBox.Show("Dziala przeslanie info: " + mw.NumOfFields + mw.Direction.ToString());
+            //MessageBox.Show("Dziala przeslanie info: " + mw.NumOfFields + mw.Direction.ToString());
             //TODO  Walniecie tutaj ruchu majac Direction i NumOfFields i jakis while, ktory 
             // w razie wybrania zlych danych znow odpali okno MoveWindow +
             // wyswietlanie komunikatu o zlym ruchu
+
+            
+            
+            if (IsChosenMoveValid(mw.NumOfFields, mw.Direction, clicked.RepresentedField))
+            {
+                MakePlayerMove(clicked.RepresentedField, mw.Direction, mw.NumOfFields);
+                if(game.IsGameWon(game.currentBoardState, PlayerEnum.HUMAN_PLAYER))
+                {
+                    MessageBox.Show("Gracz wygrał, reset planszy.");
+                    game.currentBoardState = game.StartingPosition();
+                    MainGrid.Children.Clear();
+                    DisplayBoard();
+                    if((TablutFieldType)game.BotPlayerFieldType == TablutFieldType.BLACK_PAWN)
+                        return;
+                }
+                game.currentBoardState = bot.MakeMove(game.currentBoardState);
+                if (game.IsGameWon(game.currentBoardState, PlayerEnum.BOT_PLAYER))
+                {
+                    MessageBox.Show("Bot wygrał, reset planszy.");
+                    game.currentBoardState = game.StartingPosition();
+                }else
+                {
+                    MainGrid.Children.Clear();
+                    DisplayBoard();
+                }
+                
+            }else
+            {
+                if(mw.NumOfFields != 0)
+                    MessageBox.Show("Nieprawidlowy ruch.");
+            }
+        }
+
+        private Boolean IsChosenMoveValid(int numOfFields, DirectionEnum direction, Field field)
+        {
+            if (numOfFields <= 0)
+                return false;
+            else if (numOfFields > game.CalculateMaximumPossibleRange(game.currentBoardState, field, direction))
+                return false;
+            else if (((TablutFieldType)game.HumanPlayerFieldType == TablutFieldType.BLACK_PAWN && (TablutFieldType)field.Type != TablutFieldType.BLACK_PAWN)
+                || ((TablutFieldType)game.HumanPlayerFieldType == TablutFieldType.WHITE_PAWN && (TablutFieldType)field.Type == TablutFieldType.BLACK_PAWN))
+                return false;
+
+            return true;
+        }
+
+        private void MakePlayerMove(Field selectedField, DirectionEnum selectedDirection, int selectedNumOfFields)
+        {
+            game.MovePawn(game.currentBoardState, selectedField, selectedDirection, selectedNumOfFields);
+            MainGrid.Children.Clear();
+            DisplayBoard();
         }
 
         private void LoadBoardForGame(string titleOfGame)
@@ -169,22 +222,38 @@ namespace BoardGremiumCore
 
             if (titleOfGame == "Tablut")
             {
+                TablutFieldType gamerPawns = TablutFieldType.EMPTY_FIELD;
                 string boardPath = "viewObjects\\Tablut.jpg";
                 string kingPath = "viewObjects\\checker_king.gif";
                 string blackPath = "viewObjects\\checker_black.gif";
                 string redPath = "viewObjects\\checker_red.gif";
-                game = new TablutGame(boardPath, redPath, blackPath, kingPath);
-
-                PrepareGraphics(boardPath, redPath, blackPath, kingPath);
-
-                int counterOfButtons = 0;
-                foreach (Field field in game.currentBoardState.BoardFields)
+                if (PawnsSelectionCB.Text == "Red")
+                    gamerPawns = TablutFieldType.WHITE_PAWN;
+                else if(PawnsSelectionCB.Text == "Black")
+                    gamerPawns = TablutFieldType.BLACK_PAWN;
+                game = new TablutGame(boardPath, redPath, blackPath, kingPath, gamerPawns);
+                bot = new Bot(game);
+                if((TablutFieldType)game.BotPlayerFieldType == TablutFieldType.WHITE_PAWN)
                 {
-                    DisplayField(field, ref counterOfButtons);
+                    game.currentBoardState = bot.MakeMove(game.currentBoardState);
                 }
+                PrepareGraphics(boardPath);
+
+                DisplayBoard();
 
             }
 
+        }
+
+        private void DisplayBoard()
+        {
+            PrepareGraphics("viewObjects\\Tablut.jpg");
+            int counterOfButtons = 0;
+            foreach (Field field in game.currentBoardState.BoardFields)
+            {
+                DisplayField(field, ref counterOfButtons);
+            }
+            
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)

@@ -20,5 +20,9 @@
             <ComboBoxItem Content="Tablut"></ComboBoxItem>
             <ComboBoxItem Content="NextGame"></ComboBoxItem>
         </ComboBox>
+        <ComboBox Name="PawnsSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,420,0,0" Text="Select pawns" Width="200" Height="20"  IsReadOnly="True" IsEditable="True">
+            <ComboBoxItem Content="Red"></ComboBoxItem>
+            <ComboBoxItem Content="Black"></ComboBoxItem>
+        </ComboBox>
     </Grid>
 </Window>
