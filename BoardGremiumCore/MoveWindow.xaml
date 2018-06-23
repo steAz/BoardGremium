@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BoardGremiumCore"
         mc:Ignorable="d"
-          Title="Move" Height="320" Width="220">
+          Title="Move" Height="348.527" Width="220">
     <StackPanel Margin="10,10,14,10">
         <Label FontWeight="Bold">Select number of moves</Label>
         <RadioButton Name="MoveI" GroupName="moves">1</RadioButton>

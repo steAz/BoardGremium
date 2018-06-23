@@ -26,7 +26,6 @@ namespace AbstractGame
             List<BoardState> possibleMoves = Game.GetPossibleBoardStates(startingBoardState, PlayerEnum.BOT_PLAYER);
             Random rnd = new Random();
             int randNumber = rnd.Next(possibleMoves.Count);
-            System.Threading.Thread.Sleep(1000);
             return possibleMoves[randNumber];
         }
     }

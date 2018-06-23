@@ -62,62 +62,62 @@ namespace BoardGremiumCore
             switch (field.X)
             {
                 case 0:
-                    xCoord = 265;
+                    xCoord = 210;//bylo 265 minus 55
                     break;
                 case 1:
-                    xCoord = 420;
+                    xCoord = 338;
                     break;
                 case 2:
-                    xCoord = 575;
+                    xCoord = 462;
                     break;
                 case 3:
-                    xCoord = 735;
+                    xCoord = 588;
                     break;
                 case 4:
-                    xCoord = 890;
+                    xCoord = 712;
                     break;
                 case 5:
-                    xCoord = 1050;
+                    xCoord = 838;
                     break;
                 case 6:
-                    xCoord = 1208;
+                    xCoord = 967;
                     break;
                 case 7:
-                    xCoord = 1365;
+                    xCoord = 1090;
                     break;
                 case 8:
-                    xCoord = 1520;
+                    xCoord = 1215;
                     break;
             }
-
+            //xCoord = 210 + 70 * field.X;
             switch (field.Y)
             {
                 case 0:
-                    yCoord = 142;
+                    yCoord = 112;
                     break;
                 case 1:
-                    yCoord = 226;
+                    yCoord = 180;
                     break;
                 case 2:
-                    yCoord = 312;
+                    yCoord = 250;
                     break;
                 case 3:
-                    yCoord = 394;
+                    yCoord = 317;
                     break;
                 case 4:
-                    yCoord = 477;
+                    yCoord = 382;
                     break;
                 case 5:
-                    yCoord = 560;
+                    yCoord = 450;
                     break;
                 case 6:
-                    yCoord = 645;
+                    yCoord = 520;
                     break;
                 case 7:
-                    yCoord = 730;
+                    yCoord = 585;
                     break;
                 case 8:
-                    yCoord = 815;
+                    yCoord = 654;
                     break;
             }
 
@@ -128,7 +128,8 @@ namespace BoardGremiumCore
         {
             if (!field.Type.Equals(TablutFieldType.EMPTY_FIELD))
             {
-                if (!game.ItemToGraphicsDict.TryGetValue(field.Type, out string path)) {
+                string path;
+                if (!game.ItemToGraphicsDict.TryGetValue(field.Type, out path)) {
                     throw new Exception("Cannot find image's path with the given FieldType");
                 }
 
