@@ -10,8 +10,8 @@ namespace BoardGremiumServer
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("NOJI?");
-            Console.ReadKey();
+            BoardGremiumServer server = new BoardGremiumServer("127.0.0.1", 13000);
+            server.startListening();
         }
     }
 }

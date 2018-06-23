@@ -28,26 +28,22 @@ namespace BoardGremiumServer
         {
             Listener.Start();
             Buffer = new byte[256];
+            ListeningLoop();
         }
 
         private void ListeningLoop()
         {
+            Console.Write("Waiting for a connection... ");
+            TcpClient client = Listener.AcceptTcpClient();
+            Console.WriteLine("Connected!");
+            // Get a stream object for reading and writing
+            NetworkStream stream = client.GetStream();
             while (true)
             {
-                Console.Write("Waiting for a connection... ");
-                TcpClient client = Listener.AcceptTcpClient();
-                Console.WriteLine("Connected!");
-                // Get a stream object for reading and writing
-                NetworkStream stream = client.GetStream();
-                while (true)
-                {
-                    dataRecivedAction(reciveMessage(stream));
-                }
-
-
-                // Shutdown and end connection
-                client.Close();
+                dataRecivedAction(reciveMessage(stream));
             }
+            // Shutdown and end connection
+            client.Close();
         }
 
         /// <summary>
