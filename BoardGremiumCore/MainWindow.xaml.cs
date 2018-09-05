@@ -231,7 +231,7 @@ namespace BoardGremiumCore
         {
             var message = "move p " + selectedField.X.ToString() + " " + selectedField.Y.ToString()
                             + " " + selectedDirection.ToString().First() + " " + selectedNumOfFields.ToString();
-            client.SendMessage(message);
+            client.SendPostMove(message);
 
             //server callback message
             bool isRightMove;
@@ -419,7 +419,7 @@ namespace BoardGremiumCore
 
                 client = new Client("127.0.0.1", 13000);
                 var message = "gamerPawns " + PawnsSelectionCB.Text.ToLower();
-                client.SendMessage(message);
+                client.SendPostGame(message);
                 if (gamerPawns == TablutFieldType.BLACK_PAWN) // bot needs to make first move and player needs to update it on Board by getting message from server
                 {
                     bool isRightMove;

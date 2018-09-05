@@ -2,41 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BoardGremiumCore
 {
-    class Client : TcpClient
+    class Client : HttpClient
     {
-        public NetworkStream stream;
+        private string server;
+        private int port;
 
-        public Client(string server, int port) : base(server, port)
+        public Client(string server, int port) : base()
         {
-            try
-            {
-               // var servEndPoint = new IPEndPoint(IPAddress.Parse(server), port);
-                //client = new TcpClient(servEndPoint);
-                stream = this.GetStream();
-
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine("ArgumentNullException in constructor: {0}", e);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException in constructor: {0}", e);
-            }
+            this.server = server;
+            this.port = port;
         }
 
-        public void SendMessage(string message)
+        public void SendPostMove(string message)
         {
             try
             {
                 var data = Encoding.ASCII.GetBytes(message);
-                stream.Write(data, 0, data.Length);
                 Console.WriteLine("Sent: {0}", message);
             }
             catch (ArgumentNullException e)
@@ -51,6 +39,11 @@ namespace BoardGremiumCore
             {
                 Console.WriteLine("NullReferenceException while sending message: {0}", e);
             }
+        }
+
+        public void SendPostGame(string message)
+        {
+      
         }
     }
 }
