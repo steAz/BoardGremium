@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AbstractGame">
+      <HintPath>..\AbstractGame\bin\Debug\AbstractGame.dll</HintPath>
+    </Reference>
     <Reference Include="Games">
       <HintPath>..\Games\bin\Debug\Games.dll</HintPath>
     </Reference>
@@ -47,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoardGremiumServer.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="ServerApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
