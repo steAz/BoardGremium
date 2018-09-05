@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Games
+namespace AbstractGame
 {
     public enum TablutFieldType
     {
         EMPTY_FIELD,
-        WHITE_PAWN,
+        RED_PAWN,
         BLACK_PAWN,
         KING
     }

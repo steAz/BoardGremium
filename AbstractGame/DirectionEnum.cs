@@ -11,6 +11,7 @@ namespace AbstractGame
         UP,
         DOWN,
         LEFT,
-        RIGHT
+        RIGHT,
+        NONE
     }
 }

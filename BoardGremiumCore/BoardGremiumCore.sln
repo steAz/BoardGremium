@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGremiumCore", "BoardGremiumCore.csproj", "{D8B92224-6FE0-4D31-BCAA-133FD869724F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonAbstracts", "..\AbstractGame\CommonAbstracts.csproj", "{B9A36568-B69E-4BE3-85DF-E6F89DB99B2F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Games", "..\Games\Games.csproj", "{AC839234-C761-4A06-A6F0-DAE97A7A1290}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotDecisions", "..\BotDecisions\BotDecisions.csproj", "{95F9C925-9732-45BB-87F9-C932CE8BC7D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +29,15 @@ Global
 		{AC839234-C761-4A06-A6F0-DAE97A7A1290}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC839234-C761-4A06-A6F0-DAE97A7A1290}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC839234-C761-4A06-A6F0-DAE97A7A1290}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95F9C925-9732-45BB-87F9-C932CE8BC7D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95F9C925-9732-45BB-87F9-C932CE8BC7D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95F9C925-9732-45BB-87F9-C932CE8BC7D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95F9C925-9732-45BB-87F9-C932CE8BC7D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FE28CB8A-3C46-4B32-9B5C-08223BDE335B}
 	EndGlobalSection
 EndGlobal

@@ -13,7 +13,8 @@ namespace BoardGremiumServer
     {
         private string ServerIp { get; }
         private int ServerPort { get; }
-        private TcpListener Listener;
+        private TcpListener Listener1;
+        private TcpListener Listener2;
         private byte[] Buffer;
 
         public BoardGremiumServer(string ServerIp, int ServerPort)
@@ -21,12 +22,14 @@ namespace BoardGremiumServer
             this.ServerIp = ServerIp;
             this.ServerPort = ServerPort;
             IPAddress serverAddress = IPAddress.Parse(ServerIp);
-            Listener = new TcpListener(serverAddress, ServerPort);
+            Listener1 = new TcpListener(serverAddress, ServerPort);
+            //Listener2 = new TcpListener(serverAddress, ServerPort);
         }
 
         public void startListening()
         {
-            Listener.Start();
+            Listener1.Start();
+            //Listener2.Start();
             Buffer = new byte[256];
             ListeningLoop();
         }
@@ -34,16 +37,33 @@ namespace BoardGremiumServer
         private void ListeningLoop()
         {
             Console.Write("Waiting for a connection... ");
-            TcpClient client = Listener.AcceptTcpClient();
-            Console.WriteLine("Connected!");
+            TcpClient playerClient = Listener1.AcceptTcpClient();
+            Console.WriteLine("Player Connected!");
+            TcpClient botClient = Listener1.AcceptTcpClient();
+            Console.WriteLine("Bot Connected!");
             // Get a stream object for reading and writing
-            NetworkStream stream = client.GetStream();
+            NetworkStream playerStream = playerClient.GetStream();
+            NetworkStream botStream = botClient.GetStream();
+            string playerData, botData;
             while (true)
             {
-                dataRecivedAction(reciveMessage(stream));
+                //dataRecivedAction(reciveMessage(stream));
+                playerData = receiveMessage(playerStream);
+                if (playerData != null)
+                {
+                    dataRecivedAction(playerData);
+                }
+
+                botData = receiveMessage(botStream);
+                if (botData != null)
+                {
+                    dataRecivedAction(botData);
+                }
+
             }
             // Shutdown and end connection
-            client.Close();
+            playerClient.Close();
+            botClient.Close();
         }
 
         /// <summary>
@@ -51,16 +71,15 @@ namespace BoardGremiumServer
         /// </summary>
         /// <param name="stream"> client stream</param>
         /// <returns></returns>
-        private string reciveMessage(NetworkStream stream)
+        private string receiveMessage(NetworkStream stream)
         {
             int i;
             string data;
             // Loop to receive all the data sent by the client.
-            while ((i = stream.Read(Buffer, 0, Buffer.Length)) != 0)
+            if ((i = stream.Read(Buffer, 0, Buffer.Length)) != 0)
             {
                 // Translate data bytes to a ASCII string.
-                data = System.Text.Encoding.ASCII.GetString(Buffer, 0, i);
-                Console.WriteLine("Received: {0}", data);
+                data = Encoding.ASCII.GetString(Buffer, 0, i);
                 return data;
             }
             return null;
@@ -84,11 +103,17 @@ namespace BoardGremiumServer
                     }
              * */
         }
-        //p 2 3 L2
+        //move p 2 3 L2
         private void dataRecivedAction(string data)
         {
-            Console.WriteLine(data);
+            Console.WriteLine("Received: {0}", data);
+            if (data.StartsWith("move"))
+            {
+
+            }
         }
+
+
 
     }
 }

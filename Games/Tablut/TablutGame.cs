@@ -15,20 +15,13 @@ namespace Games
         public TablutGame(string boardPath, string whitePawnPath, string blackPawnPath, string kingPath, TablutFieldType humanPawn) 
             :base(BOARD_WIDTH, BOARD_HEIGHT, boardPath)
         {
-            ItemToGraphicsDict = new Dictionary<Enum, string>
-            {
-                { TablutFieldType.WHITE_PAWN, whitePawnPath },
-                { TablutFieldType.BLACK_PAWN, blackPawnPath },
-                { TablutFieldType.KING, kingPath },
-                { TablutFieldType.EMPTY_FIELD, null }
-            };
             this.currentBoardState = StartingPosition();
             //for now hardcoded white for player, black for bot
             this.HumanPlayerFieldType = humanPawn;
-            if(humanPawn.Equals(TablutFieldType.WHITE_PAWN))
+            if(humanPawn.Equals(TablutFieldType.RED_PAWN))
                 this.BotPlayerFieldType = TablutFieldType.BLACK_PAWN;
             else
-                this.BotPlayerFieldType = TablutFieldType.WHITE_PAWN;
+                this.BotPlayerFieldType = TablutFieldType.RED_PAWN;
 
         }
         public override List<BoardState> GetPossibleBoardStates(BoardState initial, PlayerEnum playerType)
@@ -48,7 +41,7 @@ namespace Games
                     {
                         result.AddRange(GetPossibleBoardStatesForPawn(initial, initial.BoardFields[i, j]));
                     }
-                    if(pawnType == TablutFieldType.WHITE_PAWN)
+                    if(pawnType == TablutFieldType.RED_PAWN)
                     {
                         //we add moves of the king
                         if ((TablutFieldType)initial.BoardFields[i, j].Type == TablutFieldType.KING)
@@ -63,7 +56,7 @@ namespace Games
 
         private List<BoardState> GetPossibleBoardStatesForPawn(BoardState initial, Field pawn)
         {
-            if((TablutFieldType)pawn.Type != TablutFieldType.WHITE_PAWN && 
+            if((TablutFieldType)pawn.Type != TablutFieldType.RED_PAWN && 
                 (TablutFieldType)pawn.Type != TablutFieldType.BLACK_PAWN &&
                 (TablutFieldType)pawn.Type != TablutFieldType.KING)
             {
@@ -167,8 +160,8 @@ namespace Games
             TablutFieldType type = TablutFieldType.KING;
             if (((TablutFieldType)field.Type).Equals(TablutFieldType.BLACK_PAWN))
                 type = TablutFieldType.BLACK_PAWN;
-            else if (((TablutFieldType)field.Type).Equals(TablutFieldType.WHITE_PAWN))
-                type = TablutFieldType.WHITE_PAWN;
+            else if (((TablutFieldType)field.Type).Equals(TablutFieldType.RED_PAWN))
+                type = TablutFieldType.RED_PAWN;
             else if (((TablutFieldType)field.Type).Equals(TablutFieldType.KING))
                 type = TablutFieldType.KING;
             switch (direction)
@@ -223,7 +216,7 @@ namespace Games
             {
                 //just white pawn because taking off the king is checked in checking
                 //end of the game, which is called before taking pawns off
-                enemyPawnType = TablutFieldType.WHITE_PAWN;
+                enemyPawnType = TablutFieldType.RED_PAWN;
             }
             else
             {
@@ -237,12 +230,12 @@ namespace Games
             if (adjecentField != null && (TablutFieldType)adjecentField.Type == enemyPawnType)
             {
                 nextField = bs.AdjecentField(adjecentField, direction);
-                if (enemyPawnType == TablutFieldType.WHITE_PAWN)
+                if (enemyPawnType == TablutFieldType.RED_PAWN)
                 {
                     if (nextField != null && (TablutFieldType)nextField.Type == TablutFieldType.BLACK_PAWN)
                     {
                         //take off if not a king
-                        if ((TablutFieldType)adjecentField.Type == TablutFieldType.WHITE_PAWN)
+                        if ((TablutFieldType)adjecentField.Type == TablutFieldType.RED_PAWN)
                         {
                             adjecentField.Type = TablutFieldType.EMPTY_FIELD;
                         }
@@ -250,7 +243,7 @@ namespace Games
                 }
                 else
                 {
-                    if (nextField != null && (TablutFieldType)nextField.Type == TablutFieldType.WHITE_PAWN)
+                    if (nextField != null && (TablutFieldType)nextField.Type == TablutFieldType.RED_PAWN)
                     {
                         adjecentField.Type = TablutFieldType.EMPTY_FIELD;
                     }
@@ -262,12 +255,12 @@ namespace Games
         {
             if(forPlayer == PlayerEnum.HUMAN_PLAYER)
             {
-                if ((TablutFieldType)HumanPlayerFieldType == TablutFieldType.WHITE_PAWN)
+                if ((TablutFieldType)HumanPlayerFieldType == TablutFieldType.RED_PAWN)
                     return HasWhitePlayerWon(bs);
                 else return HasBlackPlayerWon(bs);
             }else
             {
-                if ((TablutFieldType)BotPlayerFieldType == TablutFieldType.WHITE_PAWN)
+                if ((TablutFieldType)BotPlayerFieldType == TablutFieldType.RED_PAWN)
                     return HasWhitePlayerWon(bs);
                 else return HasBlackPlayerWon(bs);
             }
@@ -359,15 +352,15 @@ namespace Games
                 startingBoardState.BoardFields[8, 5].Type = TablutFieldType.BLACK_PAWN;
                 //white pawns
 
-                startingBoardState.BoardFields[4, 2].Type = TablutFieldType.WHITE_PAWN;
-                startingBoardState.BoardFields[4, 3].Type = TablutFieldType.WHITE_PAWN;
-                startingBoardState.BoardFields[4, 5].Type = TablutFieldType.WHITE_PAWN;
-                startingBoardState.BoardFields[4, 6].Type = TablutFieldType.WHITE_PAWN;
+                startingBoardState.BoardFields[4, 2].Type = TablutFieldType.RED_PAWN;
+                startingBoardState.BoardFields[4, 3].Type = TablutFieldType.RED_PAWN;
+                startingBoardState.BoardFields[4, 5].Type = TablutFieldType.RED_PAWN;
+                startingBoardState.BoardFields[4, 6].Type = TablutFieldType.RED_PAWN;
 
-                startingBoardState.BoardFields[2, 4].Type = TablutFieldType.WHITE_PAWN;
-                startingBoardState.BoardFields[3, 4].Type = TablutFieldType.WHITE_PAWN;
-                startingBoardState.BoardFields[5, 4].Type = TablutFieldType.WHITE_PAWN;
-                startingBoardState.BoardFields[6, 4].Type = TablutFieldType.WHITE_PAWN;
+                startingBoardState.BoardFields[2, 4].Type = TablutFieldType.RED_PAWN;
+                startingBoardState.BoardFields[3, 4].Type = TablutFieldType.RED_PAWN;
+                startingBoardState.BoardFields[5, 4].Type = TablutFieldType.RED_PAWN;
+                startingBoardState.BoardFields[6, 4].Type = TablutFieldType.RED_PAWN;
                 //king
                 startingBoardState.BoardFields[4, 4].Type = TablutFieldType.KING;
                 return startingBoardState;
