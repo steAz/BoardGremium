@@ -154,7 +154,7 @@ namespace BoardGremiumServer
                 if(array[1].Equals("red"))
                 {
                     Console.WriteLine("Player plays white pawns");
-                    GameState = new GameState(TablutFieldType.WHITE_PAWN);
+                    GameState = new GameState(TablutFieldType.RED_PAWN);
                     botType = "black";
                     string messageForBot = "start " + botType;
                     sendMessage(messageForBot, PlayerEnum.BOT_PLAYER);

@@ -282,56 +282,56 @@ namespace BoardGremiumCore
             var buffer = new byte[256];
             while (true)
             {
-                if (client.stream.DataAvailable)
-                {
-                    var i = client.stream.Read(buffer, 0, buffer.Length);
-                    var data = Encoding.ASCII.GetString(buffer, 0, i);
+                //if (client.stream.DataAvailable)
+                //{
+                // //   var i = client.stream.Read(buffer, 0, buffer.Length);
+                //    var data = Encoding.ASCII.GetString(buffer, 0, i);
 
-                    Console.WriteLine(data);
+                //    Console.WriteLine(data);
 
-                    if (data.StartsWith("enemy"))
-                    {
-                        var arrayOfData = data.Split(' ');
-                        var directionText = arrayOfData[3];
-                        var botMovedDirection = GetDirectionFromCode(directionText);
-                        var botMovedX = Int32.Parse(arrayOfData[1]);
-                        var botMovedY = Int32.Parse(arrayOfData[2]);
-                        var botMovedField = currentBoardState.BoardFields[botMovedY, botMovedX];
-                        var botMovedNumOfFields = Int32.Parse(arrayOfData[4]);
-                        ChangeBoardStateAfterMove(botMovedDirection, botMovedField, botMovedNumOfFields);
+                //    if (data.StartsWith("enemy"))
+                //    {
+                //        var arrayOfData = data.Split(' ');
+                //        var directionText = arrayOfData[3];
+                //        var botMovedDirection = GetDirectionFromCode(directionText);
+                //        var botMovedX = Int32.Parse(arrayOfData[1]);
+                //        var botMovedY = Int32.Parse(arrayOfData[2]);
+                //        var botMovedField = currentBoardState.BoardFields[botMovedY, botMovedX];
+                //        var botMovedNumOfFields = Int32.Parse(arrayOfData[4]);
+                //        ChangeBoardStateAfterMove(botMovedDirection, botMovedField, botMovedNumOfFields);
 
-                        if (data.Contains("taken"))
-                        {
-                            var playerTakenX = Int32.Parse(arrayOfData[6]);
-                            var playerTakenY = Int32.Parse(arrayOfData[7]);
-                            currentBoardState.BoardFields[playerTakenX, playerTakenY].Type = TablutFieldType.EMPTY_FIELD;
-                        }
+                //        if (data.Contains("taken"))
+                //        {
+                //            var playerTakenX = Int32.Parse(arrayOfData[6]);
+                //            var playerTakenY = Int32.Parse(arrayOfData[7]);
+                //            currentBoardState.BoardFields[playerTakenX, playerTakenY].Type = TablutFieldType.EMPTY_FIELD;
+                //        }
 
-                        isRightMove = true;
-                        return;
-                    }
-                    else if(data.StartsWith("ok"))
-                    {
-                        var arrayOfData = data.Split(' ');
-                        this.ChangeBoardStateAfterMove(direction, field, numOfFields);
+                //        isRightMove = true;
+                //        return;
+                //    }
+                //    else if(data.StartsWith("ok"))
+                //    {
+                //        var arrayOfData = data.Split(' ');
+                //        this.ChangeBoardStateAfterMove(direction, field, numOfFields);
 
-                        if (data.Contains("taken")) // also enemy pawn is taken/beaten
-                        {
-                            var takenX = Int32.Parse(arrayOfData[2]);
-                            var takenY = Int32.Parse(arrayOfData[3]);
-                            currentBoardState.BoardFields[takenY, takenX].Type = TablutFieldType.EMPTY_FIELD;
-                        }
+                //        if (data.Contains("taken")) // also enemy pawn is taken/beaten
+                //        {
+                //            var takenX = Int32.Parse(arrayOfData[2]);
+                //            var takenY = Int32.Parse(arrayOfData[3]);
+                //            currentBoardState.BoardFields[takenY, takenX].Type = TablutFieldType.EMPTY_FIELD;
+                //        }
 
-                        isRightMove = true;
-                        return;
-                    }
-                    else if (data.StartsWith("notOk"))
-                    {
-                        MessageBox.Show("Nieprawidłowy ruch");
-                        isRightMove = false;
-                        return;
-                    }
-                }
+                //        isRightMove = true;
+                //        return;
+                //    }
+                //    else if (data.StartsWith("notOk"))
+                //    {
+                //        MessageBox.Show("Nieprawidłowy ruch");
+                //        isRightMove = false;
+                //        return;
+                //    }
+                //}
             }
         }
 

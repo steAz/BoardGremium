@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Games;
-using AbstractGame;
+using System.Web;
 
-namespace BoardGremiumServer
+namespace BoardGremiumRESTservice
 {
-    public class GameState
+    public class TablutGameState
     {
-        private BoardState CurrentBoardState { get; }
+        //private BoardState CurrentBoardState { get; }
         public Game game { get; }
 
-        public GameState(TablutFieldType playerPawn)
+        public TablutGameState(TablutFieldType playerPawn, BoardState bs)
         {
             game = new TablutGame("", "", "", "", playerPawn);
+            game.currentBoardState = bs;
         }
 
         public Boolean IsChosenMoveValid(int numOfFields, DirectionEnum direction, Field field)
@@ -36,11 +34,11 @@ namespace BoardGremiumServer
         {
             int result = 0;
             Field[,] fields = bs.BoardFields;
-            for(int i=0; i < game.BoardHeight; i++)
+            for (int i = 0; i < game.BoardHeight; i++)
             {
-                for(int j=0; j < game.BoardWidth; j++)
+                for (int j = 0; j < game.BoardWidth; j++)
                 {
-                    if(!fields[i,j].Type.Equals(TablutFieldType.EMPTY_FIELD))
+                    if (!fields[i, j].Type.Equals(TablutFieldType.EMPTY_FIELD))
                     {
                         result++;
                     }
@@ -55,18 +53,19 @@ namespace BoardGremiumServer
         public Field getMissingPawnForPlayer(BoardState oldBS, BoardState newBS, PlayerEnum player)
         {
             TablutFieldType takenType;
-            if(player.Equals(PlayerEnum.HUMAN_PLAYER))
+            if (player.Equals(PlayerEnum.HUMAN_PLAYER))
             {
                 takenType = (TablutFieldType)game.HumanPlayerFieldType;
-            }else
+            }
+            else
             {
                 takenType = (TablutFieldType)game.BotPlayerFieldType;
             }
-            for(int i=0; i < game.BoardHeight; i++)
+            for (int i = 0; i < game.BoardHeight; i++)
             {
-                for(int j=0; j < game.BoardWidth; j++)
+                for (int j = 0; j < game.BoardWidth; j++)
                 {
-                    if(oldBS.BoardFields[i,j].Type.Equals(takenType) && !newBS.BoardFields[i, j].Type.Equals(takenType))
+                    if (oldBS.BoardFields[i, j].Type.Equals(takenType) && !newBS.BoardFields[i, j].Type.Equals(takenType))
                     {
                         Console.WriteLine("Returns field coords: " + i + ";" + j);
                         return newBS.BoardFields[i, j];
@@ -91,14 +90,15 @@ namespace BoardGremiumServer
                (t1.Equals(TablutFieldType.KING) && t2.Equals(TablutFieldType.RED_PAWN)))
             {
                 return true;
-            } else return false;
+            }
+            else return false;
         }
 
         public DirectionEnum getDirectionFromMove(Field source, Field destination)
         {
             if (source.X > destination.X)
                 return DirectionEnum.LEFT;
-            if(source.X < destination.X)
+            if (source.X < destination.X)
                 return DirectionEnum.RIGHT;
             if (source.Y > destination.Y)
                 return DirectionEnum.UP;
@@ -107,7 +107,7 @@ namespace BoardGremiumServer
 
         public int getNumOfFieldsFromMove(Field source, Field destination, DirectionEnum direction)
         {
-            switch(direction)
+            switch (direction)
             {
                 case DirectionEnum.UP:
                     {
