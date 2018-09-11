@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using BoardGremiumRESTservice.Models;
+using BoardGremiumRESTservice.Utils;
 
 namespace BoardGremiumRESTservice.Controllers
 {
@@ -32,9 +33,10 @@ namespace BoardGremiumRESTservice.Controllers
             {
                 return NotFound();
             }
-
             return Ok(GameEntity);
         }
+
+        //tu GET currentPlayer gry o {id} i GET boardState gry o {id}
 
         // PUT: api/GameEntitys/5
         [ResponseType(typeof(void))]
@@ -79,12 +81,14 @@ namespace BoardGremiumRESTservice.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            GameEntity xd = new GameEntity(playerPawnColor);
-            db.GameEntities.Add(xd);
+            TablutFieldType playerType = MessagesConverterUtils.playerPawnFromMessage(playerPawnColor);
+            TablutGameState tgs = new TablutGameState(playerType);
+            string bsRepresentation = ConvertTablutGameStateToString(tgs);
+            GameEntity ge = new GameEntity(playerPawnColor, bsRepresentation);
+            db.GameEntities.Add(ge);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = xd.Id }, xd);
+            return CreatedAtRoute("DefaultApi", new { id = ge.Id }, ge);
         }
 
         // DELETE: api/GameEntitys/5
@@ -156,7 +160,7 @@ namespace BoardGremiumRESTservice.Controllers
             return result;
         }
 
-        private TablutGameState ConvertStringToTablutBoardState(string stringRepresentation, string playerPawnColor)
+        private TablutGameState ConvertStringToTablutGameState(string stringRepresentation, string playerPawnColor)
         {
             BoardState result = new BoardState(TablutGame.BOARD_WIDTH, TablutGame.BOARD_HEIGHT);
             string[] arguments = stringRepresentation.Split(',');

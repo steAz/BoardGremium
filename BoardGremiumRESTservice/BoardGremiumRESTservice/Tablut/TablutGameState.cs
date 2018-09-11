@@ -10,6 +10,11 @@ namespace BoardGremiumRESTservice
         //private BoardState CurrentBoardState { get; }
         public Game game { get; }
 
+        public TablutGameState(TablutFieldType playerPawn)
+        {
+            game = new TablutGame("", "", "", "", playerPawn);
+        }
+
         public TablutGameState(TablutFieldType playerPawn, BoardState bs)
         {
             game = new TablutGame("", "", "", "", playerPawn);
