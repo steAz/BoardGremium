@@ -24,7 +24,7 @@ namespace BoardGremiumCore
         public int NumOfFields;
         public DirectionEnum Direction;
 
-        public MoveWindow(Game game)
+        public MoveWindow()
         {
             InitializeComponent();
         }

@@ -27,10 +27,7 @@ namespace BoardGremiumCore
         private TextBox debugBox;
         Dictionary<Enum, string> ItemToGraphicsDict;
         public Game game;
-        public Bot bot;
         private Client client;
-        private int currentX;
-        private int currentY;
         /// <summary>
         /// Mapping, where images are reflected to pawns
         /// </summary>
@@ -177,7 +174,7 @@ namespace BoardGremiumCore
         {
             BoardButton clicked = (BoardButton)sender;
             //MessageBox.Show("Button's name is: " + clicked.Name);
-            MoveWindow mw = new MoveWindow(game);
+            MoveWindow mw = new MoveWindow();
             mw.ShowDialog();
             //MessageBox.Show("Dziala przeslanie info: " + mw.NumOfFields + mw.Direction.ToString());
             //TODO  Walniecie tutaj ruchu majac Direction i NumOfFields i jakis while, ktory 
@@ -272,8 +269,8 @@ namespace BoardGremiumCore
                 }
             }
 
-            currentBoardState.BoardFields[selectedField.Y + yCoord, selectedField.X + xCoord].Type = selectedField.Type; // firstly, changing the destination field
-            currentBoardState.BoardFields[selectedField.Y, selectedField.X].Type = TablutFieldType.EMPTY_FIELD; // then, changing source field to empty
+            //currentBoardState.BoardFields[selectedField.Y + yCoord, selectedField.X + xCoord].Type = selectedField.Type; // firstly, changing the destination field
+           // currentBoardState.BoardFields[selectedField.Y, selectedField.X].Type = TablutFieldType.EMPTY_FIELD; // then, changing source field to empty
 
         }
 
@@ -372,7 +369,7 @@ namespace BoardGremiumCore
                 else if(PawnsSelectionCB.Text == "Black")
                     gamerPawns = TablutFieldType.BLACK_PAWN;
 
-                currentBoardState = StartingPosition(9, 9);
+              //  currentBoardState = StartingPosition(9, 9);
                 this.SetDictForGraphics(redPath, blackPath, kingPath);
                 PrepareGraphics(boardPath);
                 PrepareDebugBox();
@@ -403,78 +400,58 @@ namespace BoardGremiumCore
             PrepareGraphics("viewObjects\\Tablut.jpg");
             MainGrid.Children.Add(debugBox);
             int counterOfButtons = 0;
-            foreach (Field field in currentBoardState.BoardFields)
-            {
-                DisplayField(field, ref counterOfButtons);
-            }
+
+            //for (int i = 0; i != currentBoardState.Width; ++i)
+            //{
+            //    for (int j = 0; j != currentBoardState.Height; ++j)
+            //    {
+            // //       DisplayField(currentBoardState)
+            //    }
+            //}
+
+          //  foreach (Field field in currentBoardState.BoardFields)
+          //  {
+           //     DisplayField(field, ref counterOfButtons);
+          //  }
             
         }
 
-        private void Start_Click(object sender, RoutedEventArgs e)
+        private void CreateGame_Click(object sender, RoutedEventArgs e)
         {
-            if (GameSelectionCB.Text != "Select a game")
+            if (GameSelectionCB.Text != "Select a game" && 
+                !CreatedGameNameTB.Text.Equals(String.Empty) && !CreatedGameNameTB.Text.Equals("'Tutaj wpisz nazwę gry'"))
             {
-                TablutFieldType gamerPawns;
-                LoadBoardForGame(GameSelectionCB.Text, out gamerPawns);
+                LoadBoardForGame(GameSelectionCB.Text, out TablutFieldType gamerPawns);
 
-                client = new Client("127.0.0.1", 13000);
-                var message = "gamerPawns " + PawnsSelectionCB.Text.ToLower();
-                client.SendPostGame(message);
-                if (gamerPawns == TablutFieldType.BLACK_PAWN) // bot needs to make first move and player needs to update it on Board by getting message from server
+                client = new Client("http://localhost:54377");
+                var message = "\"" + CreatedGameNameTB.Text + "," + PawnsSelectionCB.Text.ToUpper() + "\"";
+                var result = client.SendPostGame(message);
+
+                if(!result.Result.Contains("Error 400"))
                 {
-                    bool isRightMove;
-                    ReceiveMessage(null, DirectionEnum.NONE, 0, out isRightMove); // first receiving message from server which gives first bot's move to the graphics -> enemy ...
-                    MainGrid.Children.Clear();
-                    DisplayBoard();
+                    var gameWindow = new GameWindow(gamerPawns, CreatedGameNameTB.Text)
+                    {
+                        Owner = this
+                    };
+                    gameWindow.Show();
+
+                    var getResult = client.SendGetCurrentPlayer(CreatedGameNameTB.Text);
+                    if(getResult.Result.Contains("BOT"))
+                    {
+                        gameWindow.PlayerTurnLabel.Content = "Enemy makes move.";
+                    }else if (getResult.Result.Contains("HUMAN"))
+                    {
+                        gameWindow.PlayerTurnLabel.Content = "Make your move, biatch";
+                    }else
+                    {
+                        gameWindow.PlayerTurnLabel.Content = "WTF";
+                    }
+
                 }
+ 
             }
         }
 
-        public BoardState StartingPosition(int BoardWidth, int BoardHeight)
-        {
-            BoardState startingBoardState = new BoardState(BoardWidth, BoardHeight);
-            for (int i = 0; i < startingBoardState.Height; i++)
-            {
-                for (int j = 0; j < startingBoardState.Width; j++)
-                {
-                    //startingBoardState.SetField(j, i, TablutFieldType.EMPTY_FIELD);
-                    startingBoardState.BoardFields[i, j] = new Field(j, i, TablutFieldType.EMPTY_FIELD);
-                }
-            }
-            //black pawns
-            startingBoardState.BoardFields[3, 0].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[4, 0].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[5, 0].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[4, 1].Type = TablutFieldType.BLACK_PAWN;
-
-            startingBoardState.BoardFields[3, 8].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[4, 8].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[4, 7].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[5, 8].Type = TablutFieldType.BLACK_PAWN;
-
-            startingBoardState.BoardFields[0, 3].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[0, 4].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[1, 4].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[0, 5].Type = TablutFieldType.BLACK_PAWN;
-
-            startingBoardState.BoardFields[8, 3].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[8, 4].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[7, 4].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[8, 5].Type = TablutFieldType.BLACK_PAWN;
-            //red pawns
-
-            startingBoardState.BoardFields[4, 2].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[4, 3].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[4, 5].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[4, 6].Type = TablutFieldType.RED_PAWN;
-
-            startingBoardState.BoardFields[2, 4].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[3, 4].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[5, 4].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[6, 4].Type = TablutFieldType.RED_PAWN;
-            //king
-            startingBoardState.BoardFields[4, 4].Type = TablutFieldType.KING;
-            return startingBoardState;
-        }
+      
     }
 }

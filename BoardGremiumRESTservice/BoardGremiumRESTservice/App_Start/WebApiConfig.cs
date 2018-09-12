@@ -19,11 +19,10 @@ namespace BoardGremiumRESTservice
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-            config.Routes.MapHttpRoute(
-                name: "DefaultApiAction",
-                routeTemplate: "api/{controller}/{action}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
+            //config.Routes.MapHttpRoute(
+            //    name: "DefaultApiAction",
+             //   routeTemplate: "api/{controller}/{action}/{id}"
+           // );
         }
     }
 }

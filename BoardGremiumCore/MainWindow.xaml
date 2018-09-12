@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BoardGremiumCore"
         mc:Ignorable="d"
         Title="BoardGremium" WindowState="Maximized">
-    <Grid Name="MainGrid" RenderTransformOrigin="0.5,0.5" Margin="1,0,-3,-12">
+    <Grid Name="MainGrid" RenderTransformOrigin="0.5,0.5" Margin="1,-1,-542,-209">
         <Grid.RenderTransform>
             <TransformGroup>
                 <ScaleTransform/>
@@ -15,7 +15,7 @@
                 <TranslateTransform/>
             </TransformGroup>
         </Grid.RenderTransform>
-        <Button Content="StartButton" HorizontalAlignment="Left" Margin="1000,450,0,0" VerticalAlignment="Top" Width="75" Name="StartButton" Click="Start_Click"/>
+        <Button Content="Create game" HorizontalAlignment="Left" Margin="1000,450,0,0" VerticalAlignment="Top" Width="94" Name="CreateButton" Click="CreateGame_Click" Height="23"/>
         <ComboBox Name="GameSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,450,0,0" Text="Select a game" Width="200" Height="20"  IsReadOnly="True" IsEditable="True">
             <ComboBoxItem Content="Tablut"></ComboBoxItem>
             <ComboBoxItem Content="NextGame"></ComboBoxItem>
@@ -24,5 +24,7 @@
             <ComboBoxItem Content="Red"></ComboBoxItem>
             <ComboBoxItem Content="Black"></ComboBoxItem>
         </ComboBox>
+        <Button Content="Join game" HorizontalAlignment="Left" Margin="484,425,0,0" VerticalAlignment="Top" Width="102" Height="29"/>
+        <TextBox x:Name="CreatedGameNameTB" HorizontalAlignment="Left" Height="23" Margin="1118,450,0,0" TextWrapping="Wrap" Text="'Tutaj wpisz nazwę gry'" VerticalAlignment="Top" Width="156"/>
     </Grid>
 </Window>

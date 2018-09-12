@@ -55,7 +55,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AbstractGame\BoardState.cs" />
+    <Compile Include="AbstractGame\DirectionEnum.cs" />
+    <Compile Include="AbstractGame\Field.cs" />
+    <Compile Include="AbstractGame\Game.cs" />
+    <Compile Include="AbstractGame\PlayerEnum.cs" />
+    <Compile Include="AbstractGame\TablutFieldType.cs" />
+    <Compile Include="GameWindow.xaml.cs">
+      <DependentUpon>GameWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tablut\TablutBoard.xaml.cs">
+      <DependentUpon>TablutBoard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tablut\TablutColorConverter.cs" />
+    <Compile Include="Tablut\TablutUtils.cs" />
+    <Compile Include="Tablut\TablutViewModel.cs" />
     <Compile Include="TextBoxOutputter.cs" />
+    <Page Include="GameWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -71,6 +90,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MoveWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Tablut\TablutBoard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -106,10 +129,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AbstractGame\CommonAbstracts.csproj">
-      <Project>{b9a36568-b69e-4be3-85df-e6f89db99b2f}</Project>
-      <Name>CommonAbstracts</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Games\Games.csproj">
       <Project>{ac839234-c761-4a06-a6f0-dae97a7a1290}</Project>
       <Name>Games</Name>

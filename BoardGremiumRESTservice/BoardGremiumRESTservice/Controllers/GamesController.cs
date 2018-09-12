@@ -36,7 +36,32 @@ namespace BoardGremiumRESTservice.Controllers
             return Ok(GameEntity);
         }
 
-        //tu GET currentPlayer gry o {id} i GET boardState gry o {id}
+        //GET api/GameEntitys/{id}/CurrentPlayer
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/CurrentPlayer")]
+        public async Task<IHttpActionResult> GetCurrentPlayer(string gameName)
+        {
+            GameEntity GameEntity = GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return NotFound();
+            }else
+            {
+                return Ok(GameEntity.CurrentPlayer);
+            }
+        }
+
+        private GameEntity GetGameByName(string gameName)
+        {
+            var allGameEntities = db.GameEntities.ToArray();
+            foreach (var gE in allGameEntities)
+            {
+                if (gE.GameName.Equals(gameName))
+                    return gE;
+            }
+            return null;
+        }
 
         // PUT: api/GameEntitys/5
         [ResponseType(typeof(void))]
@@ -73,18 +98,31 @@ namespace BoardGremiumRESTservice.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/GameEntitys
+        // POST: api/GameEntitys - string Body format: gameName,playerPawnColor(UpperCase)
         [ResponseType(typeof(GameEntity))]
-        public async Task<IHttpActionResult> PostGameEntity([FromBody]string playerPawnColor)
+        public async Task<IHttpActionResult> PostGameEntity([FromBody]string gameMessage)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            TablutFieldType playerType = MessagesConverterUtils.playerPawnFromMessage(playerPawnColor);
+
+            var gameParams = gameMessage.Split(','); // 0 - gameName,  1 - playerPawnColor
+            var gameName = gameParams[0];
+            var playerPawnColor = gameParams[1];
+
+
+            var allGameEntities = db.GameEntities.ToArray();
+            foreach( var gE in allGameEntities)
+            {
+                if(gE.GameName.Equals(gameName))
+                    return BadRequest("Error 400 - Game name already exists in the database");
+            }
+
+            TablutFieldType playerType = MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor);
             TablutGameState tgs = new TablutGameState(playerType);
-            string bsRepresentation = ConvertTablutGameStateToString(tgs);
-            GameEntity ge = new GameEntity(playerPawnColor, bsRepresentation);
+            string bsRepresentation = MessagesConverterUtils.ConvertTablutGameStateToString(tgs);
+            GameEntity ge = new GameEntity(playerPawnColor, bsRepresentation, gameName);
             db.GameEntities.Add(ge);
             await db.SaveChangesAsync();
 
@@ -129,82 +167,7 @@ namespace BoardGremiumRESTservice.Controllers
             EMPTY_FIELD - E
         */
 
-        private string ConvertTablutGameStateToString(TablutGameState tgs)
-        {
-            
-            string result = "";
-            if ((TablutFieldType)tgs.game.HumanPlayerFieldType == TablutFieldType.BLACK_PAWN)
-            {
-                result += "B,";
-            }
-            else
-            {
-                result += "R,";
-            }
-            foreach(Field f in tgs.game.currentBoardState.BoardFields)
-            {
-                if((TablutFieldType)f.Type == TablutFieldType.BLACK_PAWN)
-                {
-                    result += "B";
-                } else if ((TablutFieldType)f.Type == TablutFieldType.RED_PAWN)
-                {
-                    result += "R";
-                }else if ((TablutFieldType)f.Type == TablutFieldType.KING)
-                {
-                    result += "K";
-                }else
-                {
-                    result += "E";
-                }
-            }
-            return result;
-        }
-
-        private TablutGameState ConvertStringToTablutGameState(string stringRepresentation, string playerPawnColor)
-        {
-            BoardState result = new BoardState(TablutGame.BOARD_WIDTH, TablutGame.BOARD_HEIGHT);
-            string[] arguments = stringRepresentation.Split(',');
-            TablutFieldType playerType;
-            if(playerPawnColor.Equals("B"))
-            {
-                playerType = TablutFieldType.BLACK_PAWN;
-            }else
-            {
-                playerType = TablutFieldType.RED_PAWN;
-            }
-            var enumerator = stringRepresentation.GetEnumerator();
-            int horizontalIndex = 0, verticalIndex = 0;
-            do
-            {
-                char character = enumerator.Current;
-                if(character.Equals('B'))
-                {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = TablutFieldType.BLACK_PAWN;
-                }else if (character.Equals('R'))
-                {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = TablutFieldType.RED_PAWN;
-                }else if (character.Equals('K'))
-                {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = TablutFieldType.KING;
-                }else
-                {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = TablutFieldType.EMPTY_FIELD;
-                }
-
-                horizontalIndex++;
-                if(horizontalIndex >= TablutGame.BOARD_WIDTH )
-                {
-                    horizontalIndex = 0;
-                    verticalIndex++;
-                }
-
-                if(verticalIndex >= TablutGame.BOARD_HEIGHT)
-                {
-                    throw new ArgumentOutOfRangeException("Exception thrown while parsing BoardState string representation - string is too long");
-                }
-            } while (enumerator.MoveNext());
-            return new TablutGameState(playerType, result);
-        }
+        
         //przy POST nowej gry musimy dodawać do bazy stringRepresentation poczatkowego stanu
     }
 }

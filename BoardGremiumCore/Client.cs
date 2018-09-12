@@ -13,11 +13,14 @@ namespace BoardGremiumCore
     {
         private string server;
         private int port;
+        private string AddressIP;
 
-        public Client(string server, int port) : base()
+        private static string PostGameRoute = "/api/GameEntitys";
+
+
+        public Client(string addressIP) : base()
         {
-            this.server = server;
-            this.port = port;
+            this.AddressIP = addressIP;
         }
 
         public void SendPostMove(string message)
@@ -41,9 +44,35 @@ namespace BoardGremiumCore
             }
         }
 
-        public void SendPostGame(string message)
+        public async Task<string> SendPostGame(string jsonMessage)
         {
-      
+            //gthis.BaseAddress = new Uri(AddressIP);
+            var content = new StringContent(jsonMessage, Encoding.UTF8, "application/json");
+            var result = this.PostAsync(AddressIP + PostGameRoute, content).Result;
+            string resultContent = await result.Content.ReadAsStringAsync();
+            Console.WriteLine(resultContent);
+            return resultContent;
+        }
+
+        public async Task<string> SendGetCurrentPlayer(string gameName)
+        {
+            string uri = AddressIP + GetCurrentPlayerRoute(gameName);
+            var result = this.GetAsync(uri).Result;
+            if(result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                Console.WriteLine(resultContent);
+                return resultContent;
+            }else
+            {
+                Console.WriteLine("NOT FOUND");
+                return "NOT FOUND";
+            }
+        }
+
+        public string GetCurrentPlayerRoute(string gameName)
+        {
+            return "/api/GameEntitys/" + gameName + "/CurrentPlayer";
         }
     }
 }
