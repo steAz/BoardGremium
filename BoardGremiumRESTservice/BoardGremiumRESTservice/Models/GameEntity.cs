@@ -14,6 +14,7 @@ namespace BoardGremiumRESTservice.Models
         public string BoardStateRepresentation { get; set; }
         public string GameName { get; set; }
         public string CurrentPlayer { get; set; }
+        public int Field { get; set; }
 
         public GameEntity() { }
 
@@ -28,6 +29,30 @@ namespace BoardGremiumRESTservice.Models
             }else
             {
                 CurrentPlayer = MessagesConverterUtils.BOT_STRING;
+            }
+        }
+
+        public PlayerEnum GetEnemyPlayer()
+        {
+            PlayerEnum currentPlayer = MessagesConverterUtils.PlayerEnumFromString(CurrentPlayer);
+            if (currentPlayer.Equals(PlayerEnum.BOT_PLAYER))
+            {
+                return PlayerEnum.HUMAN_PLAYER;
+            }
+            else
+            {
+                return PlayerEnum.BOT_PLAYER;
+            }
+        }
+
+        public void ChangeCurrentPlayer()
+        {
+            if (CurrentPlayer.Equals(MessagesConverterUtils.HUMAN_STRING))
+            {
+                CurrentPlayer = MessagesConverterUtils.BOT_STRING;
+            }else
+            {
+                CurrentPlayer = MessagesConverterUtils.HUMAN_STRING;
             }
         }
     }

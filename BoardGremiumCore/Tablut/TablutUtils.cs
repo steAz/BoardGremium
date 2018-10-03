@@ -12,6 +12,11 @@ namespace BoardGremiumCore.Tablut
         public static int BOARD_WIDTH = 9;
         public static int BOARD_HEIGHT = 9;
 
+        public static char RED_CHAR = 'R';
+        public static char BLACK_CHAR = 'B';
+        public static char KING_CHAR = 'K';
+        public static char EMPTY_CHAR = 'E';
+
         static public BoardState StartingPosition()
         {
             BoardState startingBoardState = new BoardState(BOARD_WIDTH, BOARD_HEIGHT);
@@ -69,6 +74,52 @@ namespace BoardGremiumCore.Tablut
             {
                 return false;
             }
+        }
+
+        public static BoardState ConvertStringToTablutBoardState(string stringRepresentation)
+        {
+            BoardState result = new BoardState(BOARD_WIDTH, BOARD_HEIGHT);
+            string[] arguments = stringRepresentation.Split(',');
+            TablutFieldType playerType;
+            var enumerator = arguments[1].GetEnumerator();
+          //  enumerator.MoveNext();
+
+            int horizontalIndex = 0, verticalIndex = 0;
+            while(enumerator.MoveNext())
+            {
+                char character = enumerator.Current;
+                if (character.Equals(BLACK_CHAR))
+                {
+                    result.BoardFields[horizontalIndex][verticalIndex].Type = TablutFieldType.BLACK_PAWN;
+                }
+                else if (character.Equals(RED_CHAR))
+                {
+                    result.BoardFields[horizontalIndex][verticalIndex].Type = TablutFieldType.RED_PAWN;
+                }
+                else if (character.Equals(KING_CHAR))
+                {
+                    result.BoardFields[horizontalIndex][verticalIndex].Type = TablutFieldType.KING;
+                }
+                else
+                {
+                    result.BoardFields[horizontalIndex][verticalIndex].Type = TablutFieldType.EMPTY_FIELD;
+                }
+
+                horizontalIndex++;
+                if (horizontalIndex >= BOARD_WIDTH)
+                {
+                    horizontalIndex = 0;
+                    verticalIndex++;
+                }
+
+                if (verticalIndex >= BOARD_HEIGHT)
+                {
+                    //throw new ArgumentOutOfRangeException("Exception thrown while parsing BoardState string representation - string is too long");
+                    break;
+                }
+            }
+
+            return result;
         }
     }
 }

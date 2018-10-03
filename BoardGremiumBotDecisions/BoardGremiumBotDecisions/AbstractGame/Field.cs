@@ -3,25 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace AbstractGame
 {
     /// <summary>
     /// class representing single field on board
     /// </summary>
-    public class Field :  DependencyObject, ICloneable
+    public class Field : ICloneable
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public TablutFieldType Type
-        {
-            get { return (TablutFieldType)GetValue(TypeProperty); }
-            set { SetValue(TypeProperty, value); }
-        }
-
-        public static readonly DependencyProperty TypeProperty =
-                    DependencyProperty.Register("Type", typeof(TablutFieldType), typeof(Field), null);
+        public TablutFieldType Type { get; set; }
 
         public Field()
         {

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{95F9C925-9732-45BB-87F9-C932CE8BC7D6}</ProjectGuid>
+    <ProjectGuid>{9D264C35-6ABA-4551-B888-500074666548}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>BotDecisions</RootNamespace>
-    <AssemblyName>BotDecisions</AssemblyName>
+    <RootNamespace>BoardGremiumBotDecisions</RootNamespace>
+    <AssemblyName>BoardGremiumBotDecisions</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -42,19 +42,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractGame\BoardState.cs" />
+    <Compile Include="AbstractGame\Bot.cs" />
+    <Compile Include="AbstractGame\DirectionEnum.cs" />
+    <Compile Include="AbstractGame\Field.cs" />
+    <Compile Include="AbstractGame\Game.cs" />
+    <Compile Include="AbstractGame\PlayerEnum.cs" />
+    <Compile Include="AbstractGame\TablutFieldType.cs" />
     <Compile Include="BotClient.cs" />
     <Compile Include="GameState.cs" />
+    <Compile Include="MessagesConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerResponseException.cs" />
+    <Compile Include="TablutBotModel.cs" />
+    <Compile Include="TablutGame.cs" />
+    <Compile Include="TablutUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AbstractGame\CommonAbstracts.csproj">
-      <Project>{b9a36568-b69e-4be3-85df-e6f89db99b2f}</Project>
-      <Name>CommonAbstracts</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

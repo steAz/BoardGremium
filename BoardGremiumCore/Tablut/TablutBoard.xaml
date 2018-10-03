@@ -45,7 +45,7 @@
     </UserControl.Resources>
 
     <StackPanel Width="364" Height="335">
-        <ListBox ItemsSource="{Binding MyBoardFields}" ItemTemplate="{StaticResource RowTemplate}"
+        <ListBox Name="MyBoardListBox" ItemsSource="{Binding MyBoardFields}" ItemTemplate="{StaticResource RowTemplate}"
              HorizontalContentAlignment="Center" Padding="20"
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
              Type=tablut:TablutViewModel}">

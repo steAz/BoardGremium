@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AbstractGame;
+using System.Windows.Threading;
 
 namespace BoardGremiumCore.Tablut
 {
@@ -23,7 +24,22 @@ namespace BoardGremiumCore.Tablut
         public TablutBoard()
         {
             InitializeComponent();
-            
+            //  DispatcherTimer setup
+            var dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Start();
+
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            TablutViewModel vm = this.DataContext as TablutViewModel;
+            vm.UpdatePlayerTurnLabel();
+            vm.MovePawn();
+
+            // Forcing the CommandManager to raise the RequerySuggested event
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void Item_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -38,6 +54,9 @@ namespace BoardGremiumCore.Tablut
                return;
 
             vm.Clicked(content);
+            var binding = MyBoardListBox.GetBindingExpression(ListBox.ItemsSourceProperty);
+            binding.UpdateSource();
+            this.UpdateLayout();
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace BoardGremiumRESTservice
+namespace AbstractGame
 {
     public class BoardState : ICloneable
     {
@@ -13,14 +14,15 @@ namespace BoardGremiumRESTservice
 
         public BoardState(int width, int height)
         {
-            BoardFields = new Field[height, width];
+            BoardFields = new Field[height,width];
             this.Height = height;
             this.Width = width;
-            for (int i = 0; i < Height; i++)
+
+            for (int i = 0; i != this.Width; ++i)
             {
-                for (int j = 0; j < Width; j++)
+                for (int j = 0; j != this.Height; ++j)
                 {
-                    BoardFields[j,i] = new Field(j, i, TablutFieldType.EMPTY_FIELD);
+                    BoardFields[i, j] = new Field(j, i, TablutFieldType.EMPTY_FIELD);
                 }
             }
         }
@@ -30,7 +32,7 @@ namespace BoardGremiumRESTservice
         /// <returns>adjecent field</returns>
         public Field AdjecentField(Field field, DirectionEnum direction)
         {
-            switch (direction)
+            switch(direction)
             {
                 case DirectionEnum.UP:
                     {
@@ -66,9 +68,9 @@ namespace BoardGremiumRESTservice
         public object Clone()
         {
             BoardState clone = new BoardState(Width, Height);
-            for (int i = 0; i < Height; i++)
+            for(int i=0; i < Height; i++)
             {
-                for (int j = 0; j < Width; j++)
+                for(int j=0; j < Width; j++)
                 {
                     clone.BoardFields[i, j] = (Field)this.BoardFields[i, j].Clone();
                 }
@@ -76,6 +78,6 @@ namespace BoardGremiumRESTservice
             return clone;
         }
 
-
+        
     }
 }

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BoardGremiumRESTservice;
+using BoardGremiumRESTservice.Tablut;
 
 namespace BoardGremiumRESTservice.Utils
 {
-    public class MessagesConverterUtils
+    public static class MessagesConverterUtils
     {
 
         public static string RED_STRING = "RED";
@@ -20,6 +21,11 @@ namespace BoardGremiumRESTservice.Utils
         public static char KING_CHAR = 'K';
         public static char EMPTY_CHAR = 'E';
 
+        public static string UP_CHAR = "U";
+        public static string DOWN_CHAR = "D";
+        public static string LEFT_CHAR = "L";
+        public static string RIGHT_CHAR = "R";
+
         //message should be equal to "RED" or "BLACK"
         public static TablutFieldType PlayerPawnFromMessage(string message)
         {
@@ -30,6 +36,22 @@ namespace BoardGremiumRESTservice.Utils
             {
                 return TablutFieldType.BLACK_PAWN;
             }else
+            {
+                throw new ArgumentException("Wrong format of string message while converting to TablutFieldType.");
+            }
+        }
+
+        public static TablutFieldType EnemyPawnFromMessage(string message)
+        {
+            if (RED_STRING.Equals(message))
+            {
+                return TablutFieldType.BLACK_PAWN;
+            }
+            else if (BLACK_STRING.Equals(message))
+            {
+                return TablutFieldType.RED_PAWN;
+            }
+            else
             {
                 throw new ArgumentException("Wrong format of string message while converting to TablutFieldType.");
             }
@@ -61,23 +83,29 @@ namespace BoardGremiumRESTservice.Utils
             {
                 result += RED_STRING + ",";
             }
-            foreach (Field f in tgs.game.currentBoardState.BoardFields)
+            int boardWidth = tgs.game.BoardWidth;
+            int boardHeight = tgs.game.BoardHeight;
+            for(int i=0; i < boardHeight; i++)
             {
-                if ((TablutFieldType)f.Type == TablutFieldType.BLACK_PAWN)
+                for(int j=0; j < boardWidth; j++)
                 {
-                    result += BLACK_CHAR;
-                }
-                else if ((TablutFieldType)f.Type == TablutFieldType.RED_PAWN)
-                {
-                    result += RED_CHAR;
-                }
-                else if ((TablutFieldType)f.Type == TablutFieldType.KING)
-                {
-                    result += KING_CHAR;
-                }
-                else
-                {
-                    result += EMPTY_CHAR;
+                    Field f = tgs.game.currentBoardState.BoardFields[i, j];
+                    if ((TablutFieldType)f.Type == TablutFieldType.BLACK_PAWN)
+                    {
+                        result += BLACK_CHAR;
+                    }
+                    else if ((TablutFieldType)f.Type == TablutFieldType.RED_PAWN)
+                    {
+                        result += RED_CHAR;
+                    }
+                    else if ((TablutFieldType)f.Type == TablutFieldType.KING)
+                    {
+                        result += KING_CHAR;
+                    }
+                    else
+                    {
+                        result += EMPTY_CHAR;
+                    }
                 }
             }
             return result;
@@ -96,9 +124,10 @@ namespace BoardGremiumRESTservice.Utils
             {
                 playerType = TablutFieldType.RED_PAWN;
             }
-            var enumerator = stringRepresentation.GetEnumerator();
+            //var enumerator = stringRepresentation.GetEnumerator();
+            var enumerator = arguments[1].GetEnumerator();
             int horizontalIndex = 0, verticalIndex = 0;
-            do
+            while (enumerator.MoveNext())
             {
                 char character = enumerator.Current;
                 if (character.Equals(BLACK_CHAR))
@@ -127,10 +156,57 @@ namespace BoardGremiumRESTservice.Utils
 
                 if (verticalIndex >= TablutGame.BOARD_HEIGHT)
                 {
-                    throw new ArgumentOutOfRangeException("Exception thrown while parsing BoardState string representation - string is too long");
+                    //throw new ArgumentOutOfRangeException("Exception thrown while parsing BoardState string representation - string is too long");
+                    break;
                 }
-            } while (enumerator.MoveNext());
+            }
             return new TablutGameState(playerType, result);
+        }
+
+        //move syntax:
+        //var message = "move " + selectedField.X.ToString() + " " + selectedField.Y.ToString()
+        //                   + " " + selectedDirection.ToString().First() + " " + selectedNumOfFields.ToString();
+        public static TablutMove ConvertStringToTablutMove(string moveInfo, TablutGameState gameState)
+        {
+            string[] moveParams = moveInfo.Split(' ');
+            int x = Int32.Parse(moveParams[1]);
+            int y = Int32.Parse(moveParams[2]);
+            DirectionEnum direction = DirectionFromChar(moveParams[3]);
+            int numOfFields = Int32.Parse(moveParams[4]);
+            return new TablutMove(x, y, direction, numOfFields, gameState);
+        }
+
+        public static PlayerEnum PlayerEnumFromString(string playerString)
+        {
+            if(playerString.Equals(HUMAN_STRING))
+            {
+                return PlayerEnum.HUMAN_PLAYER;
+            }else
+            {
+                return PlayerEnum.BOT_PLAYER;
+            }
+        }
+
+        private static DirectionEnum DirectionFromChar(string directionChar)
+        {
+            if(directionChar.Equals(UP_CHAR))
+            {
+                return DirectionEnum.UP;
+            }else if (directionChar.Equals(DOWN_CHAR))
+            {
+                return DirectionEnum.DOWN;
+            }
+            else if (directionChar.Equals(LEFT_CHAR))
+            {
+                return DirectionEnum.LEFT;
+            }
+            else if (directionChar.Equals(RIGHT_CHAR))
+            {
+                return DirectionEnum.RIGHT;
+            }else
+            {
+                return DirectionEnum.NONE;
+            }
         }
     }
 }

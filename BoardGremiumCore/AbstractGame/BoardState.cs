@@ -8,7 +8,7 @@ namespace AbstractGame
 {
     public class BoardState : ICloneable
     {
-        public List<List<Field>> BoardFields { get; }
+        public List<List<Field>> BoardFields { get; set; }
         public int Height { get; }
         public int Width { get; }
 

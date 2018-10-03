@@ -165,7 +165,7 @@ namespace BoardGremiumCore
 
 
                 SetCoordinates(button, field);
-                button.Click += new RoutedEventHandler(CheckerClick);
+              //  button.Click += new RoutedEventHandler(CheckerClick);
                 MainGrid.Children.Add(button);
             }
         }
@@ -185,7 +185,7 @@ namespace BoardGremiumCore
             
          //   if (IsChosenMoveValid(mw.NumOfFields, mw.Direction, clicked.RepresentedField))
         //    {
-                MakePlayerMove(clicked.RepresentedField, mw.Direction, mw.NumOfFields);
+                //MakePlayerMove(clicked.RepresentedField, mw.Direction, mw.NumOfFields);
                 //if(game.IsGameWon(game.currentBoardState, PlayerEnum.HUMAN_PLAYER))
                 //{
                 //    MessageBox.Show("Gracz wygrał, reset planszy.");
@@ -224,21 +224,21 @@ namespace BoardGremiumCore
             return true;
         }
 
-        private void MakePlayerMove(Field selectedField, DirectionEnum selectedDirection, int selectedNumOfFields)
-        {
-            var message = "move p " + selectedField.X.ToString() + " " + selectedField.Y.ToString()
-                            + " " + selectedDirection.ToString().First() + " " + selectedNumOfFields.ToString();
-            client.SendPostMove(message);
+        //private void MakePlayerMove(Field selectedField, DirectionEnum selectedDirection, int selectedNumOfFields)
+        //{
+        //    var message = "move p " + selectedField.X.ToString() + " " + selectedField.Y.ToString()
+        //                    + " " + selectedDirection.ToString().First() + " " + selectedNumOfFields.ToString();
+        //    client.SendPostMove(message, gameName);
 
-            //server callback message
-            bool isRightMove;
-            ReceiveMessage(selectedField, selectedDirection, selectedNumOfFields, out isRightMove);
-            //bot move message
-            if (isRightMove) ReceiveMessage(selectedField, selectedDirection, selectedNumOfFields, out isRightMove);
+        //    //server callback message
+        //    bool isRightMove;
+        //    ReceiveMessage(selectedField, selectedDirection, selectedNumOfFields, out isRightMove);
+        //    //bot move message
+        //    if (isRightMove) ReceiveMessage(selectedField, selectedDirection, selectedNumOfFields, out isRightMove);
 
-            MainGrid.Children.Clear();
-            DisplayBoard();
-        }
+        //    MainGrid.Children.Clear();
+        //    DisplayBoard();
+        //}
 
         private void ChangeBoardStateAfterMove(DirectionEnum direction, Field selectedField, int numOfFields)
         {
@@ -354,7 +354,7 @@ namespace BoardGremiumCore
 
         private void LoadBoardForGame(string titleOfGame, out TablutFieldType gamerPawns)
         {
-            MainGrid.Children.Clear();
+            //MainGrid.Children.Clear();
             this.Title = titleOfGame;
             gamerPawns = TablutFieldType.EMPTY_FIELD;
 
@@ -370,8 +370,8 @@ namespace BoardGremiumCore
                     gamerPawns = TablutFieldType.BLACK_PAWN;
 
               //  currentBoardState = StartingPosition(9, 9);
-                this.SetDictForGraphics(redPath, blackPath, kingPath);
-                PrepareGraphics(boardPath);
+                //this.SetDictForGraphics(redPath, blackPath, kingPath);
+                //PrepareGraphics(boardPath);
                 PrepareDebugBox();
                 DisplayBoard();
 
@@ -383,7 +383,7 @@ namespace BoardGremiumCore
             debugBox = new TextBox
             {
                 Name = "debugBox",
-                Width = 195,
+                Width = 1000,
                 Height = 850,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
@@ -397,7 +397,7 @@ namespace BoardGremiumCore
 
         private void DisplayBoard()
         {
-            PrepareGraphics("viewObjects\\Tablut.jpg");
+            //PrepareGraphics("viewObjects\\Tablut.jpg");
             MainGrid.Children.Add(debugBox);
             int counterOfButtons = 0;
 
@@ -429,23 +429,11 @@ namespace BoardGremiumCore
 
                 if(!result.Result.Contains("Error 400"))
                 {
-                    var gameWindow = new GameWindow(gamerPawns, CreatedGameNameTB.Text)
+                    var gameWindow = new GameWindow(gamerPawns, CreatedGameNameTB.Text, client)
                     {
                         Owner = this
                     };
                     gameWindow.Show();
-
-                    var getResult = client.SendGetCurrentPlayer(CreatedGameNameTB.Text);
-                    if(getResult.Result.Contains("BOT"))
-                    {
-                        gameWindow.PlayerTurnLabel.Content = "Enemy makes move.";
-                    }else if (getResult.Result.Contains("HUMAN"))
-                    {
-                        gameWindow.PlayerTurnLabel.Content = "Make your move, biatch";
-                    }else
-                    {
-                        gameWindow.PlayerTurnLabel.Content = "WTF";
-                    }
 
                 }
  

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Ogólne informacje o zestawie są kontrolowane poprzez następujący 
 // zestaw atrybutów. Zmień wartości tych atrybutów, aby zmodyfikować informacje
 // powiązane z zestawem.
-[assembly: AssemblyTitle("BotDecisions")]
+[assembly: AssemblyTitle("BoardGremiumBotDecisions")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BotDecisions")]
+[assembly: AssemblyProduct("BoardGremiumBotDecisions")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Następujący identyfikator GUID jest identyfikatorem biblioteki typów w przypadku udostępnienia tego projektu w modelu COM
-[assembly: Guid("95f9c925-9732-45bb-87f9-c932ce8bc7d6")]
+[assembly: Guid("9d264c35-6aba-4551-b888-500074666548")]
 
 // Informacje o wersji zestawu zawierają następujące cztery wartości:
 //

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BoardGremiumRESTservice.Tablut;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -21,17 +22,28 @@ namespace BoardGremiumRESTservice
             game.currentBoardState = bs;
         }
 
-        public Boolean IsChosenMoveValid(int numOfFields, DirectionEnum direction, Field field)
+        public Boolean IsChosenMoveValid(TablutMove move, PlayerEnum currentPlayer)
         {
-            //Field field = game.currentBoardState.BoardFields[yCoord,xCoord];
-            if (numOfFields <= 0)
-                return false;
-            else if (numOfFields > game.CalculateMaximumPossibleRange(game.currentBoardState, field, direction))
-                return false;
-            else if (((TablutFieldType)game.HumanPlayerFieldType == TablutFieldType.BLACK_PAWN && (TablutFieldType)field.Type != TablutFieldType.BLACK_PAWN)
-                || ((TablutFieldType)game.HumanPlayerFieldType == TablutFieldType.RED_PAWN && (TablutFieldType)field.Type == TablutFieldType.BLACK_PAWN))
-                return false;
 
+            Field field = game.currentBoardState.BoardFields[move.Y,move.X];
+            TablutFieldType currentFieldType;
+            if(currentPlayer.Equals(PlayerEnum.HUMAN_PLAYER))
+            {
+                currentFieldType = (TablutFieldType)game.HumanPlayerFieldType;
+            }else
+            {
+                currentFieldType = (TablutFieldType)game.BotPlayerFieldType;
+            }
+            if (move.NumOfFields <= 0)
+                return false;
+            else if (move.NumOfFields > game.CalculateMaximumPossibleRange(game.currentBoardState, field, move.Direction))
+            {
+                return false;
+            } 
+            else if (!PawnsInSameTeam(currentFieldType, (TablutFieldType)field.Type))
+            {
+                return false;
+            }
             return true;
         }
 
@@ -55,7 +67,7 @@ namespace BoardGremiumRESTservice
         /// <summary>
         /// returns field on which there was pawn taken off for player
         /// </summary>
-        public Field getMissingPawnForPlayer(BoardState oldBS, BoardState newBS, PlayerEnum player)
+        public Field GetMissingPawnForPlayer(BoardState oldBS, BoardState newBS, PlayerEnum player)
         {
             TablutFieldType takenType;
             if (player.Equals(PlayerEnum.HUMAN_PLAYER))
@@ -88,7 +100,7 @@ namespace BoardGremiumRESTservice
         /// <summary>
         /// checks if 2 pawns are in the same team, e.g white pawn and king -> true white pawn and black pawn -> false
         /// </summary>
-        public bool pawnsInSameTeam(TablutFieldType t1, TablutFieldType t2)
+        public bool PawnsInSameTeam(TablutFieldType t1, TablutFieldType t2)
         {
             if ((t1.Equals(t2)) ||
                (t1.Equals(TablutFieldType.RED_PAWN) && t2.Equals(TablutFieldType.KING)) ||
@@ -99,7 +111,7 @@ namespace BoardGremiumRESTservice
             else return false;
         }
 
-        public DirectionEnum getDirectionFromMove(Field source, Field destination)
+        public DirectionEnum GetDirectionFromMove(Field source, Field destination)
         {
             if (source.X > destination.X)
                 return DirectionEnum.LEFT;
@@ -110,7 +122,7 @@ namespace BoardGremiumRESTservice
             else return DirectionEnum.DOWN;
         }
 
-        public int getNumOfFieldsFromMove(Field source, Field destination, DirectionEnum direction)
+        public int GetNumOfFieldsFromMove(Field source, Field destination, DirectionEnum direction)
         {
             switch (direction)
             {

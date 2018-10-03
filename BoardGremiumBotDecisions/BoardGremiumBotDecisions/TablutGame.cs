@@ -1,9 +1,11 @@
-﻿using System;
+﻿using AbstractGame;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace BoardGremiumRESTservice
+namespace BoardGremiumBotDecisions
 {
     public class TablutGame : Game
     {
@@ -188,7 +190,7 @@ namespace BoardGremiumRESTservice
                         break;
                     }
             }
-            board.BoardFields[xCoord, yCoord].Type = type;
+            board.BoardFields[yCoord, xCoord].Type = type;
             field.Type = TablutFieldType.EMPTY_FIELD;
             TakeEnemyPawns(board, board.BoardFields[yCoord, xCoord]);
         }

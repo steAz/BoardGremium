@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using BoardGremiumRESTservice.Models;
 using BoardGremiumRESTservice.Utils;
+using System.Net.Http.Headers;
 
 namespace BoardGremiumRESTservice.Controllers
 {
@@ -36,31 +37,73 @@ namespace BoardGremiumRESTservice.Controllers
             return Ok(GameEntity);
         }
 
-        //GET api/GameEntitys/{id}/CurrentPlayer
+        //GET api/GameEntitys/{gameName}/CurrentPlayer
         [ResponseType(typeof(string))]
         [HttpGet]
         [Route("api/GameEntitys/{gameName}/CurrentPlayer")]
-        public async Task<IHttpActionResult> GetCurrentPlayer(string gameName)
+        public HttpResponseMessage GetCurrentPlayer(string gameName)
         {
-            GameEntity GameEntity = GetGameByName(gameName);
+            GameEntity GameEntity = db.GetGameByName(gameName);
             if (GameEntity == null)
             {
-                return NotFound();
-            }else
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
             {
-                return Ok(GameEntity.CurrentPlayer);
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(GameEntity.CurrentPlayer)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
             }
         }
 
-        private GameEntity GetGameByName(string gameName)
+        //GET api/GameEntitys/{gameName}/CurrentPlayer
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/CurrentBoardState")]
+        public HttpResponseMessage GetCurrentBoardState(string gameName)
         {
-            var allGameEntities = db.GameEntities.ToArray();
-            foreach (var gE in allGameEntities)
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
             {
-                if (gE.GameName.Equals(gameName))
-                    return gE;
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
-            return null;
+            else
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(GameEntity.BoardStateRepresentation)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
+        }
+
+        //GET api/GameEntitys/{gameName}/BotColor
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/BotPawnColor")]
+        public HttpResponseMessage GetBotPawnColor(string gameName)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                var botPawnColor = MessagesConverterUtils.EnemyPawnFromMessage(GameEntity.PlayerPawnColor);
+                var botPawnColorString = MessagesConverterUtils.MessageFromPlayerPawn(botPawnColor);
+
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(botPawnColorString)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
         }
 
         // PUT: api/GameEntitys/5

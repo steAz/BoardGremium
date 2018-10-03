@@ -59,5 +59,16 @@ namespace BoardGremiumCore
 
             this.Close();
         }
+
+        public Boolean IsFilled()
+        {
+            if(NumOfFields == 0 || Direction.Equals(null))
+            {
+                return false;
+            }else
+            {
+                return true;
+            }
+        }
     }
 }

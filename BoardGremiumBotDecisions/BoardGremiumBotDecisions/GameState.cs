@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AbstractGame;
 
-namespace BotDecisions
+namespace BoardGremiumBotDecisions
 {
     class GameState
     {

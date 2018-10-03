@@ -8,7 +8,7 @@ using AbstractGame;
 
 namespace BoardGremiumCore.Tablut
 {
-    [ValueConversion(typeof(Enum), typeof(Brush))]
+    [ValueConversion(typeof(TablutFieldType), typeof(Brush))]
     public class TablutColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType,

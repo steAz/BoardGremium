@@ -24,14 +24,16 @@ namespace BoardGremiumCore
         public BoardState DisplayedBoardState;
         public TablutViewModel TablutBoard;
 
-        public GameWindow(TablutFieldType playerPawn, string gameName)
+        public GameWindow(TablutFieldType playerPawn, string gameName, Client httpClient)
         {
             DisplayedBoardState = TablutUtils.StartingPosition();
 
-            TablutBoard = new TablutViewModel(DisplayedBoardState, playerPawn, gameName);
+            
 
             InitializeComponent();
+            TablutBoard = new TablutViewModel(DisplayedBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel);
             tablutBoard.DataContext = TablutBoard;
+            
         }
     }
 }

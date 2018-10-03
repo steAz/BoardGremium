@@ -109,6 +109,7 @@
     <Compile Include="CommonAbstracts\TablutFieldType.cs" />
     <Compile Include="Tablut\TablutGame.cs" />
     <Compile Include="Tablut\TablutGameState.cs" />
+    <Compile Include="Tablut\TablutMove.cs" />
     <Compile Include="Utils\MessagesConverterUtils.cs" />
   </ItemGroup>
   <ItemGroup>
