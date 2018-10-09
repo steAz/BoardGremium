@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BoardGremiumBotDecisions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,11 +27,90 @@ namespace AbstractGame
                 }
             }
         }
+
+        public int NumberOfPawnsForPlayer(TablutFieldType forPlayer)
+        {
+            int result = 0;
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    if (!BoardFields[i, j].Type.Equals(TablutFieldType.EMPTY_FIELD))
+                    {
+                        if(TablutUtils.PawnsInSameTeam(BoardFields[i, j].Type, forPlayer))
+                        {
+                            if(BoardFields[i, j].Type != TablutFieldType.KING) // counting without king to heuristic
+                                result++;
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        public Field GetKingTablutField()
+        {
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    if (BoardFields[i, j].Type.Equals(TablutFieldType.KING))
+                    {
+                        return BoardFields[i, j];
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public int ClosestCornerDistanceFromKing()
+        {
+            Field kingField = GetKingTablutField();
+
+            int upLeftDistance = DistanceToUpperLeftCorner(kingField);
+            int upRightDistance = DistanceToUpperRightCorner(kingField);
+            int downLeftDistance = DistanceToDownLeftCorner(kingField);
+            int downRightDistance = DistanceToDownRightCorner(kingField);
+
+            int minimum = upLeftDistance;
+            if (upRightDistance < minimum)
+                minimum = upRightDistance;
+            if (downLeftDistance < minimum)
+                minimum = downLeftDistance;
+            if (downRightDistance < minimum)
+                minimum = downRightDistance;
+
+            return minimum;
+
+        }
+
+        private int DistanceToUpperLeftCorner(Field kingField)
+        {
+
+            return kingField.X + kingField.Y;
+        }
+
+        private int DistanceToUpperRightCorner(Field kingField)
+        {
+            return (Width - kingField.X - 1) + kingField.Y;
+        }
+
+        private int DistanceToDownLeftCorner(Field kingField)
+        {
+            return kingField.X + (Height - kingField.Y - 1);
+        }
+
+        private int DistanceToDownRightCorner(Field kingField)
+        {
+            return (Width - kingField.X - 1) + (Height - kingField.Y - 1);
+        }
+
         /// <summary>
         /// returns adjecent Field object or null if there is no adjecent field in that direction
         /// </summary>
         /// <returns>adjecent field</returns>
-        public Field AdjecentField(Field field, DirectionEnum direction)
+        public Field AdjacentField(Field field, DirectionEnum direction)
         {
             switch(direction)
             {

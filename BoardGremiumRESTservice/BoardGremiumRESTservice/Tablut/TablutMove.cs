@@ -19,7 +19,7 @@ namespace BoardGremiumRESTservice.Tablut
             this.Y = y;
             this.Direction = direction;
             this.NumOfFields = numOfFields;
-            this.ChosenField = gameState.game.currentBoardState.BoardFields[Y, X];
+            this.ChosenField = gameState.game.currentBoardState.BoardFields[X, Y];
         }
     }
 }

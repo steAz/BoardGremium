@@ -26,6 +26,9 @@ namespace BoardGremiumRESTservice.Utils
         public static string LEFT_CHAR = "L";
         public static string RIGHT_CHAR = "R";
 
+        public static string FIRST_JOINED_STRING = "First joined";
+        public static string FIRST_NOT_JOINED_STRING = "First not joined";
+
         //message should be equal to "RED" or "BLACK"
         public static TablutFieldType PlayerPawnFromMessage(string message)
         {
@@ -68,6 +71,20 @@ namespace BoardGremiumRESTservice.Utils
             }else
             {
                 throw new ArgumentException("Wrong value of Enum while converting from TablutFieldType");
+            }
+        }
+
+        public static string GetEnemyColor(string playerColor)
+        {
+            if(playerColor.Equals(RED_STRING))
+            {
+                return BLACK_STRING;
+            }else if(playerColor.Equals(BLACK_STRING))
+            {
+                return RED_STRING;
+            }else
+            {
+                throw new ArgumentException("Wrong value of playerColor while getting enemy color");
             }
         }
 
@@ -169,8 +186,8 @@ namespace BoardGremiumRESTservice.Utils
         public static TablutMove ConvertStringToTablutMove(string moveInfo, TablutGameState gameState)
         {
             string[] moveParams = moveInfo.Split(' ');
-            int x = Int32.Parse(moveParams[1]);
-            int y = Int32.Parse(moveParams[2]);
+            int y = Int32.Parse(moveParams[1]);
+            int x = Int32.Parse(moveParams[2]);
             DirectionEnum direction = DirectionFromChar(moveParams[3]);
             int numOfFields = Int32.Parse(moveParams[4]);
             return new TablutMove(x, y, direction, numOfFields, gameState);

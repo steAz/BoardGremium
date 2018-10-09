@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AbstractGame;
 using System.Windows.Controls;
 using BoardGremiumCore.Communication;
+using System.Net.Http;
 
 namespace BoardGremiumCore.Tablut
 {
@@ -16,17 +17,27 @@ namespace BoardGremiumCore.Tablut
         public string GameName { get; set; }
         public Client Client { get; }
         public Label PlayerTurnLabel; //label displaying information about current player
+        public bool IsGameFinished;
+        public bool IsBot2BotGame { get; set; }
+        public bool GameFinishLogged { get; set; }
 
         public TablutViewModel() { MyBoardState = new BoardState(TablutUtils.BOARD_WIDTH, TablutUtils.BOARD_HEIGHT);  }
 
-        public TablutViewModel(BoardState bs, TablutFieldType playerPawn, string gameName, Client httpClient, Label playerTurnLabel)
+        public TablutViewModel(BoardState bs, TablutFieldType playerPawn, string gameName, Client httpClient, Label playerTurnLabel, string gameMode)
         {
             MyBoardState = bs;
             this.PlayerPawn = playerPawn;
             this.GameName = gameName;
+            this.GameFinishLogged = false;
             Client = httpClient;
             PlayerTurnLabel = playerTurnLabel;
             UpdatePlayerTurnLabel();
+
+            if (gameMode == "Bot vs Bot")
+                this.IsBot2BotGame = true;
+            else
+                this.IsBot2BotGame = false;
+
         }
 
         public List<List<Field>> MyBoardFields
@@ -40,29 +51,34 @@ namespace BoardGremiumCore.Tablut
         //returns true if game is over
         public bool Clicked(Field field)
         {
-            if(Client.IsPlayerTurn(GameName))
+            if(Client.IsPlayerTurn(GameName) && !IsGameFinished)
             {
+                CheckIsGameWon();
                 if (TablutUtils.IsTargetSameType(PlayerPawn, (TablutFieldType)field.Type))
                 {
                     MoveWindow mw = new MoveWindow();
                     mw.ShowDialog();
-                    if (mw.IsFilled())
+                    if (mw.IsFilled())  // it checks if each of parameters of the move filled 
                     {
                         MakePlayerMove(field, mw.Direction, mw.NumOfFields);
                         System.Threading.Thread.Sleep(1000);
+                        if(IsGameFinished)
+                        {
+                            return true;
+                        }
                     }
                 }
                 //updating gameState after enemy's move
-                while(true)
-                {
-                    //player's turn
-                    if(Client.IsPlayerTurn(GameName))  // ZALATWMY TO DISPATCHEREM JAK Z AKTUALIZOWANIEM PIERWSZEGO RUCHU BOTA
-                    {
-                        UpdatePlayerTurnLabel();
-                        MovePawn();
-                        break;
-                    }
-                }
+                //while(true)
+                //{
+                //    //player's turn
+                //    if(Client.IsPlayerTurn(GameName))  // ZALATWMY TO DISPATCHEREM JAK Z AKTUALIZOWANIEM PIERWSZEGO RUCHU BOTA
+                //    {
+                //        UpdatePlayerTurnLabel();
+                //        MovePawn();
+                //        break;
+                //    }
+                //}
             }
             return false;
         }
@@ -77,6 +93,7 @@ namespace BoardGremiumCore.Tablut
             if(result.Result.Contains("ok"))
             {
                 MovePawn();
+                CheckIsGameWon();
                 UpdatePlayerTurnLabel();
             }else
             {
@@ -115,6 +132,28 @@ namespace BoardGremiumCore.Tablut
             else
             {
                 PlayerTurnLabel.Content = "Enemy makes move.";
+            }
+        }
+
+        public void CheckIsGameWon()
+        {
+            IsGameFinished = Client.IsGameWon(GameName);
+            if(IsGameFinished)
+            {
+                if (!GameFinishLogged)
+                {
+                    try
+                    {
+                        string winnerColor = Client.GetWinnerColor(GameName);
+                        Console.WriteLine("Game has finished. " + winnerColor + " pawns won.");
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        Console.WriteLine("Error while obtaining winner player: " + e.Message);
+                    }
+
+                    GameFinishLogged = true;
+                }
             }
         }
     }

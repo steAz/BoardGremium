@@ -9,7 +9,11 @@ namespace AbstractGame
     public class Bot
     {
         public Game Game { get; }
-        public int Heuristics(BoardState bs)
+        public BoardState TheBestBoardState { get; set; }
+        public List<BoardState> AllTheBestBoardStates { get; }
+        public int TheBestDepth { get; set; }
+
+        public virtual int Heuristic(BoardState bs)
         {
             return 0;
         }
@@ -17,13 +21,14 @@ namespace AbstractGame
         public Bot(Game game)
         {
             this.Game = game;
+            AllTheBestBoardStates = new List<BoardState>();
         }
         /// <summary>
         /// The simplest implementation of makingMove - pics random possible move and returns it
         /// </summary>
-        public BoardState MakeMove()
+        public virtual BoardState MakeMove()
         {
-            List<BoardState> possibleMoves = Game.GetPossibleBoardStates(Game.currentBoardState, PlayerEnum.BOT_PLAYER);
+            List<BoardState> possibleMoves = Game.GetPossibleBoardStates(Game.currentBoardState, Game.BotPlayerFieldType);
             Random rnd = new Random();
             int randNumber = rnd.Next(possibleMoves.Count);
             return possibleMoves[randNumber];

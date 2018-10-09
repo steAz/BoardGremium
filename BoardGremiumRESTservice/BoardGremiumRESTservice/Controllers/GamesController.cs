@@ -59,6 +59,30 @@ namespace BoardGremiumRESTservice.Controllers
             }
         }
 
+        [ResponseType(typeof(string))]
+        [HttpPost]
+        [Route("api/GameEntitys/{gameName}/HumanPlayerJoined")]
+        public HttpResponseMessage PostHumanPlayerJoined(string gameName)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                GameEntity.IsFirstPlayerJoined = true;
+                db.Entry(GameEntity).State = EntityState.Modified;
+                db.SaveChanges();
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent("OK")
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
+        }
+
         //GET api/GameEntitys/{gameName}/CurrentPlayer
         [ResponseType(typeof(string))]
         [HttpGet]
@@ -94,12 +118,156 @@ namespace BoardGremiumRESTservice.Controllers
             }
             else
             {
-                var botPawnColor = MessagesConverterUtils.EnemyPawnFromMessage(GameEntity.PlayerPawnColor);
-                var botPawnColorString = MessagesConverterUtils.MessageFromPlayerPawn(botPawnColor);
+                string botPawnColorString;
+                if (!GameEntity.IsFirstPlayerJoined)
+                {
+                    GameEntity.IsFirstPlayerJoined = true; // first player joined
+                    botPawnColorString = GameEntity.PlayerPawnColor;
+                }
+                else if (!GameEntity.IsSecPlayerJoined)
+                {
+                    GameEntity.IsSecPlayerJoined = true;
+                    var botPawnColor = MessagesConverterUtils.EnemyPawnFromMessage(GameEntity.PlayerPawnColor);
+                    botPawnColorString = MessagesConverterUtils.MessageFromPlayerPawn(botPawnColor);
+                }
+                else // 
+                {
+                    // var botPawnColor = MessagesConverterUtils.EnemyPawnFromMessage(GameEntity.PlayerPawnColor);
+                    // botPawnColorString = MessagesConverterUtils.MessageFromPlayerPawn(botPawnColor);
+                    //after error
+                    botPawnColorString = GameEntity.PlayerPawnColor;
+                    GameEntity.IsSecPlayerJoined = false;
+                }
 
                 var response = new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(botPawnColorString)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                db.Entry(GameEntity).State = EntityState.Modified;
+                db.SaveChanges();
+                return response;
+            }
+
+            
+        }
+
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/IsWon")]
+        public HttpResponseMessage GetIsGameWon(string gameName)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                bool isWon = GameEntity.IsGameWon;
+
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(isWon.ToString())
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
+        }
+
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/IsFirstPlayerJoined")]
+        public HttpResponseMessage GetIsFirstPlayerJoined(string gameName)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                bool isFirstPlayerJoined = GameEntity.IsFirstPlayerJoined;
+                bool isSecondPlayerJoined = GameEntity.IsSecPlayerJoined;
+                string isFirstPlayerJoinedMessage;
+
+                //This GET is sent only once on start of game in bot application.
+                //So if both bools are true(firstJoined and secondJoined) it means that game has stopped and bots are reconnecting.
+                //Thats why we set both bools to false.
+                if(isFirstPlayerJoined && isSecondPlayerJoined)
+                {
+                    isFirstPlayerJoined = false;
+                    isSecondPlayerJoined = false;
+                }
+                if(isFirstPlayerJoined)
+                {
+                    isFirstPlayerJoinedMessage = MessagesConverterUtils.FIRST_JOINED_STRING;
+                }else
+                {
+                    isFirstPlayerJoinedMessage = MessagesConverterUtils.FIRST_NOT_JOINED_STRING;
+                }
+
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(isFirstPlayerJoinedMessage)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
+        }
+
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/FirstPlayerColor")]
+        public HttpResponseMessage GetFirstPlayerColor(string gameName)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                string firstPlayerColor = GameEntity.PlayerPawnColor;
+
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(firstPlayerColor)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
+        }
+
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/SecondPlayerColor")]
+        public HttpResponseMessage GetSecondPlayerColor(string gameName)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                HttpResponseMessage response = null;
+                string secondPlayerColor = "";
+                try
+                {
+                    secondPlayerColor = MessagesConverterUtils.GetEnemyColor(GameEntity.PlayerPawnColor);
+                }catch(ArgumentException e)
+                {
+                    response = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                    {
+                        Content = new StringContent(e.Message)
+                    };
+                }
+                
+
+                response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(secondPlayerColor)
                 };
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
                 return response;

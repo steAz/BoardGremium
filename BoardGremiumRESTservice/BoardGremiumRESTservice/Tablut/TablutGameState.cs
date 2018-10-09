@@ -25,11 +25,11 @@ namespace BoardGremiumRESTservice
         public Boolean IsChosenMoveValid(TablutMove move, PlayerEnum currentPlayer)
         {
 
-            Field field = game.currentBoardState.BoardFields[move.Y,move.X];
+            Field field = game.currentBoardState.BoardFields[move.X,move.Y];
             TablutFieldType currentFieldType;
             if(currentPlayer.Equals(PlayerEnum.HUMAN_PLAYER))
             {
-                currentFieldType = (TablutFieldType)game.HumanPlayerFieldType;
+                currentFieldType = (TablutFieldType)game.HumanPlayerFieldType;// change HUmanPlayerType to CreatorFieldType ?? - so we can play bot-bot or human-human
             }else
             {
                 currentFieldType = (TablutFieldType)game.BotPlayerFieldType;
@@ -84,7 +84,6 @@ namespace BoardGremiumRESTservice
                 {
                     if (oldBS.BoardFields[i, j].Type.Equals(takenType) && !newBS.BoardFields[i, j].Type.Equals(takenType))
                     {
-                        Console.WriteLine("Returns field coords: " + i + ";" + j);
                         return newBS.BoardFields[i, j];
                     }
                 }

@@ -23,24 +23,18 @@ namespace BoardGremiumBotDecisions
                 this.BotPlayerFieldType = TablutFieldType.RED_PAWN;
 
         }
-        public override List<BoardState> GetPossibleBoardStates(BoardState initial, PlayerEnum playerType)
+        public override List<BoardState> GetPossibleBoardStates(BoardState initial, TablutFieldType playerFieldType)
         {
-            TablutFieldType pawnType;
-            //for now we assume player playes white pawns, and bot plays black
-            if (playerType == PlayerEnum.BOT_PLAYER)
-                pawnType = (TablutFieldType)BotPlayerFieldType;
-            else
-                pawnType = (TablutFieldType)HumanPlayerFieldType;
             List<BoardState> result = new List<BoardState>();
             for (int i = 0; i < BOARD_HEIGHT; i++)
             {
                 for (int j = 0; j < BOARD_WIDTH; j++)
                 {
-                    if ((TablutFieldType)initial.BoardFields[i, j].Type == pawnType)
+                    if ((TablutFieldType)initial.BoardFields[i, j].Type == playerFieldType)
                     {
                         result.AddRange(GetPossibleBoardStatesForPawn(initial, initial.BoardFields[i, j]));
                     }
-                    if (pawnType == TablutFieldType.RED_PAWN)
+                    if (playerFieldType == TablutFieldType.RED_PAWN)
                     {
                         //we add moves of the king
                         if ((TablutFieldType)initial.BoardFields[i, j].Type == TablutFieldType.KING)
@@ -224,11 +218,11 @@ namespace BoardGremiumBotDecisions
                     return;
                 else enemyPawnType = TablutFieldType.BLACK_PAWN;
             }
-            Field adjecentField = bs.AdjecentField(ourField, direction);
+            Field adjecentField = bs.AdjacentField(ourField, direction);
             Field nextField;
             if (adjecentField != null && (TablutFieldType)adjecentField.Type == enemyPawnType)
             {
-                nextField = bs.AdjecentField(adjecentField, direction);
+                nextField = bs.AdjacentField(adjecentField, direction);
                 if (enemyPawnType == TablutFieldType.RED_PAWN)
                 {
                     if (nextField != null && (TablutFieldType)nextField.Type == TablutFieldType.BLACK_PAWN)
@@ -298,10 +292,10 @@ namespace BoardGremiumBotDecisions
                     break;
             }
             Field adjecentUp, adjecentDown, adjecentRight, adjecentLeft;
-            adjecentUp = bs.AdjecentField(kingField, DirectionEnum.UP);
-            adjecentDown = bs.AdjecentField(kingField, DirectionEnum.DOWN);
-            adjecentLeft = bs.AdjecentField(kingField, DirectionEnum.LEFT);
-            adjecentRight = bs.AdjecentField(kingField, DirectionEnum.RIGHT);
+            adjecentUp = bs.AdjacentField(kingField, DirectionEnum.UP);
+            adjecentDown = bs.AdjacentField(kingField, DirectionEnum.DOWN);
+            adjecentLeft = bs.AdjacentField(kingField, DirectionEnum.LEFT);
+            adjecentRight = bs.AdjacentField(kingField, DirectionEnum.RIGHT);
             if ((adjecentUp == null || isFieldStoppingKing(adjecentUp))
                 && (adjecentDown == null || isFieldStoppingKing(adjecentDown))
                 && (adjecentRight == null || isFieldStoppingKing(adjecentRight))

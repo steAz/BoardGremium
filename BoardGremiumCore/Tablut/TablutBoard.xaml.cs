@@ -25,18 +25,19 @@ namespace BoardGremiumCore.Tablut
         {
             InitializeComponent();
             //  DispatcherTimer setup
-            var dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            dispatcherTimer.Start();
+            var dTForUpdatingView = new DispatcherTimer();
+            dTForUpdatingView.Tick += new EventHandler(DispatcherTimerForUpdatingTheView_Tick);
+            dTForUpdatingView.Interval = new TimeSpan(0, 0, 1);
+            dTForUpdatingView.Start();
 
         }
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        private void DispatcherTimerForUpdatingTheView_Tick(object sender, EventArgs e)
         {
             TablutViewModel vm = this.DataContext as TablutViewModel;
             vm.UpdatePlayerTurnLabel();
             vm.MovePawn();
+            vm.CheckIsGameWon();
 
             // Forcing the CommandManager to raise the RequerySuggested event
             CommandManager.InvalidateRequerySuggested();
@@ -45,18 +46,19 @@ namespace BoardGremiumCore.Tablut
         private void Item_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             TablutViewModel vm = this.DataContext as TablutViewModel;
-            ListBoxItem item = sender as ListBoxItem;
-            Field content = item.Content as Field;
 
-            //XXX sometimes if you click really fast you can end up clicking on what the debugger says is a "ListBoxItem {DisconnectedItem}
-            //hunting down the exact cause would take ages, and might even be a bug in WPF or something
-            if (content == null)
-               return;
+            if (!vm.IsBot2BotGame) // this is Human vs Bot mode and Clicked is needed to make a move 
+            {
+                ListBoxItem item = sender as ListBoxItem;
+                Field content = item.Content as Field;
 
-            vm.Clicked(content);
-            var binding = MyBoardListBox.GetBindingExpression(ListBox.ItemsSourceProperty);
-            binding.UpdateSource();
-            this.UpdateLayout();
+                //XXX sometimes if you click really fast you can end up clicking on what the debugger says is a "ListBoxItem {DisconnectedItem}
+                //hunting down the exact cause would take ages, and might even be a bug in WPF or something
+                if (content == null)
+                    return;
+
+                vm.Clicked(content);
+            }
         }
     }
 }

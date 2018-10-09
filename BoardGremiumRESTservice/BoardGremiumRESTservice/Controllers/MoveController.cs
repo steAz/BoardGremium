@@ -55,6 +55,12 @@ namespace BoardGremiumRESTservice.Controllers
             else
             {
                 TablutGameState gameState = MessagesConverterUtils.ConvertStringToTablutGameState(GameEntity.BoardStateRepresentation, GameEntity.PlayerPawnColor);
+                if (GameEntity.IsGameWon)
+                {
+                    var callbackMessage = gameState.game.BotPlayerFieldType;
+                    return Ok(GameEntity.CurrentPlayer);
+                }
+              
                 TablutMove move = MessagesConverterUtils.ConvertStringToTablutMove(moveInfo, gameState);
                 PlayerEnum currentPlayer = MessagesConverterUtils.PlayerEnumFromString(GameEntity.CurrentPlayer);
                 if(gameState.IsChosenMoveValid(move, currentPlayer))
@@ -62,6 +68,14 @@ namespace BoardGremiumRESTservice.Controllers
                     BoardState oldBoardState = (BoardState)gameState.game.currentBoardState.Clone();
                     //perform move
                     gameState.game.MovePawn(gameState.game.currentBoardState, move.ChosenField, move.Direction, move.NumOfFields);
+                    if(gameState.game.IsGameWon(gameState.game.currentBoardState, currentPlayer))
+                    {
+                        GameEntity.IsGameWon = true;
+                        UpdateBoardStateRepresentation(GameEntity, gameState);
+                        db.Entry(GameEntity).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return Ok("ok");
+                    }
                     string callbackMessage;
                     if (gameState.NumberOfPawnsOnBS(oldBoardState) != gameState.NumberOfPawnsOnBS(gameState.game.currentBoardState))
                     {
@@ -74,8 +88,7 @@ namespace BoardGremiumRESTservice.Controllers
                         callbackMessage = "ok";
                     }
                     //change game state
-                    string updatedBoardStateRepresentation= MessagesConverterUtils.ConvertTablutGameStateToString(gameState);
-                    GameEntity.BoardStateRepresentation = updatedBoardStateRepresentation;
+                    UpdateBoardStateRepresentation(GameEntity, gameState);
                     GameEntity.ChangeCurrentPlayer();
                     db.Entry(GameEntity).State = EntityState.Modified;
                     db.SaveChanges();
@@ -87,6 +100,12 @@ namespace BoardGremiumRESTservice.Controllers
                 }
                 
             }
+        }
+
+        private void UpdateBoardStateRepresentation(GameEntity gameEntity, TablutGameState tbs)
+        {
+            string updatedBoardStateRepresentation = MessagesConverterUtils.ConvertTablutGameStateToString(tbs);
+            gameEntity.BoardStateRepresentation = updatedBoardStateRepresentation;
         }
 
         // PUT: api/Move/5

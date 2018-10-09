@@ -14,7 +14,10 @@ namespace BoardGremiumRESTservice.Models
         public string BoardStateRepresentation { get; set; }
         public string GameName { get; set; }
         public string CurrentPlayer { get; set; }
-        public int Field { get; set; }
+        public bool IsGameWon { get; set; }
+        public bool IsFirstPlayerJoined { get; set; }
+        public bool IsSecPlayerJoined { get; set; }
+        //public DateTime CreationDate { get; set; }
 
         public GameEntity() { }
 
@@ -23,6 +26,10 @@ namespace BoardGremiumRESTservice.Models
             this.PlayerPawnColor = playerPawnColor;
             this.BoardStateRepresentation = boardStateRepresentation;
             this.GameName = gameName;
+            this.IsFirstPlayerJoined = false;
+            this.IsSecPlayerJoined = false;
+            IsGameWon = false;
+            //CreationDate = new DateTime();
             if(MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor).Equals(TablutFieldType.RED_PAWN))
             {
                 CurrentPlayer = MessagesConverterUtils.HUMAN_STRING;

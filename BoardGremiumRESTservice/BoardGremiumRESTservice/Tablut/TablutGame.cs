@@ -100,7 +100,7 @@ namespace BoardGremiumRESTservice
                     {
                         for (int i = 0; i < pawn.Y; i++)
                         {
-                            if (((TablutFieldType)initial.BoardFields[pawn.Y - i - 1, pawn.X].Type).Equals(TablutFieldType.EMPTY_FIELD))
+                            if (((TablutFieldType)initial.BoardFields[pawn.X, pawn.Y - i - 1].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -112,7 +112,7 @@ namespace BoardGremiumRESTservice
                     {
                         for (int i = 0; i < BOARD_HEIGHT - 1 - pawn.Y; i++)
                         {
-                            if (((TablutFieldType)initial.BoardFields[pawn.Y + i + 1, pawn.X].Type).Equals(TablutFieldType.EMPTY_FIELD))
+                            if (((TablutFieldType)initial.BoardFields[pawn.X, pawn.Y + i + 1].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -124,7 +124,7 @@ namespace BoardGremiumRESTservice
                     {
                         for (int i = 0; i < pawn.X; i++)
                         {
-                            if (((TablutFieldType)initial.BoardFields[pawn.Y, pawn.X - i - 1].Type).Equals(TablutFieldType.EMPTY_FIELD))
+                            if (((TablutFieldType)initial.BoardFields[pawn.X - i - 1, pawn.Y].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -136,7 +136,7 @@ namespace BoardGremiumRESTservice
                     {
                         for (int i = 0; i < BOARD_WIDTH - 1 - pawn.X; i++)
                         {
-                            if (((TablutFieldType)initial.BoardFields[pawn.Y, pawn.X + i + 1].Type).Equals(TablutFieldType.EMPTY_FIELD))
+                            if (((TablutFieldType)initial.BoardFields[pawn.X + i + 1, pawn.Y].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -190,7 +190,7 @@ namespace BoardGremiumRESTservice
             }
             board.BoardFields[xCoord, yCoord].Type = type;
             field.Type = TablutFieldType.EMPTY_FIELD;
-            TakeEnemyPawns(board, board.BoardFields[yCoord, xCoord]);
+            TakeEnemyPawns(board, board.BoardFields[xCoord, yCoord]);
         }
         /// <summary>
         /// method called after performing move on boardstate, then this method is taking enemy pawns off the board

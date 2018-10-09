@@ -17,8 +17,8 @@ namespace AbstractGame
         public int BoardHeight { get; }
         public BoardState currentBoardState { get; set; }
         public PlayerEnum currentPlayer { get; set; }
-        public Enum HumanPlayerFieldType { get; set; } //e.g whitePawn/blackPawn
-        public Enum BotPlayerFieldType { get; set; }
+        public TablutFieldType HumanPlayerFieldType { get; set; } //e.g whitePawn/blackPawn
+        public TablutFieldType BotPlayerFieldType { get; set; }
         //image of empty board
         public string BoardImageName { get; set; }
         /// <summary>
@@ -47,7 +47,7 @@ namespace AbstractGame
         /// </summary>
         /// <param name="initial">initial BoardState</param>
         /// <returns></returns>
-        public abstract List<BoardState> GetPossibleBoardStates(BoardState initial, PlayerEnum playerType);
+        public abstract List<BoardState> GetPossibleBoardStates(BoardState initial, TablutFieldType playerFieldType);
 
         public abstract int CalculateMaximumPossibleRange(BoardState initial, Field pawn, DirectionEnum direction);
         public abstract void MovePawn(BoardState board, Field field, DirectionEnum direction, int numberOfFields);

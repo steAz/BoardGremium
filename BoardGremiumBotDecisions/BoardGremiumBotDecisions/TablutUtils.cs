@@ -17,6 +17,12 @@ namespace BoardGremiumBotDecisions
         public static char KING_CHAR = 'K';
         public static char EMPTY_CHAR = 'E';
 
+        public static string FIRST_JOINED_STRING = "First joined";
+        public static string FIRST_NOT_JOINED_STRING = "First not joined";
+
+        public static int INITIAL_BLACK_PAWNS_NUMBER = 16;
+        public static int INITIAL_RED_PAWNS_NUMBER = 8;
+
 
         public static bool PawnsInSameTeam(TablutFieldType t1, TablutFieldType t2)
         {
@@ -27,6 +33,31 @@ namespace BoardGremiumBotDecisions
                 return true;
             }
             else return false;
+        }
+
+        public static TablutFieldType EnemyType(TablutFieldType playerType)
+        {
+            if(playerType.Equals(TablutFieldType.BLACK_PAWN))
+            {
+                return TablutFieldType.RED_PAWN;
+            }else if(playerType.Equals(TablutFieldType.RED_PAWN) || playerType.Equals(TablutFieldType.KING))
+            {
+                return TablutFieldType.BLACK_PAWN;
+            }else
+            {
+                throw new ArgumentException("EMPTY_FIELD type in get EnemyType.");
+            }
+        }
+
+        public static int InitialNumberOfPawns(TablutFieldType forPlayer)
+        {
+            if(forPlayer == TablutFieldType.BLACK_PAWN)
+            {
+                return INITIAL_BLACK_PAWNS_NUMBER;
+            }else
+            {
+                return INITIAL_RED_PAWNS_NUMBER;
+            }
         }
 
         public static DirectionEnum GetDirectionFromMove(Field source, Field destination)

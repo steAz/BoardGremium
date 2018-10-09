@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AbstractGame;
+using System.Net.Http;
 
 namespace BoardGremiumBotDecisions
 {
@@ -13,12 +14,14 @@ namespace BoardGremiumBotDecisions
         public string GameName { get; set; }
         public BotClient BotClient { get; }
         public Bot Bot { get; }
+        public bool IsFirstPlayerJoined{ get; set; }
 
-        public TablutBotModel(TablutFieldType botPawn, string gameName, BotClient botClient)
+        public TablutBotModel(TablutFieldType botPawn, string gameName, BotClient botClient, bool isFirstPlayerJoined)
         {
             BotPawnColor = botPawn;
             GameName = gameName;
             BotClient = botClient;
+            IsFirstPlayerJoined = isFirstPlayerJoined;
             TablutFieldType humanPawnType;
             if(botPawn.Equals(TablutFieldType.RED_PAWN))
             {
@@ -30,25 +33,52 @@ namespace BoardGremiumBotDecisions
             Game game = new TablutGame("", "", "", "", humanPawnType);
             BoardState currentBoardState = botClient.HttpGet_CurrentBoardState(gameName);
             game.currentBoardState = currentBoardState;
-            Bot = new Bot(game);
+            Bot = new MinMaxBot(game);
         }
 
-        //Playing game in loop
-        public void Play()
+        /// <summary>
+        /// It is method which makes move for bot.
+        /// </summary>
+        /// <returns>true if game has ended</returns>
+        public bool Play()
         {
             while(true)
             {
-                if(BotClient.HttpGet_IsBotMove(GameName))
+                if (BotClient.IsGameWon(GameName))
+                {
+                    Console.WriteLine("someone won");
+                    return true;
+                }
+
+                if(BotClient.HttpGet_IsBotMove(GameName, IsFirstPlayerJoined))
                 {
                     Console.WriteLine("Making move...");
+                    UpdateCurrentBoardState();
                     //wykonujemy ruch
                     BoardState botDecision = Bot.MakeMove();
                     var moveMessage = MoveMessage(Bot.Game.currentBoardState, botDecision);
                     Console.WriteLine("MoveMessage: " + moveMessage);
                     var result = BotClient.SendPostMove(moveMessage);
-                }else
+
+                    if (BotClient.IsGameWon(GameName))
+                    {
+                        try
+                        {
+                            string winnerColor = BotClient.GetWinnerColor(GameName);
+                            Console.WriteLine("Game has finished. " + winnerColor + " pawns won.");
+                        }catch(HttpRequestException e)
+                        {
+                            Console.WriteLine("Error while obtaining winner player: " + e.Message);
+                        }
+                        
+                        Console.WriteLine("");
+                        return true;
+                    }
+
+                }
+                else
                 {
-                    System.Threading.Thread.Sleep(5000);
+                    System.Threading.Thread.Sleep(500);
                     
                     //śpimy albo i nie
                 }
@@ -89,6 +119,12 @@ namespace BoardGremiumBotDecisions
                 return message;
             }
             return null;
+        }
+
+        private void UpdateCurrentBoardState()
+        {
+            BoardState bs = BotClient.HttpGet_CurrentBoardState(GameName);
+            this.Bot.Game.currentBoardState = bs;
         }
     }
 }
