@@ -33,7 +33,10 @@ namespace BoardGremiumBotDecisions
             Game game = new TablutGame("", "", "", "", humanPawnType);
             BoardState currentBoardState = botClient.HttpGet_CurrentBoardState(gameName);
             game.currentBoardState = currentBoardState;
-            Bot = new MinMaxBot(game);
+            if (!isFirstPlayerJoined)
+                Bot = new MinMaxBot(game);
+            else
+                Bot = new NegaMaxBot(game);
         }
 
         /// <summary>

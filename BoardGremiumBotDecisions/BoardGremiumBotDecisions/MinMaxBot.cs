@@ -103,7 +103,7 @@ namespace BoardGremiumBotDecisions
             }
         }
 
-        private int HeuristicForBlack(BoardState bs)
+        protected int HeuristicForBlack(BoardState bs)
         {
             int resultBlack = 0;
 
@@ -147,7 +147,7 @@ namespace BoardGremiumBotDecisions
             return resultBlack;
         }
 
-        private int HeuristicForRed(BoardState bs)
+        protected int HeuristicForRed(BoardState bs)
         {
             var resultRed = 0;
             resultRed = TablutUtils.InitialNumberOfPawns(TablutFieldType.BLACK_PAWN) * 100 - (bs.NumberOfPawnsForPlayer(TablutFieldType.BLACK_PAWN) * 100); // the less enemy'pawns on the board, the better black's heuristic is
