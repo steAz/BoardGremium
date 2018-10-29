@@ -8,6 +8,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -99,6 +100,54 @@ namespace BoardGremiumRESTservice.Controllers
                     return BadRequest("Error 400 - Chosen move is not valid");
                 }
                 
+            }
+        }
+
+        [ResponseType(typeof(string))]
+        [HttpPost]
+        [Route("api/Move/{gameName}/RedHeuristics")]
+        public HttpResponseMessage PostRedHeuristics(string gameName, [FromBody] string redHeuristic)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                GameEntity.AddRedHeuristic(redHeuristic);
+                db.Entry(GameEntity).State = EntityState.Modified;
+                db.SaveChanges();
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent("OK")
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
+        }
+
+        [ResponseType(typeof(string))]
+        [HttpPost]
+        [Route("api/Move/{gameName}/BlackHeuristics")]
+        public HttpResponseMessage PostBlackHeuristics(string gameName, [FromBody] string blackHeuristic)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                GameEntity.AddBlackHeuristic(blackHeuristic);
+                db.Entry(GameEntity).State = EntityState.Modified;
+                db.SaveChanges();
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent("OK")
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
             }
         }
 

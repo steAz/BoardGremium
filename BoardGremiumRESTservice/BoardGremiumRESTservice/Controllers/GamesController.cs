@@ -12,6 +12,7 @@ using System.Web.Http.Description;
 using BoardGremiumRESTservice.Models;
 using BoardGremiumRESTservice.Utils;
 using System.Net.Http.Headers;
+using Newtonsoft.Json;
 
 namespace BoardGremiumRESTservice.Controllers
 {
@@ -53,6 +54,48 @@ namespace BoardGremiumRESTservice.Controllers
                 var response = new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(GameEntity.CurrentPlayer)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
+        }
+
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/RedHeuristics")]
+        public HttpResponseMessage GetRedHeuristics(string gameName)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(GameEntity.RedHeuristics)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
+        }
+
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/BlackHeuristics")]
+        public HttpResponseMessage GetBlackHeuristics(string gameName)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(GameEntity.BlackHeuristics)
                 };
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
                 return response;
@@ -150,6 +193,58 @@ namespace BoardGremiumRESTservice.Controllers
             }
 
             
+        }
+
+        // POST: api/GameEntitys/{gameName}/BotAlgorithms - string Body format: firstBotAlgorithm,secBotAlgorithm(NONE if there is Human vs Bot)
+        [ResponseType(typeof(GameEntity))]
+        [HttpPost]
+        [Route("api/GameEntitys/{gameName}/SetBotAlgorithms")]
+        public HttpResponseMessage PostSetBotAlgorithms(string gameName, [FromBody]string botAlgorithmsParamsJSON)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+               // var botAlgParamsJSONbeforeReplace = botAlgorithmsParamsJSON.Substring(1, botAlgorithmsParamsJSON.Length - 1);
+                botAlgorithmsParamsJSON = botAlgorithmsParamsJSON.Replace('\'', '"') ;
+                var allGameEntities = db.GameEntities.ToArray();
+                foreach (var gE in allGameEntities)
+                {
+                    if (gE.GameName.Equals(gameName)) gE.BotAlgorithmParamsJSON = botAlgorithmsParamsJSON;
+                }
+
+                db.SaveChanges();
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent("OK")
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
+        }
+
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/BotAlgorithmParamsJSON")]
+        public HttpResponseMessage GetBotAlgorithmParamsJSON(string gameName)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(GameEntity.BotAlgorithmParamsJSON)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
         }
 
         [ResponseType(typeof(string))]
@@ -370,15 +465,5 @@ namespace BoardGremiumRESTservice.Controllers
             return db.GameEntities.Count(e => e.Id == id) > 0;
         }
 
-        /*  string format of TablutGameStateObject:
-            every field type has 1 character representation:
-            RED_PAWN - R
-            BLACK_PAWN - B
-            KING - K
-            EMPTY_FIELD - E
-        */
-
-        
-        //przy POST nowej gry musimy dodawać do bazy stringRepresentation poczatkowego stanu
     }
 }

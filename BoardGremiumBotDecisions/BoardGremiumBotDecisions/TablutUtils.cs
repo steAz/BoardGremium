@@ -20,6 +20,9 @@ namespace BoardGremiumBotDecisions
         public static string FIRST_JOINED_STRING = "First joined";
         public static string FIRST_NOT_JOINED_STRING = "First not joined";
 
+        public static string MINMAX_ALG_STRING = "MinMax";
+        public static string NEGAMAX_ALG_STRING = "NegaMax";
+
         public static int INITIAL_BLACK_PAWNS_NUMBER = 16;
         public static int INITIAL_RED_PAWNS_NUMBER = 8;
 
@@ -94,6 +97,44 @@ namespace BoardGremiumBotDecisions
             }
             //won't happen
             return 0;
+        }
+
+        public static Bot BotInstanceFromAlg(BotAlgorithmsParameters botAlg, Game gameInstance, bool isFirstPlayerJoined)
+        {
+            string algName;
+            int maxTreeDepth;
+            if(!isFirstPlayerJoined)
+            {
+                algName = botAlg.FirstBotAlgorithmName;
+                maxTreeDepth = botAlg.FirstBotMaxTreeDepth;
+            }else
+            {
+                if (botAlg.IsBot2BotGame)
+                {
+                    algName = botAlg.SecBotAlgorithmName;
+                    maxTreeDepth = botAlg.SecBotMaxTreeDepth;
+                }
+                else
+                {
+                    algName = botAlg.FirstBotAlgorithmName;
+                    maxTreeDepth = botAlg.FirstBotMaxTreeDepth;
+                }
+            }
+
+            if (algName.Contains(MINMAX_ALG_STRING))
+            {
+                return new MinMaxBot(gameInstance, maxTreeDepth);
+            }
+            else if (algName.Contains(NEGAMAX_ALG_STRING))
+            {
+                return new NegaMaxBot(gameInstance, maxTreeDepth);
+            }
+            else
+            {
+                Console.WriteLine("Wrong format og botAlgorithm string representation");
+                return null;
+            }
+
         }
     }
 }

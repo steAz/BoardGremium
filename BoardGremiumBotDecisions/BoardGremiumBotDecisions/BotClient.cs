@@ -1,4 +1,5 @@
 ﻿using AbstractGame;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,6 @@ namespace BoardGremiumBotDecisions
             if (result.IsSuccessStatusCode)
             {
                 string resultContent = await result.Content.ReadAsStringAsync();
-                Console.WriteLine(resultContent);
                 return resultContent;
             }
             else
@@ -251,6 +251,75 @@ namespace BoardGremiumBotDecisions
             }
         }
 
+        private async Task<string> HttpGet_BotAlgorithmsParamsJSON(string gameName)
+        {
+            string uri = AddressIP + GetBotAlgParamsJSONRoute(gameName);
+            var result = this.GetAsync(uri).Result;
+            if (result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                //Console.WriteLine(resultContent);
+                return resultContent;
+            }
+            else
+            {
+                throw new HttpRequestException("Error while getting bot algorithm params JSON");
+            }
+        }
+
+        public string BotAlgorithmsParamsJSON(string gameName)
+        {
+            try
+            {
+                var getResult = HttpGet_BotAlgorithmsParamsJSON(gameName);
+                return getResult.Result;
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("Error while getting bot algorithm params JSON");
+                Console.WriteLine(e.Message);
+                return null;
+            }
+            
+        }
+
+
+        public BotAlgorithmsParameters BotAlgorithmsParams(string gameName)
+        {
+            var botAlgorithmsParamsJSON = BotAlgorithmsParamsJSON(gameName);
+            var deserializedBotAlgParams = JsonConvert.DeserializeObject<BotAlgorithmsParameters>(botAlgorithmsParamsJSON);
+            return deserializedBotAlgParams;
+        }
+
+        private async Task<string> HttpPost_SetHeuristic(string gameName, int heuristic, TablutFieldType pawnType)
+        {
+            string uri = AddressIP + PostHeuristicRoute(gameName, pawnType);
+            var content = new StringContent(heuristic.ToString(), Encoding.UTF8, "application/json");
+            var result = this.PostAsync(uri, content).Result; //POST
+            if (result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                return resultContent;
+            }
+            else
+            {
+                throw new HttpRequestException("Error while setting heuristic");
+            }
+        }
+
+        public void SetHeuristic(string gameName, int heuristic, TablutFieldType pawnType)
+        {
+            try
+            {
+                var postResult = HttpPost_SetHeuristic(gameName, heuristic, pawnType);
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("Error while setting heuristic");
+                Console.WriteLine(e.Message);
+            }
+        }
+
         public string GetCurrentPlayerRoute(string gameName)
         {
             return "/api/GameEntitys/" + gameName + "/CurrentPlayer";
@@ -289,6 +358,32 @@ namespace BoardGremiumBotDecisions
         public string GetSecondPlayerColorRoute(string gameName)
         {
             return "/api/GameEntitys/" + gameName + "/SecondPlayerColor";
+        }
+
+        public string GetBotAlgParamsJSONRoute(string gameName)
+        {
+            return "/api/GameEntitys/" + gameName + "/BotAlgorithmParamsJSON";
+        }
+
+        public string PostHeuristicRoute(string gameName, TablutFieldType botPawn)
+        {
+            if(botPawn.Equals(TablutFieldType.RED_PAWN))
+            {
+                return PostRedHeuristicRoute(gameName);
+            }else
+            {
+                return PostBlackHeuristicRoute(gameName);
+            }
+        }
+
+        private string PostRedHeuristicRoute(string gameName)
+        {
+            return "/api/Move/" + gameName + "/RedHeuristics";
+        }
+
+        private string PostBlackHeuristicRoute(string gameName)
+        {
+            return "/api/Move/" + gameName + "/BlackHeuristics";
         }
     }
 }

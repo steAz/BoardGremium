@@ -13,20 +13,22 @@ namespace BoardGremiumCore.Tablut
     public class TablutViewModel
     {
         public BoardState MyBoardState { get; set; }
-        public TablutFieldType PlayerPawn { get; set; }
+        public TablutFieldType FirstPlayerPawn { get; set; }
+        public TablutFieldType SecPlayerPawn { get; set; }
         public string GameName { get; set; }
         public Client Client { get; }
         public Label PlayerTurnLabel; //label displaying information about current player
         public bool IsGameFinished;
         public bool IsBot2BotGame { get; set; }
         public bool GameFinishLogged { get; set; }
+        public BotAlgorithmsParameters BotAlgParams {get; set;}
 
         public TablutViewModel() { MyBoardState = new BoardState(TablutUtils.BOARD_WIDTH, TablutUtils.BOARD_HEIGHT);  }
 
-        public TablutViewModel(BoardState bs, TablutFieldType playerPawn, string gameName, Client httpClient, Label playerTurnLabel, string gameMode)
+        public TablutViewModel(BoardState bs, TablutFieldType firstPlayerPawn, string gameName, Client httpClient, Label playerTurnLabel, string gameMode)
         {
             MyBoardState = bs;
-            this.PlayerPawn = playerPawn;
+            InitializePlayersPawns(firstPlayerPawn);
             this.GameName = gameName;
             this.GameFinishLogged = false;
             Client = httpClient;
@@ -48,13 +50,22 @@ namespace BoardGremiumCore.Tablut
             }
         }
 
+        private void InitializePlayersPawns(TablutFieldType firstPlayerPawn)
+        {
+            this.FirstPlayerPawn = firstPlayerPawn;
+            if (this.FirstPlayerPawn == TablutFieldType.RED_PAWN)
+                this.SecPlayerPawn = TablutFieldType.BLACK_PAWN;
+            else
+                this.SecPlayerPawn = TablutFieldType.RED_PAWN;
+        }
+
         //returns true if game is over
         public bool Clicked(Field field)
         {
             if(Client.IsPlayerTurn(GameName) && !IsGameFinished)
             {
                 CheckIsGameWon();
-                if (TablutUtils.IsTargetSameType(PlayerPawn, (TablutFieldType)field.Type))
+                if (TablutUtils.IsTargetSameType(FirstPlayerPawn, (TablutFieldType)field.Type))
                 {
                     MoveWindow mw = new MoveWindow();
                     mw.ShowDialog();
@@ -68,17 +79,6 @@ namespace BoardGremiumCore.Tablut
                         }
                     }
                 }
-                //updating gameState after enemy's move
-                //while(true)
-                //{
-                //    //player's turn
-                //    if(Client.IsPlayerTurn(GameName))  // ZALATWMY TO DISPATCHEREM JAK Z AKTUALIZOWANIEM PIERWSZEGO RUCHU BOTA
-                //    {
-                //        UpdatePlayerTurnLabel();
-                //        MovePawn();
-                //        break;
-                //    }
-                //}
             }
             return false;
         }
@@ -156,5 +156,7 @@ namespace BoardGremiumCore.Tablut
                 }
             }
         }
+
+
     }
 }

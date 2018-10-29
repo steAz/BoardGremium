@@ -15,13 +15,15 @@ namespace BoardGremiumBotDecisions
         public BotClient BotClient { get; }
         public Bot Bot { get; }
         public bool IsFirstPlayerJoined{ get; set; }
+        public BotAlgorithmsParameters BotAlgorithm { get; set; }
 
-        public TablutBotModel(TablutFieldType botPawn, string gameName, BotClient botClient, bool isFirstPlayerJoined)
+        public TablutBotModel(TablutFieldType botPawn, string gameName, BotClient botClient, bool isFirstPlayerJoined, BotAlgorithmsParameters botAlgorithm)
         {
             BotPawnColor = botPawn;
             GameName = gameName;
             BotClient = botClient;
             IsFirstPlayerJoined = isFirstPlayerJoined;
+            BotAlgorithm = botAlgorithm;
             TablutFieldType humanPawnType;
             if(botPawn.Equals(TablutFieldType.RED_PAWN))
             {
@@ -32,11 +34,9 @@ namespace BoardGremiumBotDecisions
             }
             Game game = new TablutGame("", "", "", "", humanPawnType);
             BoardState currentBoardState = botClient.HttpGet_CurrentBoardState(gameName);
+
             game.currentBoardState = currentBoardState;
-            if (!isFirstPlayerJoined)
-                Bot = new MinMaxBot(game);
-            else
-                Bot = new NegaMaxBot(game);
+            Bot = TablutUtils.BotInstanceFromAlg(BotAlgorithm, game, isFirstPlayerJoined);   
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace BoardGremiumBotDecisions
             {
                 if (BotClient.IsGameWon(GameName))
                 {
-                    Console.WriteLine("someone won");
+                    LogVictory();
                     return true;
                 }
 
@@ -57,18 +57,18 @@ namespace BoardGremiumBotDecisions
                 {
                     Console.WriteLine("Making move...");
                     UpdateCurrentBoardState();
+                    BotClient.SetHeuristic(GameName, Bot.Heuristic(Bot.Game.currentBoardState), BotPawnColor);
                     //wykonujemy ruch
                     BoardState botDecision = Bot.MakeMove();
                     var moveMessage = MoveMessage(Bot.Game.currentBoardState, botDecision);
                     Console.WriteLine("MoveMessage: " + moveMessage);
                     var result = BotClient.SendPostMove(moveMessage);
-
+                    BotClient.SetHeuristic(GameName, Bot.Heuristic(botDecision), BotPawnColor);
                     if (BotClient.IsGameWon(GameName))
                     {
                         try
                         {
-                            string winnerColor = BotClient.GetWinnerColor(GameName);
-                            Console.WriteLine("Game has finished. " + winnerColor + " pawns won.");
+                            LogVictory();
                         }catch(HttpRequestException e)
                         {
                             Console.WriteLine("Error while obtaining winner player: " + e.Message);
@@ -82,10 +82,14 @@ namespace BoardGremiumBotDecisions
                 else
                 {
                     System.Threading.Thread.Sleep(500);
-                    
-                    //śpimy albo i nie
                 }
             }
+        }
+
+        private void LogVictory()
+        {
+            string winnerColor = BotClient.GetWinnerColor(GameName);
+            Console.WriteLine("Game has finished. " + winnerColor + " pawns won.");
         }
 
         private string MoveMessage(BoardState previous, BoardState next)

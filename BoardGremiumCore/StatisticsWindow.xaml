@@ -1,0 +1,33 @@
+﻿<Window x:Class="BoardGremiumCore.StatisticsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:tablut="clr-namespace:BoardGremiumCore.Tablut"
+        xmlns:chartingToolkit=
+	            "clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        mc:Ignorable="d"
+        Title="StatisticsWindow" Height="715.189" Width="828.65">
+    <Grid Name ="XD" Margin="0,0,76,-153">
+        <Label Name="LabelGameMode" Content="GameMode" HorizontalAlignment="Left" Margin="23,27,0,0" VerticalAlignment="Top" Height="31" Width="85" RenderTransformOrigin="0.664,0.858"/>
+        <Label Name ="LabelBotParams" Content="Bots' configuration" HorizontalAlignment="Left" Margin="23,84,0,0" VerticalAlignment="Top" Height="31" Width="115"/>
+        <Label Name ="LabelFirstBotParams" Content="Bot parameters" HorizontalAlignment="Left" Margin="61,129,0,0" VerticalAlignment="Top"/>
+        <Label Name ="LabelSecBotParams" Content="Second bot parameters" HorizontalAlignment="Left" Visibility="Hidden" Margin="61,272,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.538,0.736"/>
+        <Label Name="LabelFirstBotAlgName" Content="First bot alg name" HorizontalAlignment="Left" Margin="97,169,0,0" VerticalAlignment="Top" Width="118"/>
+        <Label Name="LabelFirstBotTreeDepth" Content="First bot tree depth" HorizontalAlignment="Left" Margin="97,217,0,0" VerticalAlignment="Top" Width="118"/>
+        <Label Name="LabelSecBotAlgName" Content="Sec bot alg name" HorizontalAlignment="Left" Visibility="Hidden" Margin="97,313,0,0" VerticalAlignment="Top" Width="118"/>
+        <Label Name="LabelSecBotTreeDepth" Content="Sec bot tree depth" HorizontalAlignment="Left" Visibility="Hidden" Margin="97,362,0,0" VerticalAlignment="Top" Width="127"/>
+
+
+        <Button Name="RedHeuristicsButton" Content="Show red heuristics" HorizontalAlignment="Left" Margin="306,52,0,0" VerticalAlignment="Top" Width="113" Click="RedHeuristicsButton_Click"/>
+        <chartingToolkit:Chart  Name="heuristicsLineChart" Title="Line Series Heuristics" 
+		VerticalAlignment="Top" Margin="433,67,23,0" Height="321">
+            <chartingToolkit:Chart.Series>
+                <chartingToolkit:LineSeries   DependentValuePath="Value" 
+		    IndependentValuePath="Key" ItemsSource="{Binding data}" 
+		    IsSelectionEnabled="True" Margin="0,-12,-41,-10"  d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
+             Type=tablut:ChartViewModel}"/>
+            </chartingToolkit:Chart.Series>
+        </chartingToolkit:Chart>
+    </Grid>
+</Window>

@@ -98,7 +98,10 @@ namespace BoardGremiumBotDecisions
                         {
                             if (((TablutFieldType)initial.BoardFields[pawn.Y - i - 1, pawn.X].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
-                                result++;
+                                if (pawn.Type == TablutFieldType.KING)
+                                    result++;
+                                else if (!IsCornerCoords(pawn.Y - i - 1, pawn.X))
+                                    result++;
                             }
                             else break;
                         }
@@ -110,7 +113,10 @@ namespace BoardGremiumBotDecisions
                         {
                             if (((TablutFieldType)initial.BoardFields[pawn.Y + i + 1, pawn.X].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
-                                result++;
+                                if (pawn.Type == TablutFieldType.KING)
+                                    result++;
+                                else if (!IsCornerCoords(pawn.Y + i + 1, pawn.X))
+                                    result++;
                             }
                             else break;
                         }
@@ -122,7 +128,10 @@ namespace BoardGremiumBotDecisions
                         {
                             if (((TablutFieldType)initial.BoardFields[pawn.Y, pawn.X - i - 1].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
-                                result++;
+                                if (pawn.Type == TablutFieldType.KING)
+                                    result++;
+                                else if (!IsCornerCoords(pawn.Y, pawn.X - i - 1))
+                                    result++;
                             }
                             else break;
                         }
@@ -134,7 +143,10 @@ namespace BoardGremiumBotDecisions
                         {
                             if (((TablutFieldType)initial.BoardFields[pawn.Y, pawn.X + i + 1].Type).Equals(TablutFieldType.EMPTY_FIELD))
                             {
-                                result++;
+                                if (pawn.Type == TablutFieldType.KING)
+                                    result++;
+                                else if (!IsCornerCoords(pawn.Y, pawn.X + i + 1))
+                                    result++;
                             }
                             else break;
                         }
@@ -142,6 +154,19 @@ namespace BoardGremiumBotDecisions
                     }
             }
             return result;
+        }
+
+        private bool IsCornerCoords(int x, int y)
+        {
+            if ((x == 0 && y == 0)
+                || (x == 0 && y == (BoardWidth - 1))
+                || (x == (BoardHeight - 1) && y == 0)
+                || (x == (BoardHeight - 1) && y == (BoardWidth - 1)))
+            {
+                return true;
+            }
+            else
+                return false;
         }
         //TODO this method can be abstract in Game class
         // changes BoardState inside of method

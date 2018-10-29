@@ -21,6 +21,8 @@ namespace BoardGremiumCore.Tablut
     /// </summary>
     public partial class TablutBoard : UserControl
     {
+        bool StatisticsWindowCreated = false;
+
         public TablutBoard()
         {
             InitializeComponent();
@@ -38,6 +40,13 @@ namespace BoardGremiumCore.Tablut
             vm.UpdatePlayerTurnLabel();
             vm.MovePawn();
             vm.CheckIsGameWon();
+
+            if (vm.IsGameFinished && !this.StatisticsWindowCreated)
+            {
+                this.StatisticsWindowCreated = true;
+                var statsWindow = new StatisticsWindow("Tablut", vm.BotAlgParams, vm.FirstPlayerPawn, vm.SecPlayerPawn, vm.IsBot2BotGame, vm.Client, vm.GameName);
+                statsWindow.Show();
+            }
 
             // Forcing the CommandManager to raise the RequerySuggested event
             CommandManager.InvalidateRequerySuggested();

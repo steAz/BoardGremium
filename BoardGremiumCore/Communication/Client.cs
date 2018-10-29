@@ -1,4 +1,6 @@
-﻿using BoardGremiumCore.Communication;
+﻿using AbstractGame;
+using BoardGremiumCore.Communication;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,6 +107,40 @@ namespace BoardGremiumCore
             
         }
 
+        private async Task<string> HttpPost_SetBotAlgorithms(string gameName, string botAlgorithmsParamsJSON)
+        {
+            string uri = AddressIP + PostSetBotAlgorithmsRoute(gameName);
+            var content = new StringContent(botAlgorithmsParamsJSON, Encoding.UTF8, "application/json");
+            var result = this.PostAsync(uri, content).Result; //POST
+            if (result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                //Console.WriteLine(resultContent);
+                return resultContent;
+            }
+            else
+            {
+                throw new HttpRequestException("Error while setting bot algorithms");
+            }
+        }
+
+        public void SetBotAlgorithms(string gameName, BotAlgorithmsParameters botAlgParams)
+        {
+            try
+            {
+                string output = JsonConvert.SerializeObject(botAlgParams);
+
+                output = "\"" + output.Replace('"', '\'') + "\"";
+                var postResult = HttpPost_SetBotAlgorithms(gameName, output);
+
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("Error while setting bot algorithms");
+                Console.WriteLine(e.Message);
+            }
+        }
+
         public async Task<string> SendGetCurrentBoardState(string gameName)
         {
             string uri = AddressIP + GetCurrentBoardStateRoute(gameName);
@@ -152,6 +188,56 @@ namespace BoardGremiumCore
             {
                 throw new ServerResponseException("GET IsGameWon for game: " + gameName + " - server's response is not recognized");
             }
+        }
+
+        private async Task<string> HttpGet_Heuristics(string gameName, TablutFieldType playerColor)
+        {
+            string uri = AddressIP;
+            if (playerColor == TablutFieldType.RED_PAWN)
+                uri += GetRedHeuristicsRoute(gameName);
+            else
+                uri += GetBlackHeuristicsRoute(gameName);
+            var result = this.GetAsync(uri).Result;
+            if (result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                return resultContent;
+            }
+            else
+            {
+                throw new HttpRequestException("Error while getting heuristics");
+            }
+        }
+
+        public List<int> GetHeuristics(string gameName, TablutFieldType playerColor)
+        {         
+            try
+            {
+                var heuristicsTask = HttpGet_Heuristics(gameName, playerColor);
+                var heuristicsString = heuristicsTask.Result; // example: 1,2,124,15 .. as strings
+                var liOfHeuristics = new List<int>();
+                var tabOfHeuristicsString = heuristicsString.Split(','); // tab of these strings that were above
+                foreach(var heuristicString in tabOfHeuristicsString)
+                {
+                    if(Int32.TryParse(heuristicString, out var heuristicInt))
+                        liOfHeuristics.Add(heuristicInt);
+                }
+
+                return liOfHeuristics; // list of heuristics as ints
+                
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("Error while setting bot algorithms");
+                Console.WriteLine(e.Message);            
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error probably occured while converting string of heuristics to list of heuristics");
+                Console.WriteLine(e.Message); 
+            }
+
+            return null;
         }
 
         private async Task<string> HttpGet_FirstPlayerColor(string gameName)
@@ -247,6 +333,11 @@ namespace BoardGremiumCore
             return "/api/GameEntitys/" + gameName + "/HumanPlayerJoined";
         }
 
+        public string PostSetBotAlgorithmsRoute(string gameName)
+        {
+            return "/api/GameEntitys/" + gameName + "/SetBotAlgorithms";
+        }
+
         public string GetFirstPlayerColorRoute(string gameName)
         {
             return "/api/GameEntitys/" + gameName + "/FirstPlayerColor";
@@ -255,6 +346,16 @@ namespace BoardGremiumCore
         public string GetSecondPlayerColorRoute(string gameName)
         {
             return "/api/GameEntitys/" + gameName + "/SecondPlayerColor";
+        }
+
+        public string GetRedHeuristicsRoute(string gameName)
+        {
+            return "/api/GameEntitys/" + gameName + "/RedHeuristics";
+        }
+
+        public string GetBlackHeuristicsRoute(string gameName)
+        {
+            return "/api/GameEntitys/" + gameName + "/BlackHeuristics";
         }
     }
 }

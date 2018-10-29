@@ -22,12 +22,13 @@ namespace BoardGremiumBotDecisions
             var gameName = Console.ReadLine();
 
             bool isFirstPlayerJoined = botClient.HttpGet_IsFirstPlayerJoined(gameName);
+            BotAlgorithmsParameters botAlgParams = botClient.BotAlgorithmsParams(gameName);
 
             var botPawnColor = botClient.HttpGet_BotPawnColor(gameName);
 
             
 
-            TablutBotModel tbm = new TablutBotModel(botPawnColor, gameName, botClient, isFirstPlayerJoined);
+            TablutBotModel tbm = new TablutBotModel(botPawnColor, gameName, botClient, isFirstPlayerJoined, botAlgParams);
             if (tbm.Play())
             {
                 Console.WriteLine("Press key to exit");

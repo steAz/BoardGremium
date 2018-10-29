@@ -17,8 +17,10 @@ namespace BoardGremiumRESTservice.Models
         public bool IsGameWon { get; set; }
         public bool IsFirstPlayerJoined { get; set; }
         public bool IsSecPlayerJoined { get; set; }
-        //public DateTime CreationDate { get; set; }
-
+        public string BotAlgorithmParamsJSON { get; set; }
+        public string RedHeuristics { get; set; } //comma-separated list of ints e.g 10,12,15,20 ...
+        public string BlackHeuristics { get; set; }
+        
         public GameEntity() { }
 
         public GameEntity(string playerPawnColor, string boardStateRepresentation, string gameName)
@@ -28,15 +30,27 @@ namespace BoardGremiumRESTservice.Models
             this.GameName = gameName;
             this.IsFirstPlayerJoined = false;
             this.IsSecPlayerJoined = false;
-            IsGameWon = false;
+            this.IsGameWon = false;
+            RedHeuristics = string.Empty;
+            BlackHeuristics = string.Empty;
             //CreationDate = new DateTime();
-            if(MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor).Equals(TablutFieldType.RED_PAWN))
+            if (MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor).Equals(TablutFieldType.RED_PAWN))
             {
                 CurrentPlayer = MessagesConverterUtils.HUMAN_STRING;
             }else
             {
                 CurrentPlayer = MessagesConverterUtils.BOT_STRING;
             }
+        }
+
+        public void AddRedHeuristic(string heuristic)
+        {
+            RedHeuristics += (heuristic + ",");
+        }
+
+        public void AddBlackHeuristic(string heuristic)
+        {
+            BlackHeuristics += (heuristic + ",");
         }
 
         public PlayerEnum GetEnemyPlayer()

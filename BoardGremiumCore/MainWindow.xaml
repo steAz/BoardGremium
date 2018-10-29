@@ -16,17 +16,25 @@
             </TransformGroup>
         </Grid.RenderTransform>
         <Button Content="Create game" HorizontalAlignment="Left" Margin="1000,450,0,0" VerticalAlignment="Top" Width="94" Name="CreateButton" Click="CreateGame_Click" Height="23"/>
-        <ComboBox Name="GameSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,450,0,0" Text="Select a game" Width="200" Height="20"  IsReadOnly="True" IsEditable="True">
+        <ComboBox Name="GameSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,420,0,0" Text="Select a game" Width="200" Height="20"  IsReadOnly="True" IsEditable="True" SelectionChanged="GameSelectionCB_SelectionChanged">
             <ComboBoxItem Content="Tablut"></ComboBoxItem>
             <ComboBoxItem Content="NextGame"></ComboBoxItem>
         </ComboBox>
-        <ComboBox Name="PawnsSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,420,0,0" Text="Select pawns" Width="200" Height="20"  IsReadOnly="True" IsEditable="True">
+        <ComboBox Name="PawnsSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,450,0,0" Text="Select pawns" Width="200" Height="20"  IsReadOnly="True" IsEditable="True">
             <ComboBoxItem Content="Red"></ComboBoxItem>
             <ComboBoxItem Content="Black"></ComboBoxItem>
         </ComboBox>
-        <ComboBox Name="GameModeSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,480,0,0" Text="Select gamemode" Width="200" Height="20"  IsReadOnly="True" IsEditable="True">
+        <ComboBox Name="GameModeSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,480,0,0" Text="Select gamemode" Width="200" Height="20"  IsReadOnly="True" IsEditable="True" SelectionChanged="GameModeSelectionCB_SelectionChanged">
             <ComboBoxItem Content="Human vs Bot"></ComboBoxItem>
             <ComboBoxItem Content="Bot vs Bot"></ComboBoxItem>
+        </ComboBox>
+        <ComboBox Name="FirstBotAlgoSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,510,0,0" Text="Select bot algorithm" Width="200" Height="20"  IsReadOnly="True" IsEditable="True" SelectionChanged="FirstBotAlgoSelectionCB_SelectionChanged">
+        </ComboBox>
+        <ComboBox Name="FirstBotMaxTreeDepth" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="790,540,0,0" Text="Select max tree depth for first bot alg" Width="300" Height="20"  IsReadOnly="True" IsEditable="True" Visibility="Hidden">
+        </ComboBox>
+        <ComboBox Name="SecBotAlgoSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,570,0,0" Text="Select second bot algorithm" Width="200" Height="20"  IsReadOnly="True" IsEditable="True" Visibility="Hidden" SelectionChanged="SecBotAlgoSelectionCB_SelectionChanged">
+        </ComboBox>
+        <ComboBox Name="SecBotMaxTreeDepth" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="790,600,0,0" Text="Select max tree depth for second bot alg" Width="300" Height="20"  IsReadOnly="True" IsEditable="True" Visibility="Hidden">
         </ComboBox>
         <Button Content="Join game" HorizontalAlignment="Left" Margin="484,425,0,0" VerticalAlignment="Top" Width="102" Height="29"/>
         <TextBox x:Name="CreatedGameNameTB" HorizontalAlignment="Left" Height="23" Margin="1118,450,0,0" TextWrapping="Wrap" Text="'Tutaj wpisz nazwę gry'" VerticalAlignment="Top" Width="156"/>

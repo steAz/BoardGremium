@@ -11,7 +11,7 @@ namespace BoardGremiumBotDecisions
 
     public class MinMaxBot : Bot
     {
-
+        public int MaxTreeDepth { get; set; }
 
         public enum TraversingLevel
         {
@@ -20,8 +20,9 @@ namespace BoardGremiumBotDecisions
         }
 
 
-        public MinMaxBot(Game game) :base(game)
+        public MinMaxBot(Game game, int maxTreeDepth) :base(game)
         {
+            MaxTreeDepth = maxTreeDepth;
         }
 
         private int MaxMinEvaluateState(BoardState currBoardState, int currDepth, int maxDepth, TraversingLevel typeOfLevel)
@@ -107,7 +108,7 @@ namespace BoardGremiumBotDecisions
         {
             int resultBlack = 0;
 
-            resultBlack = TablutUtils.InitialNumberOfPawns(TablutFieldType.RED_PAWN) * 150 - (bs.NumberOfPawnsForPlayer(TablutFieldType.RED_PAWN) * 150); // the less enemy'pawns on the board, the better black's heuristic is
+            resultBlack = TablutUtils.InitialNumberOfPawns(TablutFieldType.RED_PAWN) * 100 - (bs.NumberOfPawnsForPlayer(TablutFieldType.RED_PAWN) * 100); // the less enemy'pawns on the board, the better black's heuristic is
 
             var kingField = bs.GetKingTablutField();
 
@@ -176,7 +177,7 @@ namespace BoardGremiumBotDecisions
 
         public override BoardState MakeMove()
         {
-            MaxMinEvaluateState(Game.currentBoardState, 0, 3, TraversingLevel.MAX);  // on output BestBoardState is set
+            MaxMinEvaluateState(Game.currentBoardState, 0, MaxTreeDepth, TraversingLevel.MAX);  // on output BestBoardState is set
             Console.WriteLine("best depth: " + this.TheBestDepth);
             Random rng = new Random();
             return this.AllTheBestBoardStates[rng.Next(AllTheBestBoardStates.Count)];
