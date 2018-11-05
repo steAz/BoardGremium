@@ -12,7 +12,7 @@ namespace BoardGremiumCore.Tablut
     {
 
         private ObservableCollection<KeyValuePair<string, int>> _data;
-        public ObservableCollection<KeyValuePair<string, int>> data
+        public ObservableCollection<KeyValuePair<string, int>> Data
         {
             get { return _data; }
         }
@@ -40,10 +40,11 @@ namespace BoardGremiumCore.Tablut
             }
         }
 
-        public void UpdateDataForChart(string gameName)
+        public void UpdateDataForChart(string gameName, FieldType colorOfPawn)
         {
-            var heuristics = Client.GetHeuristics(gameName, TablutFieldType.RED_PAWN);
+            var heuristics = Client.GetHeuristics(gameName, colorOfPawn);
             int i = 0;
+            _data.Clear();
             foreach (var heuristic in heuristics)
             {
                 _data.Add(new KeyValuePair<string, int>(i.ToString(), heuristic));

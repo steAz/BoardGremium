@@ -14,30 +14,30 @@ namespace AbstractGame
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public TablutFieldType Type
+        public FieldType Type
         {
-            get { return (TablutFieldType)GetValue(TypeProperty); }
+            get { return (FieldType)GetValue(TypeProperty); }
             set { SetValue(TypeProperty, value); }
         }
 
         public static readonly DependencyProperty TypeProperty =
-                    DependencyProperty.Register("Type", typeof(TablutFieldType), typeof(Field), null);
+                    DependencyProperty.Register("Type", typeof(FieldType), typeof(Field), null);
 
         public Field()
         {
             X = 0;
             Y = 0;
-            Type = TablutFieldType.EMPTY_FIELD;
+            Type = FieldType.EMPTY_FIELD;
         }
 
         public Field(int x, int y)
         {
             this.X = x;
             this.Y = y;
-            this.Type = TablutFieldType.EMPTY_FIELD;
+            this.Type = FieldType.EMPTY_FIELD;
         }
 
-        public Field(int x, int y, TablutFieldType type)
+        public Field(int x, int y, FieldType type)
         {
             this.X = x;
             this.Y = y;

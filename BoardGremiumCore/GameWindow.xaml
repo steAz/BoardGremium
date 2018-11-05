@@ -4,13 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BoardGremiumCore"
-        xmlns:view="clr-namespace:BoardGremiumCore.Tablut"
+        xmlns:viewTablut="clr-namespace:BoardGremiumCore.Tablut"
+        xmlns:viewAdugo="clr-namespace:BoardGremiumCore.Adugo"
         mc:Ignorable="d"
         Title="GameWindow" Height="600" Width="600">
     <Grid>
-        <Label x:Name="PlayerTurnLabel" Content="Label" HorizontalAlignment="Center" VerticalAlignment="Top" Height="50" Margin="217,62,230,0" Width="145"/>
-        <DockPanel>
-            <view:TablutBoard x:Name="tablutBoard" VerticalAlignment="Center" Margin="0,186,0,0" />
+        <Label x:Name="PlayerTurnLabel" Content="Label" HorizontalAlignment="Center" VerticalAlignment="Top" Height="50" Margin="217,62,150,0" Width="225"/>
+        <DockPanel Name="MainDockPanel">
+            <viewTablut:TablutBoard x:Name="tablutBoard" VerticalAlignment="Center" Margin="0,186,0,0" />
+            <viewAdugo:AdugoBoard x:Name="adugoBoard" VerticalAlignment="Center" Margin="0,186,0,0" />
         </DockPanel>
     </Grid>
 

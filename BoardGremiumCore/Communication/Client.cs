@@ -190,10 +190,10 @@ namespace BoardGremiumCore
             }
         }
 
-        private async Task<string> HttpGet_Heuristics(string gameName, TablutFieldType playerColor)
+        private async Task<string> HttpGet_Heuristics(string gameName, FieldType playerColor)
         {
             string uri = AddressIP;
-            if (playerColor == TablutFieldType.RED_PAWN)
+            if (playerColor == FieldType.RED_PAWN)
                 uri += GetRedHeuristicsRoute(gameName);
             else
                 uri += GetBlackHeuristicsRoute(gameName);
@@ -209,7 +209,7 @@ namespace BoardGremiumCore
             }
         }
 
-        public List<int> GetHeuristics(string gameName, TablutFieldType playerColor)
+        public List<int> GetHeuristics(string gameName, FieldType playerColor)
         {         
             try
             {

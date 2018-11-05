@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using BoardGremiumCore.Tablut;
+using BoardGremiumCore.Communication;
 
 namespace BoardGremiumCore
 {
@@ -30,35 +31,34 @@ namespace BoardGremiumCore
             InitializeComponent();
         }
 
-        public StatisticsWindow(string typeOfGame, BotAlgorithmsParameters botAlgParams,
-                            TablutFieldType firstPlayerPawn, TablutFieldType secPlayerPawn, bool isBot2BotGame, Client client, string gameName) //create class with all game infos like these parameters
+        public StatisticsWindow(GameInfos gameInfos, string typeOfGame)
         {
             InitializeComponent();
 
-            this.GameName = gameName;
-            this.LabelFirstBotAlgName.Content = botAlgParams.FirstBotAlgorithmName;
-            this.LabelFirstBotTreeDepth.Content = botAlgParams.FirstBotMaxTreeDepth;
+            this.GameName = gameInfos.GameName;
+            this.LabelFirstBotAlgName.Content = gameInfos.BotAlgParams.FirstBotAlgorithmName;
+            this.LabelFirstBotTreeDepth.Content = gameInfos.BotAlgParams.FirstBotMaxTreeDepth;
 
-            if (isBot2BotGame)
+            if (gameInfos.IsBot2BotGame)
             {
                 this.LabelSecBotParams.Visibility = Visibility.Visible;
-                this.LabelSecBotAlgName.Content = botAlgParams.SecBotAlgorithmName;
+                this.LabelSecBotAlgName.Content = gameInfos.BotAlgParams.SecBotAlgorithmName;
                 this.LabelSecBotAlgName.Visibility = Visibility.Visible;
-                this.LabelSecBotTreeDepth.Content = botAlgParams.SecBotMaxTreeDepth;
+                this.LabelSecBotTreeDepth.Content = gameInfos.BotAlgParams.SecBotMaxTreeDepth;
                 this.LabelSecBotTreeDepth.Visibility = Visibility.Visible;
             }
 
-            InitializePlayerPawnsLabels(firstPlayerPawn, secPlayerPawn, isBot2BotGame);
+            InitializePlayerPawnsLabels(gameInfos.FirstPlayerPawn, gameInfos.SecPlayerPawn, gameInfos.IsBot2BotGame);
             this.Title = "Statistics of " + typeOfGame;
-            this.ChartVM = new ChartViewModel(client);
-            heuristicsLineChart.DataContext = ChartVM;
+            this.ChartVM = new ChartViewModel(gameInfos.Client);
+            lineChart.DataContext = ChartVM;
         }
 
-        private void InitializePlayerPawnsLabels(TablutFieldType firstPlayerPawn, 
-                                        TablutFieldType secPlayerPawn, bool isBot2BotGame)
+        private void InitializePlayerPawnsLabels(FieldType firstPlayerPawn, 
+                                        FieldType secPlayerPawn, bool isBot2BotGame)
         {
             string firstPlayerPawnString, secPlayerPawnString = string.Empty;
-            if (firstPlayerPawn == TablutFieldType.RED_PAWN)
+            if (firstPlayerPawn == FieldType.RED_PAWN)
             {
                 firstPlayerPawnString = "Red";
                 secPlayerPawnString = "Black";
@@ -83,8 +83,16 @@ namespace BoardGremiumCore
 
         private void RedHeuristicsButton_Click(object sender, RoutedEventArgs e)
         {
-            ChartViewModel vm = heuristicsLineChart.DataContext as ChartViewModel;
-            vm.UpdateDataForChart(this.GameName);
+            ChartViewModel vm = lineChart.DataContext as ChartViewModel;
+            vm.UpdateDataForChart(this.GameName, FieldType.RED_PAWN);
+            lineChart.Title = "Red heuristics' chart";
+        }
+
+        private void BlackHeuristicsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChartViewModel vm = lineChart.DataContext as ChartViewModel;
+            vm.UpdateDataForChart(this.GameName, FieldType.BLACK_PAWN);
+            lineChart.Title = "Black heuristics' chart";
         }
     }
 }

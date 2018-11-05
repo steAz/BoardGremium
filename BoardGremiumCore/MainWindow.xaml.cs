@@ -42,10 +42,10 @@ namespace BoardGremiumCore
         {
             ItemToGraphicsDict = new Dictionary<Enum, string>
             {
-                { TablutFieldType.RED_PAWN, redPawnPath},
-                { TablutFieldType.BLACK_PAWN, blackPawnPath},
-                { TablutFieldType.KING, kingPath },
-                { TablutFieldType.EMPTY_FIELD, null }
+                { FieldType.RED_PAWN, redPawnPath},
+                { FieldType.BLACK_PAWN, blackPawnPath},
+                { FieldType.KING, kingPath },
+                { FieldType.EMPTY_FIELD, null }
             };
         }
 
@@ -84,8 +84,8 @@ namespace BoardGremiumCore
                 return false;
             else if (numOfFields > game.CalculateMaximumPossibleRange(game.currentBoardState, field, direction))
                 return false;
-            else if (((TablutFieldType)game.HumanPlayerFieldType == TablutFieldType.BLACK_PAWN && (TablutFieldType)field.Type != TablutFieldType.BLACK_PAWN)
-                || ((TablutFieldType)game.HumanPlayerFieldType == TablutFieldType.RED_PAWN && (TablutFieldType)field.Type == TablutFieldType.BLACK_PAWN))
+            else if (((FieldType)game.HumanPlayerFieldType == FieldType.BLACK_PAWN && (FieldType)field.Type != FieldType.BLACK_PAWN)
+                || ((FieldType)game.HumanPlayerFieldType == FieldType.RED_PAWN && (FieldType)field.Type == FieldType.BLACK_PAWN))
                 return false;
 
             return true;
@@ -142,26 +142,33 @@ namespace BoardGremiumCore
             }
         }
 
-        private void LoadBoardForGame(string titleOfGame, out TablutFieldType gamerPawns)
+        private void LoadBoardForGame(string titleOfGame, out FieldType gamerPawns)
         {
             //MainGrid.Children.Clear();
             this.Title = titleOfGame;
-            gamerPawns = TablutFieldType.EMPTY_FIELD;
+            gamerPawns = FieldType.EMPTY_FIELD;
 
             if (titleOfGame == "Tablut")
             {
                 if (PawnsSelectionCB.Text == "Red")
-                    gamerPawns = TablutFieldType.RED_PAWN;
+                    gamerPawns = FieldType.RED_PAWN;
                 else if (PawnsSelectionCB.Text == "Black")
-                    gamerPawns = TablutFieldType.BLACK_PAWN;
+                    gamerPawns = FieldType.BLACK_PAWN;
 
 
                 //  currentBoardState = StartingPosition(9, 9);
                 //this.SetDictForGraphics(redPath, blackPath, kingPath);
-                //PrepareGraphics(boardPath);
-                PrepareDebugBox();
-
+                //PrepareGraphics(boardPath);       
             }
+            else if(titleOfGame == "Adugo")
+            {
+                if (PawnsSelectionCB.Text == "Red")
+                    gamerPawns = FieldType.RED_PAWN;
+                else if (PawnsSelectionCB.Text == "Black")
+                    gamerPawns = FieldType.BLACK_PAWN;
+            }
+
+            PrepareDebugBox();
         }
 
         private void PrepareDebugBox()
@@ -187,7 +194,7 @@ namespace BoardGremiumCore
             if (GameSelectionCB.Text != "Select a game" &&
                 !CreatedGameNameTB.Text.Equals(String.Empty) && !CreatedGameNameTB.Text.Equals("'Tutaj wpisz nazwę gry'"))
             {
-                LoadBoardForGame(GameSelectionCB.Text, out TablutFieldType gamerPawns);
+                LoadBoardForGame(GameSelectionCB.Text, out FieldType gamerPawns);
 
                 client = new Client("http://localhost:54377");
                 var message = "\"" + CreatedGameNameTB.Text + "," + PawnsSelectionCB.Text.ToUpper() + "\"";
@@ -196,15 +203,17 @@ namespace BoardGremiumCore
 
                 if (!postGameResult.Result.Contains("Error 400"))
                 {
-                    var gameWindow = new GameWindow(gamerPawns, CreatedGameNameTB.Text, client, GameModeSelectionCB.Text)
+                    var gameWindow = new GameWindow(GameSelectionCB.Text, gamerPawns, CreatedGameNameTB.Text, client, GameModeSelectionCB.Text)
                     {
                         Owner = this
                     };
 
                     string botAlgorithms = string.Empty;
-                    var botAlgParams = new BotAlgorithmsParameters();
-                    botAlgParams.FirstBotAlgorithmName = FirstBotAlgoSelectionCB.Text;
-                    botAlgParams.FirstBotMaxTreeDepth = Int32.Parse(FirstBotMaxTreeDepth.Text);
+                    var botAlgParams = new BotAlgorithmsParameters
+                    {
+                        FirstBotAlgorithmName = FirstBotAlgoSelectionCB.Text,
+                        FirstBotMaxTreeDepth = Int32.Parse(FirstBotMaxTreeDepth.Text)
+                    };
                     if (GameModeSelectionCB.Text.Equals("Human vs Bot"))
                     {
                         client.HumanPlayerJoinGame(CreatedGameNameTB.Text);
@@ -216,8 +225,12 @@ namespace BoardGremiumCore
                         botAlgParams.SecBotMaxTreeDepth = Int32.Parse(SecBotMaxTreeDepth.Text);
                         botAlgParams.IsBot2BotGame = true;
                     }
-                    gameWindow.TablutBoard.BotAlgParams = botAlgParams;
-                    client.SetBotAlgorithms(CreatedGameNameTB.Text, botAlgParams);
+
+                    if (GameModeSelectionCB.Text == "Tablut")
+                    {
+                        gameWindow.TablutBoard.GameInfos.BotAlgParams = botAlgParams;
+                        client.SetBotAlgorithms(CreatedGameNameTB.Text, botAlgParams);
+                    }
                     gameWindow.Show();
 
                 }

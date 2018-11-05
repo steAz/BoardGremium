@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AbstractGame
 {
-    public enum TablutFieldType
+    public enum FieldType
     {
 
         EMPTY_FIELD,

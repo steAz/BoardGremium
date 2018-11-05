@@ -17,8 +17,8 @@
         </Grid.RenderTransform>
         <Button Content="Create game" HorizontalAlignment="Left" Margin="1000,450,0,0" VerticalAlignment="Top" Width="94" Name="CreateButton" Click="CreateGame_Click" Height="23"/>
         <ComboBox Name="GameSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,420,0,0" Text="Select a game" Width="200" Height="20"  IsReadOnly="True" IsEditable="True" SelectionChanged="GameSelectionCB_SelectionChanged">
+            <ComboBoxItem Content="Adugo"></ComboBoxItem>
             <ComboBoxItem Content="Tablut"></ComboBoxItem>
-            <ComboBoxItem Content="NextGame"></ComboBoxItem>
         </ComboBox>
         <ComboBox Name="PawnsSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,450,0,0" Text="Select pawns" Width="200" Height="20"  IsReadOnly="True" IsEditable="True">
             <ComboBoxItem Content="Red"></ComboBoxItem>

@@ -20,14 +20,21 @@
 
 
         <Button Name="RedHeuristicsButton" Content="Show red heuristics" HorizontalAlignment="Left" Margin="306,52,0,0" VerticalAlignment="Top" Width="113" Click="RedHeuristicsButton_Click"/>
-        <chartingToolkit:Chart  Name="heuristicsLineChart" Title="Line Series Heuristics" 
+        <Button Name="BlackHeuristicsButton" Content="Show black heuristics" HorizontalAlignment="Left" Margin="306,90,0,0" VerticalAlignment="Top" Width="113" Click="BlackHeuristicsButton_Click"/>
+        <chartingToolkit:Chart  Name="lineChart" Title="Tytuł" 
 		VerticalAlignment="Top" Margin="433,67,23,0" Height="321">
             <chartingToolkit:Chart.Series>
                 <chartingToolkit:LineSeries   DependentValuePath="Value" 
-		    IndependentValuePath="Key" ItemsSource="{Binding data}" 
+		    IndependentValuePath="Key" ItemsSource="{Binding Data}" 
 		    IsSelectionEnabled="True" Margin="0,-12,-41,-10"  d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
              Type=tablut:ChartViewModel}"/>
             </chartingToolkit:Chart.Series>
+            <chartingToolkit:Chart.LegendStyle>
+                <Style TargetType="Control">
+                    <Setter Property="Width" Value="0"/>
+                    <Setter Property="Height" Value="0"/>
+                </Style>
+            </chartingToolkit:Chart.LegendStyle>
         </chartingToolkit:Chart>
     </Grid>
 </Window>
