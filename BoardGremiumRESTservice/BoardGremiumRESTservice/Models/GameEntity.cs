@@ -34,7 +34,7 @@ namespace BoardGremiumRESTservice.Models
             RedHeuristics = string.Empty;
             BlackHeuristics = string.Empty;
             //CreationDate = new DateTime();
-            if (MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor).Equals(TablutFieldType.RED_PAWN))
+            if (MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor).Equals(FieldType.RED_PAWN))
             {
                 CurrentPlayer = MessagesConverterUtils.HUMAN_STRING;
             }else

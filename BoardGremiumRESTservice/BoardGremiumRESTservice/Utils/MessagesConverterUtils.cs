@@ -30,29 +30,29 @@ namespace BoardGremiumRESTservice.Utils
         public static string FIRST_NOT_JOINED_STRING = "First not joined";
 
         //message should be equal to "RED" or "BLACK"
-        public static TablutFieldType PlayerPawnFromMessage(string message)
+        public static FieldType PlayerPawnFromMessage(string message)
         {
             if(RED_STRING.Equals(message))
             {
-                return TablutFieldType.RED_PAWN;
+                return FieldType.RED_PAWN;
             } else if(BLACK_STRING.Equals(message))
             {
-                return TablutFieldType.BLACK_PAWN;
+                return FieldType.BLACK_PAWN;
             }else
             {
                 throw new ArgumentException("Wrong format of string message while converting to TablutFieldType.");
             }
         }
 
-        public static TablutFieldType EnemyPawnFromMessage(string message)
+        public static FieldType EnemyPawnFromMessage(string message)
         {
             if (RED_STRING.Equals(message))
             {
-                return TablutFieldType.BLACK_PAWN;
+                return FieldType.BLACK_PAWN;
             }
             else if (BLACK_STRING.Equals(message))
             {
-                return TablutFieldType.RED_PAWN;
+                return FieldType.RED_PAWN;
             }
             else
             {
@@ -60,12 +60,12 @@ namespace BoardGremiumRESTservice.Utils
             }
         }
 
-        public static string MessageFromPlayerPawn(TablutFieldType playerPawn)
+        public static string MessageFromPlayerPawn(FieldType playerPawn)
         {
-            if(playerPawn.Equals(TablutFieldType.RED_PAWN))
+            if(playerPawn.Equals(FieldType.RED_PAWN))
             {
                 return RED_STRING;
-            }else if(playerPawn.Equals(TablutFieldType.BLACK_PAWN))
+            }else if(playerPawn.Equals(FieldType.BLACK_PAWN))
             {
                 return BLACK_STRING;
             }else
@@ -92,7 +92,7 @@ namespace BoardGremiumRESTservice.Utils
         {
 
             string result = "";
-            if ((TablutFieldType)tgs.game.HumanPlayerFieldType == TablutFieldType.BLACK_PAWN)
+            if ((FieldType)tgs.game.HumanPlayerFieldType == FieldType.BLACK_PAWN)
             {
                 result += BLACK_STRING + ",";
             }
@@ -107,15 +107,15 @@ namespace BoardGremiumRESTservice.Utils
                 for(int j=0; j < boardWidth; j++)
                 {
                     Field f = tgs.game.currentBoardState.BoardFields[i, j];
-                    if ((TablutFieldType)f.Type == TablutFieldType.BLACK_PAWN)
+                    if ((FieldType)f.Type == FieldType.BLACK_PAWN)
                     {
                         result += BLACK_CHAR;
                     }
-                    else if ((TablutFieldType)f.Type == TablutFieldType.RED_PAWN)
+                    else if ((FieldType)f.Type == FieldType.RED_PAWN)
                     {
                         result += RED_CHAR;
                     }
-                    else if ((TablutFieldType)f.Type == TablutFieldType.KING)
+                    else if ((FieldType)f.Type == FieldType.KING)
                     {
                         result += KING_CHAR;
                     }
@@ -132,14 +132,14 @@ namespace BoardGremiumRESTservice.Utils
         {
             BoardState result = new BoardState(TablutGame.BOARD_WIDTH, TablutGame.BOARD_HEIGHT);
             string[] arguments = stringRepresentation.Split(',');
-            TablutFieldType playerType;
+            FieldType playerType;
             if (playerPawnColor.Equals(BLACK_STRING))
             {
-                playerType = TablutFieldType.BLACK_PAWN;
+                playerType = FieldType.BLACK_PAWN;
             }
             else
             {
-                playerType = TablutFieldType.RED_PAWN;
+                playerType = FieldType.RED_PAWN;
             }
             //var enumerator = stringRepresentation.GetEnumerator();
             var enumerator = arguments[1].GetEnumerator();
@@ -149,19 +149,19 @@ namespace BoardGremiumRESTservice.Utils
                 char character = enumerator.Current;
                 if (character.Equals(BLACK_CHAR))
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = TablutFieldType.BLACK_PAWN;
+                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.BLACK_PAWN;
                 }
                 else if (character.Equals(RED_CHAR))
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = TablutFieldType.RED_PAWN;
+                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.RED_PAWN;
                 }
                 else if (character.Equals(KING_CHAR))
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = TablutFieldType.KING;
+                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.KING;
                 }
                 else
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = TablutFieldType.EMPTY_FIELD;
+                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.EMPTY_FIELD;
                 }
 
                 horizontalIndex++;

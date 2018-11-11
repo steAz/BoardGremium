@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using BoardGremiumCore.Adugo;
 
 namespace AbstractGame
 {
@@ -22,6 +23,9 @@ namespace AbstractGame
 
         public static readonly DependencyProperty TypeProperty =
                     DependencyProperty.Register("Type", typeof(FieldType), typeof(Field), null);
+
+        public static readonly DependencyProperty DirectionTypeProperty =
+            DependencyProperty.Register("DirectionType", typeof(AdugoDirectionType), typeof(Field), null);
 
         public Field()
         {

@@ -28,6 +28,23 @@ namespace AbstractGame
                 }
             }
         }
+
+        public BoardState(int width, int height, string adugoType)
+        {
+            BoardFields = new List<List<Field>>();
+            this.Height = 7;
+            this.Width = 5;
+
+            for (int y = 0; y != this.Height; ++y)
+            {
+                BoardFields.Add(new List<Field>());
+
+                for (int x = 0; x != this.Width; ++x)
+                {
+                    BoardFields[y].Add(new Field(x, y));
+                }
+            }
+        }
         /// <summary>
         /// returns adjecent Field object or null if there is no adjecent field in that direction
         /// </summary>

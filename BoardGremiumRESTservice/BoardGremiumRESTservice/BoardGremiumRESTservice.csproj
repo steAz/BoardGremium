@@ -106,7 +106,7 @@
     <Compile Include="Models\GameEntity.cs" />
     <Compile Include="CommonAbstracts\PlayerEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CommonAbstracts\TablutFieldType.cs" />
+    <Compile Include="CommonAbstracts\FieldType.cs" />
     <Compile Include="Tablut\TablutGame.cs" />
     <Compile Include="Tablut\TablutGameState.cs" />
     <Compile Include="Tablut\TablutMove.cs" />

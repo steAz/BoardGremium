@@ -425,7 +425,7 @@ namespace BoardGremiumRESTservice.Controllers
                     return BadRequest("Error 400 - Game name already exists in the database");
             }
 
-            TablutFieldType playerType = MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor);
+            FieldType playerType = MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor);
             TablutGameState tgs = new TablutGameState(playerType);
             string bsRepresentation = MessagesConverterUtils.ConvertTablutGameStateToString(tgs);
             GameEntity ge = new GameEntity(playerPawnColor, bsRepresentation, gameName);

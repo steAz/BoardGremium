@@ -8,10 +8,13 @@ namespace AbstractGame
 {
     public enum FieldType
     {
-
         EMPTY_FIELD,
         RED_PAWN,
         BLACK_PAWN,
-        KING
+        KING,
+        LOCKED_FIELD,
+        JAGUAR_PAWN,
+        DOG_PAWN,
+
     }
 }

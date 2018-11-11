@@ -20,17 +20,17 @@ namespace BoardGremiumCore.Adugo
 
             switch (type)
             {
-                case FieldType.BLACK_PAWN:
-                    return new SolidColorBrush(Colors.Black);
-                case FieldType.RED_PAWN:
+                case FieldType.LOCKED_FIELD:
+                    return new SolidColorBrush(Colors.White);
+                case FieldType.DOG_PAWN:
                     return new SolidColorBrush(Colors.Red);
-                case FieldType.KING:
-                    return new SolidColorBrush(Colors.Cyan);
+                case FieldType.JAGUAR_PAWN:
+                    return new SolidColorBrush(Colors.Orange);
                 case FieldType.EMPTY_FIELD:
-                    return new SolidColorBrush(Colors.LightYellow);
+                    return new SolidColorBrush(Colors.Black);
             }
 
-            throw new Exception("fail");
+            throw new Exception("fail to convert adugo field type to color");
         }
 
         public object ConvertBack(object value, Type targetType,

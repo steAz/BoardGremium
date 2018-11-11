@@ -20,7 +20,7 @@ namespace BoardGremiumRESTservice
             {
                 for (int j = 0; j < Width; j++)
                 {
-                    BoardFields[j,i] = new Field(j, i, TablutFieldType.EMPTY_FIELD);
+                    BoardFields[j,i] = new Field(j, i, FieldType.EMPTY_FIELD);
                 }
             }
         }

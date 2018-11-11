@@ -11,12 +11,12 @@ namespace BoardGremiumRESTservice
         //private BoardState CurrentBoardState { get; }
         public Game game { get; }
 
-        public TablutGameState(TablutFieldType playerPawn)
+        public TablutGameState(FieldType playerPawn)
         {
             game = new TablutGame("", "", "", "", playerPawn);
         }
 
-        public TablutGameState(TablutFieldType playerPawn, BoardState bs)
+        public TablutGameState(FieldType playerPawn, BoardState bs)
         {
             game = new TablutGame("", "", "", "", playerPawn);
             game.currentBoardState = bs;
@@ -26,13 +26,13 @@ namespace BoardGremiumRESTservice
         {
 
             Field field = game.currentBoardState.BoardFields[move.X,move.Y];
-            TablutFieldType currentFieldType;
+            FieldType currentFieldType;
             if(currentPlayer.Equals(PlayerEnum.HUMAN_PLAYER))
             {
-                currentFieldType = (TablutFieldType)game.HumanPlayerFieldType;// change HUmanPlayerType to CreatorFieldType ?? - so we can play bot-bot or human-human
+                currentFieldType = (FieldType)game.HumanPlayerFieldType;// change HUmanPlayerType to CreatorFieldType ?? - so we can play bot-bot or human-human
             }else
             {
-                currentFieldType = (TablutFieldType)game.BotPlayerFieldType;
+                currentFieldType = (FieldType)game.BotPlayerFieldType;
             }
             if (move.NumOfFields <= 0)
                 return false;
@@ -40,7 +40,7 @@ namespace BoardGremiumRESTservice
             {
                 return false;
             } 
-            else if (!PawnsInSameTeam(currentFieldType, (TablutFieldType)field.Type))
+            else if (!PawnsInSameTeam(currentFieldType, (FieldType)field.Type))
             {
                 return false;
             }
@@ -55,7 +55,7 @@ namespace BoardGremiumRESTservice
             {
                 for (int j = 0; j < game.BoardWidth; j++)
                 {
-                    if (!fields[i, j].Type.Equals(TablutFieldType.EMPTY_FIELD))
+                    if (!fields[i, j].Type.Equals(FieldType.EMPTY_FIELD))
                     {
                         result++;
                     }
@@ -69,14 +69,14 @@ namespace BoardGremiumRESTservice
         /// </summary>
         public Field GetMissingPawnForPlayer(BoardState oldBS, BoardState newBS, PlayerEnum player)
         {
-            TablutFieldType takenType;
+            FieldType takenType;
             if (player.Equals(PlayerEnum.HUMAN_PLAYER))
             {
-                takenType = (TablutFieldType)game.HumanPlayerFieldType;
+                takenType = (FieldType)game.HumanPlayerFieldType;
             }
             else
             {
-                takenType = (TablutFieldType)game.BotPlayerFieldType;
+                takenType = (FieldType)game.BotPlayerFieldType;
             }
             for (int i = 0; i < game.BoardHeight; i++)
             {
@@ -99,11 +99,11 @@ namespace BoardGremiumRESTservice
         /// <summary>
         /// checks if 2 pawns are in the same team, e.g white pawn and king -> true white pawn and black pawn -> false
         /// </summary>
-        public bool PawnsInSameTeam(TablutFieldType t1, TablutFieldType t2)
+        public bool PawnsInSameTeam(FieldType t1, FieldType t2)
         {
             if ((t1.Equals(t2)) ||
-               (t1.Equals(TablutFieldType.RED_PAWN) && t2.Equals(TablutFieldType.KING)) ||
-               (t1.Equals(TablutFieldType.KING) && t2.Equals(TablutFieldType.RED_PAWN)))
+               (t1.Equals(FieldType.RED_PAWN) && t2.Equals(FieldType.KING)) ||
+               (t1.Equals(FieldType.KING) && t2.Equals(FieldType.RED_PAWN)))
             {
                 return true;
             }

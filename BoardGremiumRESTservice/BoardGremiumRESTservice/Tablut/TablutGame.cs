@@ -9,39 +9,39 @@ namespace BoardGremiumRESTservice
     {
         public static int BOARD_WIDTH = 9;
         public static int BOARD_HEIGHT = 9;
-        public TablutGame(string boardPath, string whitePawnPath, string blackPawnPath, string kingPath, TablutFieldType humanPawn)
+        public TablutGame(string boardPath, string whitePawnPath, string blackPawnPath, string kingPath, FieldType humanPawn)
             : base(BOARD_WIDTH, BOARD_HEIGHT, boardPath)
         {
             this.currentBoardState = StartingPosition();
             //for now hardcoded white for player, black for bot
             this.HumanPlayerFieldType = humanPawn;
-            if (humanPawn.Equals(TablutFieldType.RED_PAWN))
-                this.BotPlayerFieldType = TablutFieldType.BLACK_PAWN;
+            if (humanPawn.Equals(FieldType.RED_PAWN))
+                this.BotPlayerFieldType = FieldType.BLACK_PAWN;
             else
-                this.BotPlayerFieldType = TablutFieldType.RED_PAWN;
+                this.BotPlayerFieldType = FieldType.RED_PAWN;
 
         }
         public override List<BoardState> GetPossibleBoardStates(BoardState initial, PlayerEnum playerType)
         {
-            TablutFieldType pawnType;
+            FieldType pawnType;
             //for now we assume player playes white pawns, and bot plays black
             if (playerType == PlayerEnum.BOT_PLAYER)
-                pawnType = (TablutFieldType)BotPlayerFieldType;
+                pawnType = (FieldType)BotPlayerFieldType;
             else
-                pawnType = (TablutFieldType)HumanPlayerFieldType;
+                pawnType = (FieldType)HumanPlayerFieldType;
             List<BoardState> result = new List<BoardState>();
             for (int i = 0; i < BOARD_HEIGHT; i++)
             {
                 for (int j = 0; j < BOARD_WIDTH; j++)
                 {
-                    if ((TablutFieldType)initial.BoardFields[i, j].Type == pawnType)
+                    if ((FieldType)initial.BoardFields[i, j].Type == pawnType)
                     {
                         result.AddRange(GetPossibleBoardStatesForPawn(initial, initial.BoardFields[i, j]));
                     }
-                    if (pawnType == TablutFieldType.RED_PAWN)
+                    if (pawnType == FieldType.RED_PAWN)
                     {
                         //we add moves of the king
-                        if ((TablutFieldType)initial.BoardFields[i, j].Type == TablutFieldType.KING)
+                        if ((FieldType)initial.BoardFields[i, j].Type == FieldType.KING)
                         {
                             result.AddRange(GetPossibleBoardStatesForPawn(initial, initial.BoardFields[i, j]));
                         }
@@ -53,9 +53,9 @@ namespace BoardGremiumRESTservice
 
         private List<BoardState> GetPossibleBoardStatesForPawn(BoardState initial, Field pawn)
         {
-            if ((TablutFieldType)pawn.Type != TablutFieldType.RED_PAWN &&
-                (TablutFieldType)pawn.Type != TablutFieldType.BLACK_PAWN &&
-                (TablutFieldType)pawn.Type != TablutFieldType.KING)
+            if ((FieldType)pawn.Type != FieldType.RED_PAWN &&
+                (FieldType)pawn.Type != FieldType.BLACK_PAWN &&
+                (FieldType)pawn.Type != FieldType.KING)
             {
                 throw new ArgumentException("Field passed to GetPossibleBoardStatesForPawn is not pawn type");
             }
@@ -100,7 +100,7 @@ namespace BoardGremiumRESTservice
                     {
                         for (int i = 0; i < pawn.Y; i++)
                         {
-                            if (((TablutFieldType)initial.BoardFields[pawn.X, pawn.Y - i - 1].Type).Equals(TablutFieldType.EMPTY_FIELD))
+                            if (((FieldType)initial.BoardFields[pawn.X, pawn.Y - i - 1].Type).Equals(FieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -112,7 +112,7 @@ namespace BoardGremiumRESTservice
                     {
                         for (int i = 0; i < BOARD_HEIGHT - 1 - pawn.Y; i++)
                         {
-                            if (((TablutFieldType)initial.BoardFields[pawn.X, pawn.Y + i + 1].Type).Equals(TablutFieldType.EMPTY_FIELD))
+                            if (((FieldType)initial.BoardFields[pawn.X, pawn.Y + i + 1].Type).Equals(FieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -124,7 +124,7 @@ namespace BoardGremiumRESTservice
                     {
                         for (int i = 0; i < pawn.X; i++)
                         {
-                            if (((TablutFieldType)initial.BoardFields[pawn.X - i - 1, pawn.Y].Type).Equals(TablutFieldType.EMPTY_FIELD))
+                            if (((FieldType)initial.BoardFields[pawn.X - i - 1, pawn.Y].Type).Equals(FieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -136,7 +136,7 @@ namespace BoardGremiumRESTservice
                     {
                         for (int i = 0; i < BOARD_WIDTH - 1 - pawn.X; i++)
                         {
-                            if (((TablutFieldType)initial.BoardFields[pawn.X + i + 1, pawn.Y].Type).Equals(TablutFieldType.EMPTY_FIELD))
+                            if (((FieldType)initial.BoardFields[pawn.X + i + 1, pawn.Y].Type).Equals(FieldType.EMPTY_FIELD))
                             {
                                 result++;
                             }
@@ -154,13 +154,13 @@ namespace BoardGremiumRESTservice
             int xCoord, yCoord;
             xCoord = field.X;
             yCoord = field.Y;
-            TablutFieldType type = TablutFieldType.KING;
-            if (((TablutFieldType)field.Type).Equals(TablutFieldType.BLACK_PAWN))
-                type = TablutFieldType.BLACK_PAWN;
-            else if (((TablutFieldType)field.Type).Equals(TablutFieldType.RED_PAWN))
-                type = TablutFieldType.RED_PAWN;
-            else if (((TablutFieldType)field.Type).Equals(TablutFieldType.KING))
-                type = TablutFieldType.KING;
+            FieldType type = FieldType.KING;
+            if (((FieldType)field.Type).Equals(FieldType.BLACK_PAWN))
+                type = FieldType.BLACK_PAWN;
+            else if (((FieldType)field.Type).Equals(FieldType.RED_PAWN))
+                type = FieldType.RED_PAWN;
+            else if (((FieldType)field.Type).Equals(FieldType.KING))
+                type = FieldType.KING;
             switch (direction)
             {
                 case DirectionEnum.UP:
@@ -189,7 +189,7 @@ namespace BoardGremiumRESTservice
                     }
             }
             board.BoardFields[xCoord, yCoord].Type = type;
-            field.Type = TablutFieldType.EMPTY_FIELD;
+            field.Type = FieldType.EMPTY_FIELD;
             TakeEnemyPawns(board, board.BoardFields[xCoord, yCoord]);
         }
         /// <summary>
@@ -208,41 +208,41 @@ namespace BoardGremiumRESTservice
         /// </summary>
         private void TakePawnAtDirection(BoardState bs, Field ourField, DirectionEnum direction)
         {
-            TablutFieldType enemyPawnType;
-            if ((TablutFieldType)ourField.Type == TablutFieldType.BLACK_PAWN)
+            FieldType enemyPawnType;
+            if ((FieldType)ourField.Type == FieldType.BLACK_PAWN)
             {
                 //just white pawn because taking off the king is checked in checking
                 //end of the game, which is called before taking pawns off
-                enemyPawnType = TablutFieldType.RED_PAWN;
+                enemyPawnType = FieldType.RED_PAWN;
             }
             else
             {
                 //King cannot capture
-                if ((TablutFieldType)ourField.Type == TablutFieldType.KING)
+                if ((FieldType)ourField.Type == FieldType.KING)
                     return;
-                else enemyPawnType = TablutFieldType.BLACK_PAWN;
+                else enemyPawnType = FieldType.BLACK_PAWN;
             }
             Field adjecentField = bs.AdjecentField(ourField, direction);
             Field nextField;
-            if (adjecentField != null && (TablutFieldType)adjecentField.Type == enemyPawnType)
+            if (adjecentField != null && (FieldType)adjecentField.Type == enemyPawnType)
             {
                 nextField = bs.AdjecentField(adjecentField, direction);
-                if (enemyPawnType == TablutFieldType.RED_PAWN)
+                if (enemyPawnType == FieldType.RED_PAWN)
                 {
-                    if (nextField != null && (TablutFieldType)nextField.Type == TablutFieldType.BLACK_PAWN)
+                    if (nextField != null && (FieldType)nextField.Type == FieldType.BLACK_PAWN)
                     {
                         //take off if not a king
-                        if ((TablutFieldType)adjecentField.Type == TablutFieldType.RED_PAWN)
+                        if ((FieldType)adjecentField.Type == FieldType.RED_PAWN)
                         {
-                            adjecentField.Type = TablutFieldType.EMPTY_FIELD;
+                            adjecentField.Type = FieldType.EMPTY_FIELD;
                         }
                     }
                 }
                 else
                 {
-                    if (nextField != null && (TablutFieldType)nextField.Type == TablutFieldType.RED_PAWN)
+                    if (nextField != null && (FieldType)nextField.Type == FieldType.RED_PAWN)
                     {
-                        adjecentField.Type = TablutFieldType.EMPTY_FIELD;
+                        adjecentField.Type = FieldType.EMPTY_FIELD;
                     }
                 }
             }
@@ -252,13 +252,13 @@ namespace BoardGremiumRESTservice
         {
             if (forPlayer == PlayerEnum.HUMAN_PLAYER)
             {
-                if ((TablutFieldType)HumanPlayerFieldType == TablutFieldType.RED_PAWN)
+                if ((FieldType)HumanPlayerFieldType == FieldType.RED_PAWN)
                     return HasWhitePlayerWon(bs);
                 else return HasBlackPlayerWon(bs);
             }
             else
             {
-                if ((TablutFieldType)BotPlayerFieldType == TablutFieldType.RED_PAWN)
+                if ((FieldType)BotPlayerFieldType == FieldType.RED_PAWN)
                     return HasWhitePlayerWon(bs);
                 else return HasBlackPlayerWon(bs);
             }
@@ -266,10 +266,10 @@ namespace BoardGremiumRESTservice
         private bool HasWhitePlayerWon(BoardState bs)
         {
             Field[,] boardFields = bs.BoardFields;
-            if ((TablutFieldType)boardFields[0, 0].Type == TablutFieldType.KING
-                || (TablutFieldType)boardFields[0, BoardWidth - 1].Type == TablutFieldType.KING
-                || (TablutFieldType)boardFields[BoardHeight - 1, 0].Type == TablutFieldType.KING
-                || (TablutFieldType)boardFields[BoardHeight - 1, BoardWidth - 1].Type == TablutFieldType.KING)
+            if ((FieldType)boardFields[0, 0].Type == FieldType.KING
+                || (FieldType)boardFields[0, BoardWidth - 1].Type == FieldType.KING
+                || (FieldType)boardFields[BoardHeight - 1, 0].Type == FieldType.KING
+                || (FieldType)boardFields[BoardHeight - 1, BoardWidth - 1].Type == FieldType.KING)
             {
                 return true;
             }
@@ -285,7 +285,7 @@ namespace BoardGremiumRESTservice
             {
                 for (int j = 0; j < bs.Width; j++)
                 {
-                    if ((TablutFieldType)bs.BoardFields[i, j].Type == TablutFieldType.KING)
+                    if ((FieldType)bs.BoardFields[i, j].Type == FieldType.KING)
                     {
                         kingField = bs.BoardFields[i, j];
                         kingFound = true;
@@ -315,7 +315,7 @@ namespace BoardGremiumRESTservice
             //throne field
             if (f.X == BoardWidth / 2 && f.Y == BoardHeight / 2) return true;
             //black pawn
-            if ((TablutFieldType)f.Type == TablutFieldType.BLACK_PAWN) return true;
+            if ((FieldType)f.Type == FieldType.BLACK_PAWN) return true;
             return false;
         }
         public override BoardState StartingPosition()
@@ -326,42 +326,42 @@ namespace BoardGremiumRESTservice
                 for (int j = 0; j < startingBoardState.Width; j++)
                 {
                     //startingBoardState.SetField(j, i, TablutFieldType.EMPTY_FIELD);
-                    startingBoardState.BoardFields[i, j] = new Field(j, i, TablutFieldType.EMPTY_FIELD);
+                    startingBoardState.BoardFields[i, j] = new Field(j, i, FieldType.EMPTY_FIELD);
                 }
             }
             //black pawns
-            startingBoardState.BoardFields[3, 0].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[4, 0].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[5, 0].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[4, 1].Type = TablutFieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[3, 0].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[4, 0].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[5, 0].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[4, 1].Type = FieldType.BLACK_PAWN;
 
-            startingBoardState.BoardFields[3, 8].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[4, 8].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[4, 7].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[5, 8].Type = TablutFieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[3, 8].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[4, 8].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[4, 7].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[5, 8].Type = FieldType.BLACK_PAWN;
 
-            startingBoardState.BoardFields[0, 3].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[0, 4].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[1, 4].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[0, 5].Type = TablutFieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[0, 3].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[0, 4].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[1, 4].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[0, 5].Type = FieldType.BLACK_PAWN;
 
-            startingBoardState.BoardFields[8, 3].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[8, 4].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[7, 4].Type = TablutFieldType.BLACK_PAWN;
-            startingBoardState.BoardFields[8, 5].Type = TablutFieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[8, 3].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[8, 4].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[7, 4].Type = FieldType.BLACK_PAWN;
+            startingBoardState.BoardFields[8, 5].Type = FieldType.BLACK_PAWN;
             //white pawns
 
-            startingBoardState.BoardFields[4, 2].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[4, 3].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[4, 5].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[4, 6].Type = TablutFieldType.RED_PAWN;
+            startingBoardState.BoardFields[4, 2].Type = FieldType.RED_PAWN;
+            startingBoardState.BoardFields[4, 3].Type = FieldType.RED_PAWN;
+            startingBoardState.BoardFields[4, 5].Type = FieldType.RED_PAWN;
+            startingBoardState.BoardFields[4, 6].Type = FieldType.RED_PAWN;
 
-            startingBoardState.BoardFields[2, 4].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[3, 4].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[5, 4].Type = TablutFieldType.RED_PAWN;
-            startingBoardState.BoardFields[6, 4].Type = TablutFieldType.RED_PAWN;
+            startingBoardState.BoardFields[2, 4].Type = FieldType.RED_PAWN;
+            startingBoardState.BoardFields[3, 4].Type = FieldType.RED_PAWN;
+            startingBoardState.BoardFields[5, 4].Type = FieldType.RED_PAWN;
+            startingBoardState.BoardFields[6, 4].Type = FieldType.RED_PAWN;
             //king
-            startingBoardState.BoardFields[4, 4].Type = TablutFieldType.KING;
+            startingBoardState.BoardFields[4, 4].Type = FieldType.KING;
             return startingBoardState;
         }
     }

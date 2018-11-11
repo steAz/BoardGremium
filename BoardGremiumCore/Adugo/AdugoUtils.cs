@@ -4,59 +4,73 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace BoardGremiumCore.Adugo
 {
     static public class AdugoUtils
     {
         public static int BOARD_WIDTH = 5;
-        public static int BOARD_HEIGHT = 7;
+        public static int BOARD_HEIGHT = 8;
 
         public static char RED_CHAR = 'R';
         public static char BLACK_CHAR = 'B';
         public static char KING_CHAR = 'K';
         public static char EMPTY_CHAR = 'E';
 
+
         static public BoardState StartingPosition()
         {
-            BoardState startingBoardState = new BoardState(BOARD_WIDTH, BOARD_HEIGHT);
-            for (int i = 0; i < startingBoardState.Width; i++)
+            BoardState startingBoardState = new BoardState(BOARD_WIDTH, BOARD_HEIGHT, "Adugo");
+            for (int y = 0; y < startingBoardState.Height; y++)
             {
-                for (int j = 0; j < startingBoardState.Height; j++)
+                for (int x = 0; x < startingBoardState.Width; x++)
                 {
-                    startingBoardState.BoardFields[i][j] = new Field(j, i, FieldType.RED_PAWN);
+                    startingBoardState.BoardFields[y][x] = new AdugoField(x, y, FieldType.EMPTY_FIELD, AdugoDirectionType.ALL_DIRECTIONS);
                 }
             }
-            //black pawns
-            //startingBoardState.BoardFields[0][3].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[0][4].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[0][5].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[1][4].Type = FieldType.BLACK_PAWN;
+            ////locked pawns
+            startingBoardState.BoardFields[5][0].Type = FieldType.LOCKED_FIELD;
+            startingBoardState.BoardFields[6][1].Type = FieldType.LOCKED_FIELD;
+            startingBoardState.BoardFields[5][4].Type = FieldType.LOCKED_FIELD;
+            startingBoardState.BoardFields[6][3].Type = FieldType.LOCKED_FIELD;
 
-            //startingBoardState.BoardFields[8][3].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[8][4].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[7][4].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[8][5].Type = FieldType.BLACK_PAWN;
+            ////jaguar pawn
+            startingBoardState.BoardFields[2][2].Type = FieldType.JAGUAR_PAWN;
 
-            //startingBoardState.BoardFields[3][0].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[4][0].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[4][1].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[5][0].Type = FieldType.BLACK_PAWN;
+            ////dog pawns
+            startingBoardState.BoardFields[0][0].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[1][0].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[2][0].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[0][1].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[1][1].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[2][1].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[0][2].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[1][2].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[0][3].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[1][3].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[2][3].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[0][4].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[1][4].Type = FieldType.DOG_PAWN;
+            startingBoardState.BoardFields[2][4].Type = FieldType.DOG_PAWN;
 
-            //startingBoardState.BoardFields[3][8].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[4][8].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[4][7].Type = FieldType.BLACK_PAWN;
-            //startingBoardState.BoardFields[5][8].Type = FieldType.BLACK_PAWN;
-            ////red pawns
 
+            //empty pawns
+            //startingBoardState.BoardFields[0][3].Type = FieldType.RED_PAWN;
+            //startingBoardState.BoardFields[0][4].Type = FieldType.RED_PAWN;
+            //startingBoardState.BoardFields[0][6].Type = FieldType.RED_PAWN;
+            //startingBoardState.BoardFields[1][3].Type = FieldType.RED_PAWN;
+            //startingBoardState.BoardFields[1][4].Type = FieldType.RED_PAWN;
+            //startingBoardState.BoardFields[1][5].Type = FieldType.RED_PAWN;
+            //startingBoardState.BoardFields[2][3].Type = FieldType.RED_PAWN;
             //startingBoardState.BoardFields[2][4].Type = FieldType.RED_PAWN;
+            //startingBoardState.BoardFields[2][5].Type = FieldType.RED_PAWN;
+            //startingBoardState.BoardFields[2][6].Type = FieldType.RED_PAWN;
+            //startingBoardState.BoardFields[3][3].Type = FieldType.RED_PAWN;
             //startingBoardState.BoardFields[3][4].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[5][4].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[6][4].Type = FieldType.RED_PAWN;
-
-            //startingBoardState.BoardFields[4][2].Type = FieldType.RED_PAWN;
+            //startingBoardState.BoardFields[3][5].Type = FieldType.RED_PAWN;
             //startingBoardState.BoardFields[4][3].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[4][5].Type = FieldType.RED_PAWN;
+            //startingBoardState.BoardFields[4][4].Type = FieldType.RED_PAWN;
             //startingBoardState.BoardFields[4][6].Type = FieldType.RED_PAWN;
             ////king
             //startingBoardState.BoardFields[4][4].Type = FieldType.KING;

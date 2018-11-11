@@ -74,7 +74,10 @@
     <Compile Include="AbstractGame\DirectionEnum.cs" />
     <Compile Include="AbstractGame\Field.cs" />
     <Compile Include="AbstractGame\Game.cs" />
+    <Compile Include="Adugo\AdugoImageSourceConverter.cs" />
+    <Compile Include="Adugo\AdugoDirectionType.cs" />
     <Compile Include="Adugo\AdugoColorConverter.cs" />
+    <Compile Include="Adugo\AdugoField.cs" />
     <Compile Include="Adugo\AdugoUtils.cs" />
     <Compile Include="Adugo\AdugoBoard.xaml.cs">
       <DependentUpon>AdugoBoard.xaml</DependentUpon>
@@ -85,7 +88,7 @@
     </Compile>
     <Compile Include="Communication\BotAlgorithmParameters.cs" />
     <Compile Include="AbstractGame\PlayerEnum.cs" />
-    <Compile Include="AbstractGame\TablutFieldType.cs" />
+    <Compile Include="AbstractGame\FieldType.cs" />
     <Compile Include="Communication\GameInfos.cs" />
     <Compile Include="Communication\ServerResponseException.cs" />
     <Compile Include="GameWindow.xaml.cs">

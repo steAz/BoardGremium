@@ -8,6 +8,7 @@
     <UserControl.Resources>
 
         <adugo:AdugoColorConverter x:Key="AdugoColorConverter" />
+        <adugo:AdugoImageSourceConverter x:Key="AdugoImageSourceConverter" />
 
         <Style x:Key="HorizontalListBox">
             <Style.Resources>
@@ -23,9 +24,15 @@
         </Style>
 
         <DataTemplate x:Key="CellTemplate">
-            <Border BorderThickness="2" BorderBrush="DarkGray" CornerRadius="2" Width="20" Height="20" >
-                <Rectangle Fill ="{Binding Type,
-                    Converter={StaticResource AdugoColorConverter}}" />
+            <Border BorderThickness="5" BorderBrush="{Binding Type,
+                    Converter={StaticResource AdugoColorConverter}}" CornerRadius="2" Width="40" Height="40" >
+                <Rectangle>
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="{Binding DirectionType,
+                    Converter={StaticResource AdugoImageSourceConverter}}"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+               
             </Border>
         </DataTemplate>
 
@@ -43,10 +50,10 @@
         </DataTemplate>
 
     </UserControl.Resources>
-
-    <StackPanel Width="364" Height="335">
+    <Grid>
+        <StackPanel Width="500" Height="550">
         <ListBox Name="MyBoardListBox" ItemsSource="{Binding MyBoardFields}" ItemTemplate="{StaticResource RowTemplate}"
-             HorizontalContentAlignment="Center" Padding="20"
+             HorizontalContentAlignment="Center" Padding="40"
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
              Type=adugo:AdugoViewModel}">
             <ListBox.Style>
@@ -58,5 +65,5 @@
             </ListBox.Style>
         </ListBox>
     </StackPanel>
-
+    </Grid>
 </UserControl>
