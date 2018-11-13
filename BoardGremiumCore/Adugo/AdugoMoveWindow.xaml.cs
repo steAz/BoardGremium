@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AbstractGame;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,43 +12,23 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using AbstractGame;
-using Games;
 
-namespace BoardGremiumCore
+namespace BoardGremiumCore.Adugo
 {
     /// <summary>
-    /// Logika interakcji dla klasy MoveWindow.xaml
+    /// Interaction logic for AdugoMoveWindow.xaml
     /// </summary>
-    public partial class MoveWindow : Window
+    public partial class AdugoMoveWindow : Window
     {
-        public int NumOfFields;
-        public DirectionEnum Direction;
+        public DirectionEnum Direction; 
 
-        public MoveWindow()
+        public AdugoMoveWindow()
         {
             InitializeComponent();
         }
 
         private void AcceptMove_Click(object sender, RoutedEventArgs e)
         {
-            if ((bool)MoveI.IsChecked)
-                NumOfFields = 1;
-            else if ((bool)MoveII.IsChecked)
-                NumOfFields = 2;
-            else if ((bool)MoveIII.IsChecked)
-                NumOfFields = 3;
-            else if ((bool)MoveIV.IsChecked)
-                NumOfFields = 4;
-            else if ((bool)MoveV.IsChecked)
-                NumOfFields = 5;
-            else if ((bool)MoveVI.IsChecked)
-                NumOfFields = 6;
-            else if ((bool)MoveVII.IsChecked)
-                NumOfFields = 7;
-            else if ((bool)MoveVIII.IsChecked)
-                NumOfFields = 8;
-
             if ((bool)WayUP.IsChecked)
                 Direction = DirectionEnum.UP;
             else if ((bool)WayDOWN.IsChecked)
@@ -56,16 +37,25 @@ namespace BoardGremiumCore
                 Direction = DirectionEnum.LEFT;
             else if ((bool)WayRight.IsChecked)
                 Direction = DirectionEnum.RIGHT;
+            else if ((bool)WayUPRight.IsChecked)
+                Direction = DirectionEnum.UPRIGHT;
+            else if ((bool)WayUPLeft.IsChecked)
+                Direction = DirectionEnum.UPLEFT;
+            else if ((bool)WayDOWNRight.IsChecked)
+                Direction = DirectionEnum.DOWNRIGHT;
+            else if ((bool)WayDOWNLeft.IsChecked)
+                Direction = DirectionEnum.DOWNLEFT;
 
             this.Close();
         }
 
         public bool IsFilled()
         {
-            if(NumOfFields == 0 || Direction.Equals(null))
+            if (Direction.Equals(null))
             {
                 return false;
-            }else
+            }
+            else
             {
                 return true;
             }

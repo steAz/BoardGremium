@@ -74,10 +74,14 @@
     <Compile Include="AbstractGame\DirectionEnum.cs" />
     <Compile Include="AbstractGame\Field.cs" />
     <Compile Include="AbstractGame\Game.cs" />
+    <Compile Include="Adugo\AdugoBoardState.cs" />
     <Compile Include="Adugo\AdugoImageSourceConverter.cs" />
     <Compile Include="Adugo\AdugoDirectionType.cs" />
     <Compile Include="Adugo\AdugoColorConverter.cs" />
     <Compile Include="Adugo\AdugoField.cs" />
+    <Compile Include="Adugo\AdugoMoveWindow.xaml.cs">
+      <DependentUpon>AdugoMoveWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Adugo\AdugoUtils.cs" />
     <Compile Include="Adugo\AdugoBoard.xaml.cs">
       <DependentUpon>AdugoBoard.xaml</DependentUpon>
@@ -86,11 +90,13 @@
     <Compile Include="ChartUserControler.xaml.cs">
       <DependentUpon>ChartUserControler.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Communication\Adugo\AdugoClient.cs" />
     <Compile Include="Communication\BotAlgorithmParameters.cs" />
     <Compile Include="AbstractGame\PlayerEnum.cs" />
     <Compile Include="AbstractGame\FieldType.cs" />
     <Compile Include="Communication\GameInfos.cs" />
     <Compile Include="Communication\ServerResponseException.cs" />
+    <Compile Include="Communication\Tablut\TablutClient.cs" />
     <Compile Include="GameWindow.xaml.cs">
       <DependentUpon>GameWindow.xaml</DependentUpon>
     </Compile>
@@ -106,6 +112,10 @@
     <Compile Include="Tablut\TablutViewModel.cs" />
     <Compile Include="TextBoxOutputter.cs" />
     <Page Include="Adugo\AdugoBoard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Adugo\AdugoMoveWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

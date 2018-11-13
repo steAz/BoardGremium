@@ -23,11 +23,11 @@ namespace BoardGremiumCore.Adugo
                 case FieldType.LOCKED_FIELD:
                     return new SolidColorBrush(Colors.White);
                 case FieldType.DOG_PAWN:
-                    return new SolidColorBrush(Colors.Red);
+                    return new SolidColorBrush(Colors.Firebrick);
                 case FieldType.JAGUAR_PAWN:
-                    return new SolidColorBrush(Colors.Orange);
+                    return new SolidColorBrush(Colors.Goldenrod);
                 case FieldType.EMPTY_FIELD:
-                    return new SolidColorBrush(Colors.Black);
+                    return new SolidColorBrush(Colors.LimeGreen);
             }
 
             throw new Exception("fail to convert adugo field type to color");

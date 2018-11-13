@@ -12,6 +12,10 @@ namespace AbstractGame
         DOWN,
         LEFT,
         RIGHT,
+        UPLEFT,
+        UPRIGHT,
+        DOWNLEFT,
+        DOWNRIGHT,
         NONE
     }
 }

@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Games;
 using AbstractGame;
+using BoardGremiumCore.Communication.Adugo;
+using BoardGremiumCore.Communication.Tablut;
 
 namespace BoardGremiumCore
 {
@@ -162,10 +164,10 @@ namespace BoardGremiumCore
             }
             else if(titleOfGame == "Adugo")
             {
-                if (PawnsSelectionCB.Text == "Red")
-                    gamerPawns = FieldType.RED_PAWN;
-                else if (PawnsSelectionCB.Text == "Black")
-                    gamerPawns = FieldType.BLACK_PAWN;
+                if (PawnsSelectionCB.Text == "Jaguar")
+                    gamerPawns = FieldType.JAGUAR_PAWN;
+                else if (PawnsSelectionCB.Text == "Dogs")
+                    gamerPawns = FieldType.DOG_PAWN;
             }
 
             PrepareDebugBox();
@@ -192,11 +194,11 @@ namespace BoardGremiumCore
         private void CreateGame_Click(object sender, RoutedEventArgs e)
         {
             if (GameSelectionCB.Text != "Select a game" &&
-                !CreatedGameNameTB.Text.Equals(String.Empty) && !CreatedGameNameTB.Text.Equals("'Tutaj wpisz nazwę gry'"))
+                !CreatedGameNameTB.Text.Equals(String.Empty) && !CreatedGameNameTB.Text.Equals("'Write name of game here'"))
             {
                 LoadBoardForGame(GameSelectionCB.Text, out FieldType gamerPawns);
 
-                client = new Client("http://localhost:54377");
+                client = new TablutClient("http://localhost:54377");
                 var message = "\"" + CreatedGameNameTB.Text + "," + PawnsSelectionCB.Text.ToUpper() + "\"";
                 var postGameResult = client.SendPostGame(message);
 
@@ -231,6 +233,10 @@ namespace BoardGremiumCore
                         gameWindow.TablutBoard.GameInfos.BotAlgParams = botAlgParams;
                         client.SetBotAlgorithms(CreatedGameNameTB.Text, botAlgParams);
                     }
+                    else if (GameModeSelectionCB.Text == "Adugo")
+                    {
+
+                    }
                     gameWindow.Show();
 
                 }
@@ -240,11 +246,21 @@ namespace BoardGremiumCore
 
         private void GameSelectionCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            PawnsSelectionCB.Items.Clear();
+            if(GameSelectionCB.SelectedItem.ToString().Contains("Tablut"))
+            {
+                PawnsSelectionCB.Items.Add("Red");
+                PawnsSelectionCB.Items.Add("Black");
+            }
+            else if(GameSelectionCB.SelectedItem.ToString().Contains("Adugo"))
+            {
+                PawnsSelectionCB.Items.Add("Jaguar");
+                PawnsSelectionCB.Items.Add("Dogs");
+            }
             FirstBotAlgoSelectionCB.Items.Add("MinMax");
             FirstBotAlgoSelectionCB.Items.Add("NegaMax");
             SecBotAlgoSelectionCB.Items.Add("MinMax");
             SecBotAlgoSelectionCB.Items.Add("NegaMax");
-
         }
 
         private void GameModeSelectionCB_SelectionChanged(object sender, SelectionChangedEventArgs e)

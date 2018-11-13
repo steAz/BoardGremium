@@ -12,26 +12,20 @@ using System.Threading.Tasks;
 
 namespace BoardGremiumCore
 {
-    public class Client : HttpClient
+    public abstract class Client : HttpClient
     {
-        private string AddressIP;
+        protected string AddressIP;
 
-        private static string PostGameRoute = "/api/GameEntitys";
-        private static string PostMoveRoute = "/api/Move";
+        protected static string PostGameRoute = "/api/GameEntitys";
+
 
         public Client(string addressIP) : base()
         {
             this.AddressIP = addressIP;
         }
 
-        public async Task<string> SendPostMove(string message)
-        {
-            var content = new StringContent(message, Encoding.UTF8, "application/json");
-            var result = this.PostAsync(AddressIP + PostMoveRoute, content).Result;
-            string resultContent = await result.Content.ReadAsStringAsync();
-            Console.WriteLine(resultContent);
-            return resultContent;
-        }
+        public abstract Task<string> SendPostMove(string message);
+        public abstract string GetWinnerColor(string gameName);
 
         public async Task<string> SendPostGame(string jsonMessage)
         {
@@ -43,7 +37,7 @@ namespace BoardGremiumCore
             return resultContent;
         }
 
-        private async Task<string> SendGetCurrentPlayer(string gameName)
+        protected async Task<string> SendGetCurrentPlayer(string gameName)
         {
             string uri = AddressIP + GetCurrentPlayerRoute(gameName);
             var result = this.GetAsync(uri).Result;
@@ -238,74 +232,6 @@ namespace BoardGremiumCore
             }
 
             return null;
-        }
-
-        private async Task<string> HttpGet_FirstPlayerColor(string gameName)
-        {
-            string uri = AddressIP + GetFirstPlayerColorRoute(gameName);
-            var result = this.GetAsync(uri).Result;
-            if (result.IsSuccessStatusCode)
-            {
-                string resultContent = await result.Content.ReadAsStringAsync();
-                Console.WriteLine(resultContent);
-                return resultContent;
-            }
-            else
-            {
-                throw new HttpRequestException("Error with getting FirstPlayerColor");
-            }
-        }
-
-        private async Task<string> HttpGet_SecondPlayerColor(string gameName)
-        {
-            string uri = AddressIP + GetSecondPlayerColorRoute(gameName);
-            var result = this.GetAsync(uri).Result;
-            if (result.IsSuccessStatusCode)
-            {
-                string resultContent = await result.Content.ReadAsStringAsync();
-                Console.WriteLine(resultContent);
-                return resultContent;
-            }
-            else
-            {
-                throw new HttpRequestException("Error with getting FirstPlayerColor");
-            }
-        }
-
-        public string GetWinnerColor(string gameName)
-        {
-            var currentPlayerTask = SendGetCurrentPlayer(gameName);
-            var currentPlayerString = currentPlayerTask.Result;
-            if (currentPlayerString.Equals("HUMAN"))
-            {
-                var firstPlayerColorTask = HttpGet_FirstPlayerColor(gameName);
-                var firstPlayerColorString = firstPlayerColorTask.Result;
-                if (!firstPlayerColorString.Equals("RED") && !firstPlayerColorString.Equals("BLACK"))
-                {
-                    throw new HttpRequestException("Error with getting firstPlayerColor");
-                }
-                else
-                {
-                    return firstPlayerColorString;
-                }
-            }
-            else if (currentPlayerString.Equals("BOT"))
-            {
-                var secondPlayerColorTask = HttpGet_SecondPlayerColor(gameName);
-                var secondPlayerColorString = secondPlayerColorTask.Result;
-                if (!secondPlayerColorString.Equals("RED") && !secondPlayerColorString.Equals("BLACK"))
-                {
-                    throw new HttpRequestException("Error with getting secondPlayerColor");
-                }
-                else
-                {
-                    return secondPlayerColorString;
-                }
-            }
-            else
-            {
-                throw new HttpRequestException("Error with getting CurrentPlayer");
-            }
         }
 
         public string GetCurrentPlayerRoute(string gameName)

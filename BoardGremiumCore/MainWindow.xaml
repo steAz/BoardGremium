@@ -21,8 +21,6 @@
             <ComboBoxItem Content="Tablut"></ComboBoxItem>
         </ComboBox>
         <ComboBox Name="PawnsSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,450,0,0" Text="Select pawns" Width="200" Height="20"  IsReadOnly="True" IsEditable="True">
-            <ComboBoxItem Content="Red"></ComboBoxItem>
-            <ComboBoxItem Content="Black"></ComboBoxItem>
         </ComboBox>
         <ComboBox Name="GameModeSelectionCB" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="780,480,0,0" Text="Select gamemode" Width="200" Height="20"  IsReadOnly="True" IsEditable="True" SelectionChanged="GameModeSelectionCB_SelectionChanged">
             <ComboBoxItem Content="Human vs Bot"></ComboBoxItem>
@@ -37,6 +35,6 @@
         <ComboBox Name="SecBotMaxTreeDepth" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="790,600,0,0" Text="Select max tree depth for second bot alg" Width="300" Height="20"  IsReadOnly="True" IsEditable="True" Visibility="Hidden">
         </ComboBox>
         <Button Content="Join game" HorizontalAlignment="Left" Margin="484,425,0,0" VerticalAlignment="Top" Width="102" Height="29"/>
-        <TextBox x:Name="CreatedGameNameTB" HorizontalAlignment="Left" Height="23" Margin="1118,450,0,0" TextWrapping="Wrap" Text="'Tutaj wpisz nazwę gry'" VerticalAlignment="Top" Width="156"/>
+        <TextBox x:Name="CreatedGameNameTB" HorizontalAlignment="Left" Height="23" Margin="1118,450,0,0" TextWrapping="Wrap" Text="'Write name of game here'" VerticalAlignment="Top" Width="156"/>
     </Grid>
 </Window>

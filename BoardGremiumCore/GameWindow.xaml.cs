@@ -23,6 +23,7 @@ namespace BoardGremiumCore
     public partial class GameWindow : Window
     {
         public BoardState DisplayedBoardState;
+        public AdugoBoardState DisplayedAdugoBoardState;
         public TablutViewModel TablutBoard;
         public AdugoViewModel AdugoBoard;
 
@@ -38,9 +39,9 @@ namespace BoardGremiumCore
             }
             else if (gameType == "Adugo")
             {
-                DisplayedBoardState = AdugoUtils.StartingPosition();
+                DisplayedAdugoBoardState = AdugoUtils.StartingPosition();
                 MainDockPanel.Children.Remove(tablutBoard);
-                AdugoBoard = new AdugoViewModel(DisplayedBoardState);
+                AdugoBoard = new AdugoViewModel(DisplayedAdugoBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel, gameMode);
                 adugoBoard.DataContext = AdugoBoard;
             }
             

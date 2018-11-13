@@ -8,11 +8,8 @@ using System.Windows;
 
 namespace BoardGremiumCore.Adugo
 { 
-    class AdugoField : Field
+    public class AdugoField : Field
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-
         public AdugoDirectionType DirectionType
         {
             get { return (AdugoDirectionType)GetValue(DirectionTypeProperty); }
@@ -25,6 +22,10 @@ namespace BoardGremiumCore.Adugo
             this.Y = y;
             this.Type = type;
             this.DirectionType = directionType;
+        }
+
+        public AdugoField(int x, int y) : base(x, y)
+        {
         }
     }
 }

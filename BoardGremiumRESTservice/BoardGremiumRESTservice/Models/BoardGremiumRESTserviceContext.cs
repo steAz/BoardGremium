@@ -18,7 +18,8 @@ namespace BoardGremiumRESTservice.Models
         public BoardGremiumRESTserviceContext() : base("name=BoardGremiumRESTserviceContext")
         {
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<BoardGremiumRESTserviceContext>()); 
-            this.Database.Initialize(true); // <-- NEEDED IF SOMEHOW TABLES ARE/WERE DROPPED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! AND IN UPPER LINE change 'IfModelChanges' to 'Always'
+            this.Database.Initialize(true); // <-- NEEDED IF SOMEHOW TABLES ARE/WERE DROPPED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+                                            // AND IN UPPER LINE change 'IfModelChanges' to 'Always'
         }
 
         public System.Data.Entity.DbSet<BoardGremiumRESTservice.Models.GameEntity> GameEntities { get; set; }

@@ -55,6 +55,8 @@ namespace BoardGremiumCore.Adugo
                     return new BitmapImage(new Uri(@"../../Adugo/directionImages/up_left.png", UriKind.Relative));
                 case UP_RIGHT:
                     return new BitmapImage(new Uri(@"../../Adugo/directionImages/up_right.png", UriKind.Relative));
+                default:
+                    return null;
 
             }
 

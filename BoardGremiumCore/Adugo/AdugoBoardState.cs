@@ -1,41 +1,41 @@
-﻿using System;
+﻿using AbstractGame;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AbstractGame
+namespace BoardGremiumCore.Adugo
 {
-    public class BoardState : ICloneable
+    public class AdugoBoardState : ICloneable
     {
-        public List<List<Field>> BoardFields { get; set; }
+        public List<List<AdugoField>> BoardFields { get; set; }
         public int Height { get; }
         public int Width { get; }
 
-        public BoardState(int width, int height)
+        public AdugoBoardState(int width, int height)
         {
-            BoardFields = new List<List<Field>>();
-            this.Height = height;
-            this.Width = width;
+            BoardFields = new List<List<AdugoField>>();
+            this.Height = 7;
+            this.Width = 5;
 
-            for (int i = 0; i != this.Width; ++i)
+            for (int y = 0; y != this.Height; ++y)
             {
-                BoardFields.Add(new List<Field>());
+                BoardFields.Add(new List<AdugoField>());
 
-                for (int j = 0; j != this.Height; ++j)
+                for (int x = 0; x != this.Width; ++x)
                 {
-                    BoardFields[i].Add(new Field(j, i));
+                    BoardFields[y].Add(new AdugoField(x, y));
                 }
             }
         }
-
         /// <summary>
         /// returns adjecent Field object or null if there is no adjecent field in that direction
         /// </summary>
         /// <returns>adjecent field</returns>
-        public Field AdjecentField(Field field, DirectionEnum direction)
+        public AdugoField AdjecentField(AdugoField field, DirectionEnum direction)
         {
-            switch(direction)
+            switch (direction)
             {
                 case DirectionEnum.UP:
                     {
@@ -70,17 +70,17 @@ namespace AbstractGame
         /// </summary>
         public object Clone()
         {
-            BoardState clone = new BoardState(Width, Height);
-            for(int i=0; i < Width; i++)
+            AdugoBoardState clone = new AdugoBoardState(Width, Height);
+            for (int i = 0; i < Width; i++)
             {
-                for(int j=0; j < Height; j++)
+                for (int j = 0; j < Height; j++)
                 {
-                    clone.BoardFields[i][j] = (Field)this.BoardFields[i][j].Clone();
+                    clone.BoardFields[i][j] = (AdugoField)this.BoardFields[i][j].Clone();
                 }
             }
             return clone;
         }
 
-        
+
     }
 }

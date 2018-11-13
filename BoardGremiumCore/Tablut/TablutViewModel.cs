@@ -29,10 +29,7 @@ namespace BoardGremiumCore.Tablut
                 GameName = gameName,
                 IsBot2BotGame =  (gameMode == "Bot vs Bot") ? true : false,
                 GameFinishLogged = false,
-
-
-
-        };
+            };
             MyBoardState = bs;
             UpdatePlayerTurnLabel();
 
@@ -89,13 +86,6 @@ namespace BoardGremiumCore.Tablut
             {
                 //we can create another label with information about e.g not valid move
             }
-
-            //ReceiveMessage(selectedField, selectedDirection, selectedNumOfFields, out isRightMove);
-            //bot move message
-            //if (isRightMove) ReceiveMessage(selectedField, selectedDirection, selectedNumOfFields, out isRightMove);
-
-            //MainGrid.Children.Clear();
-            //DisplayBoard();
         }
 
         public void MovePawn()
