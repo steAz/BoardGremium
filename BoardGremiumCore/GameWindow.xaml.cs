@@ -30,21 +30,21 @@ namespace BoardGremiumCore
         public GameWindow(string gameType, FieldType playerPawn, string gameName, Client httpClient, string gameMode)
         {
             InitializeComponent();
-            if (gameType == "Tablut")
+            switch (gameType)
             {
-                DisplayedBoardState = TablutUtils.StartingPosition();
-                MainDockPanel.Children.Remove(adugoBoard);
-                TablutBoard = new TablutViewModel(DisplayedBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel, gameMode);
-                tablutBoard.DataContext = TablutBoard;
+                case "Tablut":
+                    DisplayedBoardState = TablutUtils.StartingPosition();
+                    MainDockPanel.Children.Remove(adugoBoard);
+                    TablutBoard = new TablutViewModel(DisplayedBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel, gameMode);
+                    tablutBoard.DataContext = TablutBoard;
+                    break;
+                case "Adugo":
+                    DisplayedAdugoBoardState = AdugoUtils.StartingPosition();
+                    MainDockPanel.Children.Remove(tablutBoard);
+                    AdugoBoard = new AdugoViewModel(DisplayedAdugoBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel, gameMode);
+                    adugoBoard.DataContext = AdugoBoard;
+                    break;
             }
-            else if (gameType == "Adugo")
-            {
-                DisplayedAdugoBoardState = AdugoUtils.StartingPosition();
-                MainDockPanel.Children.Remove(tablutBoard);
-                AdugoBoard = new AdugoViewModel(DisplayedAdugoBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel, gameMode);
-                adugoBoard.DataContext = AdugoBoard;
-            }
-            
         }
     }
 }

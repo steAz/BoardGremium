@@ -228,12 +228,12 @@ namespace BoardGremiumCore
                         botAlgParams.IsBot2BotGame = true;
                     }
 
-                    if (GameModeSelectionCB.Text == "Tablut")
+                    if (GameSelectionCB.Text.Equals("Tablut"))
                     {
                         gameWindow.TablutBoard.GameInfos.BotAlgParams = botAlgParams;
                         client.SetBotAlgorithms(CreatedGameNameTB.Text, botAlgParams);
                     }
-                    else if (GameModeSelectionCB.Text == "Adugo")
+                    else if (GameSelectionCB.Text.Equals("Adugo"))
                     {
 
                     }
