@@ -39,7 +39,6 @@ namespace BoardGremiumRESTservice.Controllers
 
         }
 
-        //GET api/GameEntitys/{id}/CurrentPlayer
         [ResponseType(typeof(string))]
         [HttpPost]
         [Route("api/Move")]

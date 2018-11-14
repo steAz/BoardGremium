@@ -12,6 +12,8 @@ namespace BoardGremiumRESTservice.Utils
 
         public static string RED_STRING = "RED";
         public static string BLACK_STRING = "BLACK";
+        public static string JAGUAR_STRING = "JAGUAR";
+        public static string DOG_STRING = "DOG";
 
         public static string HUMAN_STRING = "HUMAN";
         public static string BOT_STRING = "BOT";
@@ -20,11 +22,17 @@ namespace BoardGremiumRESTservice.Utils
         public static char BLACK_CHAR = 'B';
         public static char KING_CHAR = 'K';
         public static char EMPTY_CHAR = 'E';
+        public static char JAGUAR_CHAR = 'J';
+        public static char DOG_CHAR = 'D';
 
         public static string UP_CHAR = "U";
         public static string DOWN_CHAR = "D";
         public static string LEFT_CHAR = "L";
         public static string RIGHT_CHAR = "R";
+        public static string UP_LEFT_CHAR = "UL";
+        public static string UP_RIGHT_CHAR = "UR";
+        public static string DOWN_LEFT_CHAR = "DL";
+        public static string DOWN_RIGHT_CHAR = "DR";
 
         public static string FIRST_JOINED_STRING = "First joined";
         public static string FIRST_NOT_JOINED_STRING = "First not joined";
@@ -38,7 +46,14 @@ namespace BoardGremiumRESTservice.Utils
             } else if(BLACK_STRING.Equals(message))
             {
                 return FieldType.BLACK_PAWN;
-            }else
+            }else if (JAGUAR_STRING.Equals(message))
+            {
+                return FieldType.JAGUAR_PAWN;
+            }else if(DOG_STRING.Equals(message))
+            {
+                return FieldType.DOG_PAWN;
+            }
+            else
             {
                 throw new ArgumentException("Wrong format of string message while converting to TablutFieldType.");
             }
@@ -54,6 +69,14 @@ namespace BoardGremiumRESTservice.Utils
             {
                 return FieldType.RED_PAWN;
             }
+            else if (JAGUAR_STRING.Equals(message))
+            {
+                return FieldType.DOG_PAWN;
+            }
+            else if (DOG_STRING.Equals(message))
+            {
+                return FieldType.JAGUAR_PAWN;
+            }
             else
             {
                 throw new ArgumentException("Wrong format of string message while converting to TablutFieldType.");
@@ -68,7 +91,16 @@ namespace BoardGremiumRESTservice.Utils
             }else if(playerPawn.Equals(FieldType.BLACK_PAWN))
             {
                 return BLACK_STRING;
-            }else
+            }
+            else if (playerPawn.Equals(FieldType.JAGUAR_PAWN))
+            {
+                return JAGUAR_STRING;
+            }
+            else if (playerPawn.Equals(FieldType.DOG_PAWN))
+            {
+                return DOG_STRING;
+            }
+            else
             {
                 throw new ArgumentException("Wrong value of Enum while converting from TablutFieldType");
             }
@@ -82,7 +114,16 @@ namespace BoardGremiumRESTservice.Utils
             }else if(playerColor.Equals(BLACK_STRING))
             {
                 return RED_STRING;
-            }else
+            }
+            else if (playerColor.Equals(DOG_STRING))
+            {
+                return JAGUAR_STRING;
+            }
+            else if (playerColor.Equals(JAGUAR_STRING))
+            {
+                return DOG_STRING;
+            }
+            else
             {
                 throw new ArgumentException("Wrong value of playerColor while getting enemy color");
             }
@@ -107,15 +148,15 @@ namespace BoardGremiumRESTservice.Utils
                 for(int j=0; j < boardWidth; j++)
                 {
                     Field f = tgs.game.currentBoardState.BoardFields[i, j];
-                    if ((FieldType)f.Type == FieldType.BLACK_PAWN)
+                    if ((FieldType)f.FieldType == FieldType.BLACK_PAWN)
                     {
                         result += BLACK_CHAR;
                     }
-                    else if ((FieldType)f.Type == FieldType.RED_PAWN)
+                    else if ((FieldType)f.FieldType == FieldType.RED_PAWN)
                     {
                         result += RED_CHAR;
                     }
-                    else if ((FieldType)f.Type == FieldType.KING)
+                    else if ((FieldType)f.FieldType == FieldType.KING)
                     {
                         result += KING_CHAR;
                     }
@@ -149,19 +190,19 @@ namespace BoardGremiumRESTservice.Utils
                 char character = enumerator.Current;
                 if (character.Equals(BLACK_CHAR))
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.BLACK_PAWN;
+                    result.BoardFields[verticalIndex, horizontalIndex].FieldType = FieldType.BLACK_PAWN;
                 }
                 else if (character.Equals(RED_CHAR))
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.RED_PAWN;
+                    result.BoardFields[verticalIndex, horizontalIndex].FieldType = FieldType.RED_PAWN;
                 }
                 else if (character.Equals(KING_CHAR))
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.KING;
+                    result.BoardFields[verticalIndex, horizontalIndex].FieldType = FieldType.KING;
                 }
                 else
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.EMPTY_FIELD;
+                    result.BoardFields[verticalIndex, horizontalIndex].FieldType = FieldType.EMPTY_FIELD;
                 }
 
                 horizontalIndex++;
@@ -220,7 +261,24 @@ namespace BoardGremiumRESTservice.Utils
             else if (directionChar.Equals(RIGHT_CHAR))
             {
                 return DirectionEnum.RIGHT;
-            }else
+            }
+            else if (directionChar.Equals(UP_LEFT_CHAR))
+            {
+                return DirectionEnum.UPLEFT;
+            }
+            else if (directionChar.Equals(UP_RIGHT_CHAR))
+            {
+                return DirectionEnum.UPRIGHT;
+            }
+            else if (directionChar.Equals(DOWN_LEFT_CHAR))
+            {
+                return DirectionEnum.DOWNLEFT;
+            }
+            else if (directionChar.Equals(DOWN_RIGHT_CHAR))
+            {
+                return DirectionEnum.DOWNRIGHT;
+            }
+            else
             {
                 return DirectionEnum.NONE;
             }

@@ -43,7 +43,7 @@ namespace BoardGremiumCore.Adugo
         }
 
         //returns true if game is over
-        public bool Clicked(Field field)
+        public bool Clicked(AdugoField field)
         {
             if (GameInfos.Client.IsPlayerTurn(GameInfos.GameName) && !GameInfos.IsGameFinished)
             {
@@ -66,10 +66,11 @@ namespace BoardGremiumCore.Adugo
             return false;
         }
 
-        private void MakePlayerMove(Field selectedField, DirectionEnum selectedDirection)
+        private void MakePlayerMove(AdugoField selectedField, DirectionEnum selectedDirection)
         {
             string message = "\"" + GameInfos.GameName + "|move " + selectedField.Y.ToString() + " " + selectedField.X.ToString()
-                            + " " + selectedDirection.ToString().First() + "\"";
+                            + " " + selectedDirection.ToString() + "\""; 
+                                    // tutaj wysylamy caly string Direction
 
             var result = GameInfos.Client.SendPostMove(message);
 

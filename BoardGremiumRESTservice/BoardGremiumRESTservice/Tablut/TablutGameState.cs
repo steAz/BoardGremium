@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace BoardGremiumRESTservice
+namespace BoardGremiumRESTservice.Tablut
 {
     public class TablutGameState
     {
@@ -13,12 +13,12 @@ namespace BoardGremiumRESTservice
 
         public TablutGameState(FieldType playerPawn)
         {
-            game = new TablutGame("", "", "", "", playerPawn);
+            game = new TablutGame(playerPawn);
         }
 
         public TablutGameState(FieldType playerPawn, BoardState bs)
         {
-            game = new TablutGame("", "", "", "", playerPawn);
+            game = new TablutGame(playerPawn);
             game.currentBoardState = bs;
         }
 
@@ -40,7 +40,7 @@ namespace BoardGremiumRESTservice
             {
                 return false;
             } 
-            else if (!PawnsInSameTeam(currentFieldType, (FieldType)field.Type))
+            else if (!PawnsInSameTeam(currentFieldType, (FieldType)field.FieldType))
             {
                 return false;
             }
@@ -55,7 +55,7 @@ namespace BoardGremiumRESTservice
             {
                 for (int j = 0; j < game.BoardWidth; j++)
                 {
-                    if (!fields[i, j].Type.Equals(FieldType.EMPTY_FIELD))
+                    if (!fields[i, j].FieldType.Equals(FieldType.EMPTY_FIELD))
                     {
                         result++;
                     }
@@ -82,7 +82,7 @@ namespace BoardGremiumRESTservice
             {
                 for (int j = 0; j < game.BoardWidth; j++)
                 {
-                    if (oldBS.BoardFields[i, j].Type.Equals(takenType) && !newBS.BoardFields[i, j].Type.Equals(takenType))
+                    if (oldBS.BoardFields[i, j].FieldType.Equals(takenType) && !newBS.BoardFields[i, j].FieldType.Equals(takenType))
                     {
                         return newBS.BoardFields[i, j];
                     }

@@ -13,6 +13,7 @@ using BoardGremiumRESTservice.Models;
 using BoardGremiumRESTservice.Utils;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using BoardGremiumRESTservice.Tablut;
 
 namespace BoardGremiumRESTservice.Controllers
 {

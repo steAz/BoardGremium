@@ -13,8 +13,7 @@ namespace BoardGremiumRESTservice
         public PlayerEnum currentPlayer { get; set; }
         public Enum HumanPlayerFieldType { get; set; } //e.g whitePawn/blackPawn
         public Enum BotPlayerFieldType { get; set; }
-        //image of empty board
-        public string BoardImageName { get; set; }
+
         /// <summary>
         /// dictionary holding mapping: boardItem -> itemGraphics e.g WHITE_PAWN -> pawn.jpg
         /// </summary>
@@ -23,9 +22,8 @@ namespace BoardGremiumRESTservice
         /// returns starting boardState for the game
         /// </summary>
 
-        public Game(int boardWidth, int boardHeight, string pathToBoardImage)
+        public Game(int boardWidth, int boardHeight)
         {
-            BoardImageName = pathToBoardImage;
             this.BoardHeight = boardHeight;
             this.BoardWidth = boardWidth;
             ItemToGraphicsDict = new Dictionary<Enum, string>();

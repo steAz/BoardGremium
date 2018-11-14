@@ -11,6 +11,10 @@ namespace BoardGremiumRESTservice
         DOWN,
         LEFT,
         RIGHT,
+        UPLEFT,
+        UPRIGHT,
+        DOWNLEFT,
+        DOWNRIGHT,
         NONE
     }
 }

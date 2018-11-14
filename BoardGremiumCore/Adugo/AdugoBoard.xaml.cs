@@ -58,14 +58,14 @@ namespace BoardGremiumCore.Adugo
             if (!vm.GameInfos.IsBot2BotGame) // this is Human vs Bot mode and Clicked is needed to make a move 
             {
                 ListBoxItem item = sender as ListBoxItem;
-                Field content = item.Content as Field;
+                AdugoField content = item.Content as AdugoField;
 
                 //XXX sometimes if you click really fast you can end up clicking on what the debugger says is a "ListBoxItem {DisconnectedItem}
                 //hunting down the exact cause would take ages, and might even be a bug in WPF or something
                 if (content == null)
                     return;
 
-               // vm.Clicked(content);
+                vm.Clicked(content);
             }
         }
     }
