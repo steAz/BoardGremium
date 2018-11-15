@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace BoardGremiumCore.Adugo
@@ -84,13 +85,15 @@ namespace BoardGremiumCore.Adugo
             else
             {
                 GameInfos.ErrorMoveLabel.Content = "Move is not correct.";
+                GameInfos.ErrorMoveLabel.Visibility = Visibility.Visible;
             }
         }
 
         public void MovePawn()
         {
             var boardStateRepresentation = GameInfos.Client.SendGetCurrentBoardState(GameInfos.GameName);
-            var currentBoardState = AdugoUtils.ConvertStringToTablutBoardState(boardStateRepresentation.Result);
+            var currentBoardState = AdugoUtils.ConvertStringToAdugoBoardState(boardStateRepresentation.Result);
+
 
             for (int x = 0; x != MyBoardState.Width; ++x)
             {
@@ -107,10 +110,12 @@ namespace BoardGremiumCore.Adugo
             if (GameInfos.Client.IsPlayerTurn(GameInfos.GameName))
             {
                 GameInfos.PlayerTurnLabel.Content = "Make your move, my friend.";
+                GameInfos.PlayerTurnLabel.Visibility = Visibility.Visible;
             }
             else
             {
                 GameInfos.PlayerTurnLabel.Content = "Enemy makes move.";
+                GameInfos.PlayerTurnLabel.Visibility = Visibility.Visible;
             }
         }
 

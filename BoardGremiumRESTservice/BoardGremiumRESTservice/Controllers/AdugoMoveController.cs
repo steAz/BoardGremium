@@ -25,14 +25,14 @@ namespace BoardGremiumRESTservice.Controllers
         {
             string[] moveParams = moveMessage.Split('|');
             string gameName = moveParams[0];
-            string moveInfo = moveParams[1];
-            GameEntity GameEntity = db.GetGameByName(gameName);
+            var moveInfo = moveParams[1];
+            var GameEntity = db.GetGameByName(gameName);
             if (GameEntity == null)
             {
                 return NotFound();
             }
 
-            AdugoGameState gameState = MessagesConverterUtils.ConvertStringToAdugoGameState(GameEntity.BoardStateRepresentation, GameEntity.PlayerPawnColor);
+            var gameState = MessagesConverterUtils.ConvertStringToAdugoGameState(GameEntity.BoardStateRepresentation, GameEntity.PlayerPawnColor);
             if (GameEntity.IsGameWon)
             {
                 return Ok(GameEntity.CurrentPlayer);
@@ -40,39 +40,48 @@ namespace BoardGremiumRESTservice.Controllers
 
             var move = MessagesConverterUtils.ConvertStringToAdugoMove(moveInfo, gameState);
             PlayerEnum currentPlayer = MessagesConverterUtils.PlayerEnumFromString(GameEntity.CurrentPlayer);
-            if (gameState.IsChosenMoveValid(move, currentPlayer))
-            {
-                //BoardState oldBoardState = (BoardState)gameState.game.currentBoardState.Clone();
-                ////perform move
-                //gameState.game.MovePawn(gameState.game.currentBoardState, move.ChosenField, move.Direction, move.NumOfFields);
-                //if (gameState.game.IsGameWon(gameState.game.currentBoardState, currentPlayer))
-                //{
-                //    GameEntity.IsGameWon = true;
-                //    UpdateBoardStateRepresentation(GameEntity, gameState);
-                //    db.Entry(GameEntity).State = EntityState.Modified;
-                //    db.SaveChanges();
-                //    return Ok("ok");
-                //}
-                //string callbackMessage;
-                //if (gameState.NumberOfPawnsOnBS(oldBoardState) != gameState.NumberOfPawnsOnBS(gameState.game.currentBoardState))
-                //{
-                //    Field takenPawn = gameState.GetMissingPawnForPlayer
-                //        (oldBoardState, gameState.game.currentBoardState, GameEntity.GetEnemyPlayer());
-                //    callbackMessage = "ok taken " + takenPawn.X + " " + takenPawn.Y;
-                //}
-                //else
-                //{
-                //    callbackMessage = "ok";
-                //}
-                ////change game state
-                //UpdateBoardStateRepresentation(GameEntity, gameState);
-                //GameEntity.ChangeCurrentPlayer();
-                //db.Entry(GameEntity).State = EntityState.Modified;
-                //db.SaveChanges();
-                //return Ok(callbackMessage);
-            }
 
-            return BadRequest("Error 400 - Chosen move is not valid");
+            if (!gameState.IsChosenMoveValid(move, currentPlayer, out var fieldToBeat, out var fieldToMove))
+                return BadRequest("Error 400 - Chosen move is not valid");
+          //  var oldBoardState = (AdugoBoardState)gameState.Game.CurrentBoardState.Clone();
+            ////perform move
+            gameState.Game.MovePawnAndBeatIfNecessary(gameState.Game.CurrentBoardState, move, fieldToBeat, fieldToMove);
+            //if (gameState.game.IsGameWon(gameState.game.currentBoardState, currentPlayer))
+            //{
+            //    GameEntity.IsGameWon = true;
+            //    UpdateBoardStateRepresentation(GameEntity, gameState);
+            //    db.Entry(GameEntity).State = EntityState.Modified;
+            //    db.SaveChanges();
+            //    return Ok("ok");
+            //}
+            string callbackMessage;
+            if (fieldToBeat != null)
+            {
+                callbackMessage = "ok taken " + fieldToBeat.X + " " + fieldToBeat.Y;
+            }
+            //if (gameState.NumberOfPawnsOnBS(oldBoardState) != gameState.NumberOfPawnsOnBS(gameState.game.currentBoardState))
+            //{
+            //    Field takenPawn = gameState.GetMissingPawnForPlayer
+            //        (oldBoardState, gameState.game.currentBoardState, GameEntity.GetEnemyPlayer());
+            //    callbackMessage = "ok taken " + takenPawn.X + " " + takenPawn.Y;
+            //}
+            else
+            {
+                callbackMessage = "ok";
+            }
+            ////change game state
+            UpdateBoardStateRepresentation(GameEntity, gameState);
+            GameEntity.ChangeCurrentPlayer();
+            db.Entry(GameEntity).State = EntityState.Modified;
+            db.SaveChanges();
+            return Ok(callbackMessage);
+
+        }
+
+        private static void UpdateBoardStateRepresentation(GameEntity gameEntity, AdugoGameState abs)
+        {
+            var updatedBoardStateRepresentation = MessagesConverterUtils.ConvertAdugoGameStateToString(abs);
+            gameEntity.BoardStateRepresentation = updatedBoardStateRepresentation;
         }
     }
 }

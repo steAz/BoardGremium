@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Web;
 
@@ -104,6 +105,22 @@ namespace BoardGremiumRESTservice.Adugo
             return startingBoardState;
         }
 
+        public void MovePawnAndBeatIfNecessary(AdugoBoardState board, AdugoMove move, AdugoField fieldToBeat, AdugoField fieldToMove)
+        {
+            var field = move.ChosenField;
+            var xCoordToMove = fieldToMove.X;
+            var yCoordToMove = fieldToMove.Y;
+            board.BoardFields[yCoordToMove, xCoordToMove].Type = field.Type; // pawn is on new field
+            var xCoord = field.X;
+            var yCoord = field.Y;
+            field.Type = FieldType.EMPTY_FIELD; // old field is empty
+            if (fieldToBeat != null) // it wont go through it if ChosenFieldType is Dog
+            {
+                var xCoordToBeat = fieldToBeat.X;
+                var yCoordToBeat = fieldToBeat.Y;
+                board.BoardFields[yCoordToBeat, xCoordToBeat].Type = FieldType.EMPTY_FIELD; // beaten dog pawn is an empty field now
+            }
+        }
 
 
 

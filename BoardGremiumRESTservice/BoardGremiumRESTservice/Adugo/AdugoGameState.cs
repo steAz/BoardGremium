@@ -25,8 +25,10 @@ namespace BoardGremiumRESTservice.Adugo
             };
         }
 
-        public bool IsChosenMoveValid(AdugoMove move, PlayerEnum currentPlayer)
+        public bool IsChosenMoveValid(AdugoMove move, PlayerEnum currentPlayer, out AdugoField fieldToBeat, out AdugoField fieldToMove)
         {
+            fieldToBeat = null;
+            fieldToMove = null;
             FieldType currentFieldType;
             if (currentPlayer.Equals(PlayerEnum.HUMAN_PLAYER))
             {
@@ -37,25 +39,32 @@ namespace BoardGremiumRESTservice.Adugo
                 currentFieldType = (FieldType)Game.BotPlayerFieldType;
             }
 
-            if (!move.ChosenField.DirectionType.ToString().Contains(move.Direction.ToString())) // isf it's not possible to move in this direction from this place
+            if (!move.ChosenField.DirectionType.ToString().Contains(move.Direction.ToString()) &&
+                !move.ChosenField.DirectionType.Equals(AdugoDirectionType.ALL_DIRECTIONS)) // if it's not possible to move in this direction from this place
             {
                 return false;
             }
 
-
-            var fieldToMove = Game.CurrentBoardState.AdjecentField(move.ChosenField, move.Direction);
+            var helpfulField = Game.CurrentBoardState.AdjecentField(move.ChosenField, move.Direction);
             switch (currentFieldType)
             {
-                case FieldType.JAGUAR_PAWN when fieldToMove.Type.Equals(FieldType.DOG_PAWN):
+                case FieldType.JAGUAR_PAWN when helpfulField.Type.Equals(FieldType.DOG_PAWN):
                 {
-                    var adjacentFieldToMove = Game.CurrentBoardState.AdjecentField(fieldToMove, move.Direction);
-                    return adjacentFieldToMove.Type.Equals(FieldType.EMPTY_FIELD); // return true if after dog pawn there will be empty field (jaguar will eat dog)
+                    var adjacentToHelpfulField = Game.CurrentBoardState.AdjecentField(fieldToMove, move.Direction);
+                    if (adjacentToHelpfulField == null || !adjacentToHelpfulField.Type.Equals(FieldType.EMPTY_FIELD))
+                        return false;
+                    fieldToBeat = helpfulField; // Jaguar will beat dog
+                    fieldToMove = adjacentToHelpfulField; // Jaguar will go to empty field after dog
+                    return true;
+
                 }
-                case FieldType.DOG_PAWN when (fieldToMove.Type.Equals(FieldType.JAGUAR_PAWN) || fieldToMove.Type.Equals(FieldType.DOG_PAWN)):
+                case FieldType.DOG_PAWN when (helpfulField.Type.Equals(FieldType.JAGUAR_PAWN) || 
+                                              helpfulField.Type.Equals(FieldType.DOG_PAWN) || 
+                                              helpfulField.Type.Equals(FieldType.LOCKED_FIELD)):
                     return false; // DOG cannot move on JAGUAR or another DOG
                 default:
                 {
-                    if (fieldToMove.Type.Equals(FieldType.LOCKED_FIELD))
+                    if (helpfulField.Type.Equals(FieldType.LOCKED_FIELD))
                     {
                         return false;
                     }
@@ -64,6 +73,7 @@ namespace BoardGremiumRESTservice.Adugo
                 }
             }
 
+            fieldToMove = helpfulField;
             return true;
         }
     }

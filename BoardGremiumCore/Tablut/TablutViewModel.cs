@@ -7,6 +7,7 @@ using AbstractGame;
 using System.Windows.Controls;
 using BoardGremiumCore.Communication;
 using System.Net.Http;
+using System.Windows;
 
 namespace BoardGremiumCore.Tablut
 {
@@ -86,6 +87,7 @@ namespace BoardGremiumCore.Tablut
             }else
             {
                 GameInfos.ErrorMoveLabel.Content = "Move is not correct.";
+                GameInfos.ErrorMoveLabel.Visibility = Visibility.Visible;
             }
         }
 
@@ -109,10 +111,12 @@ namespace BoardGremiumCore.Tablut
             if (GameInfos.Client.IsPlayerTurn(GameInfos.GameName))
             {
                 GameInfos.PlayerTurnLabel.Content = "Make your move, my friend";
+                GameInfos.PlayerTurnLabel.Visibility = Visibility.Visible;
             }
             else
             {
                 GameInfos.PlayerTurnLabel.Content = "Enemy makes move.";
+                GameInfos.PlayerTurnLabel.Visibility = Visibility.Visible;
             }
         }
 

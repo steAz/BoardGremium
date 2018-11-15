@@ -36,25 +36,25 @@ namespace BoardGremiumRESTservice.Adugo
                     {
                         if (field.Y == 0)
                             return null;
-                        else return BoardFields[field.X, field.Y - 1];
+                        else return BoardFields[field.Y - 1, field.X];
                     }
                 case DirectionEnum.DOWN:
                     {
                         if (field.Y == Height - 1)
                             return null;
-                        else return BoardFields[field.X, field.Y + 1];
+                        else return BoardFields[field.Y + 1, field.X];
                     }
                 case DirectionEnum.LEFT:
                     {
                         if (field.X == 0)
                             return null;
-                        else return BoardFields[field.X - 1, field.Y];
+                        else return BoardFields[field.Y, field.X - 1];
                     }
                 case DirectionEnum.RIGHT:
                     {
                         if (field.X == Width - 1)
                             return null;
-                        else return BoardFields[field.X + 1, field.Y];
+                        else return BoardFields[field.Y, field.X + 1];
                     }
             }
             return null;

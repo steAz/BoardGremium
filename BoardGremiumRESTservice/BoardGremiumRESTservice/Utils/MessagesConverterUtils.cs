@@ -53,6 +53,7 @@ namespace BoardGremiumRESTservice.Utils
         public static string UP_RIGHT_STRING = "U_R";
         public static string UPRIGHT_RIGHT_STRING = "UR_R";
         public static string UPLEFT_LEFT_STRING = "UL_L";
+        public static string NONE_STRING = "N";
 
         public static string FIRST_JOINED_STRING = "First joined";
         public static string FIRST_NOT_JOINED_STRING = "First not joined";
@@ -282,6 +283,9 @@ namespace BoardGremiumRESTservice.Utils
                         case AdugoDirectionType.UP_UPRIGHT_RIGHT:
                             result += UP_UPRIGHT_RIGHT_STRING;
                             break;
+                        case AdugoDirectionType.NONE:
+                            result += NONE_STRING;
+                            break;
                         default:
                             throw new NullReferenceException("There was field with NONE direction type while converting AdugoGameState to BoardRepresentation");
                     }
@@ -360,7 +364,7 @@ namespace BoardGremiumRESTservice.Utils
             //var enumerator = stringRepresentation.GetEnumerator();
             var enumerator = arguments[1].GetEnumerator();
             int horizontalIndex = 0, verticalIndex = 0;
-            bool tupleInProgress = false;
+            bool tupleInProgress = true; // string starts with tuple
             string tupleFieldTypeDirectionType = string.Empty;
             while (enumerator.MoveNext())
             {
@@ -372,7 +376,7 @@ namespace BoardGremiumRESTservice.Utils
 
                 if (tupleInProgress)
                 {
-                    tupleFieldTypeDirectionType += enumerator; // building string: FieldType_CHAR|DirectionType_STRING
+                    tupleFieldTypeDirectionType += character; // building string: FieldType_CHAR|DirectionType_STRING
                 }
                 else // after building tuple, we can fill in AdugoField in BoardFields
                 {
@@ -397,10 +401,105 @@ namespace BoardGremiumRESTservice.Utils
                         result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.EMPTY_FIELD;
                     }
 
-                    if (directionTypeString.Equals(UP_UPRIGHT_RIGHT_STRING)) // TODO
+                    if (directionTypeString.Equals(UP_UPRIGHT_RIGHT_STRING)) 
                     {
                         result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
                             AdugoDirectionType.UP_UPRIGHT_RIGHT;
+                    }
+                    else if (directionTypeString.Equals(UPLEFT_LEFT_STRING)) 
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.UPLEFT_LEFT;
+                    }
+                    else if (directionTypeString.Equals(ALL_DIRECTIONS_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.ALL_DIRECTIONS;
+                    }
+                    else if (directionTypeString.Equals(UP_DOWN_LEFT_RIGHT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.UP_DOWN_LEFT_RIGHT;
+                    }
+                    else if (directionTypeString.Equals(UP_DOWN_LEFT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =    
+                            AdugoDirectionType.UP_DOWN_LEFT;
+                    }
+                    else if (directionTypeString.Equals(UPRIGHT_RIGHT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.UPRIGHT_RIGHT;
+                    }
+                    else if (directionTypeString.Equals(UP_DOWN_RIGHT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.UP_DOWN_RIGHT;
+                    }
+                    else if (directionTypeString.Equals(UP_LEFT_RIGHT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.UP_LEFT_RIGHT;
+                    }
+                    else if (directionTypeString.Equals(UP_DOWN_UPLEFT_DOWNLEFT_LEFT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.UP_DOWN_UPLEFT_DOWNLEFT_LEFT;
+                    }
+                    else if (directionTypeString.Equals(UP_DOWN_UPRIGHT_DOWNRIGHT_RIGHT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.UP_DOWN_UPRIGHT_DOWNRIGHT_RIGHT;
+                    }
+                    else if (directionTypeString.Equals(UP_LEFT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.UP_LEFT;
+                    }
+                    else if (directionTypeString.Equals(UP_RIGHT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.UP_RIGHT;
+                    }
+                    else if (directionTypeString.Equals(UP_UPLEFT_LEFT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.UP_UPLEFT_LEFT;
+                    }
+                    else if (directionTypeString.Equals(DOWN_DOWNLEFT_LEFT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.DOWN_DOWNLEFT_LEFT;
+                    }
+                    else if (directionTypeString.Equals(DOWN_DOWNRIGHT_RIGHT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.DOWN_DOWNRIGHT_RIGHT;
+                    }
+                    else if (directionTypeString.Equals(DOWN_LEFT_RIGHT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.DOWN_LEFT_RIGHT;
+                    }
+                    else if (directionTypeString.Equals(DOWN_UPLEFT_LEFT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.DOWN_UPLEFT_LEFT;
+                    }
+                    else if (directionTypeString.Equals(DOWN_UPRIGHT_RIGHT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.DOWN_UPRIGHT_RIGHT;
+                    }
+                    else if (directionTypeString.Equals(DOWN_DOWNLEFT_DOWNRIGHT_LEFT_RIGHT_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.DOWN_DOWNLEFT_DOWNRIGHT_LEFT_RIGHT;
+                    }
+                    else if (directionTypeString.Equals(NONE_STRING))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.NONE;
                     }
 
                     horizontalIndex++;
@@ -416,6 +515,7 @@ namespace BoardGremiumRESTservice.Utils
                         break;
                     }
 
+                    tupleFieldTypeDirectionType = string.Empty;
                     tupleInProgress = true; // new tuple will be built in the next iterations
                 }
             }
