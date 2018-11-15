@@ -7,9 +7,10 @@
         xmlns:viewTablut="clr-namespace:BoardGremiumCore.Tablut"
         xmlns:viewAdugo="clr-namespace:BoardGremiumCore.Adugo"
         mc:Ignorable="d"
-        Title="GameWindow" Height="600" Width="600">
+        Title="GameWindow" Height="900" Width="700">
     <Grid>
-        <Label x:Name="PlayerTurnLabel" Content="Label" HorizontalAlignment="Center" VerticalAlignment="Top" Height="50" Margin="217,62,150,0" Width="225"/>
+        <Label x:Name="PlayerTurnLabel" Content="Label" HorizontalAlignment="Center" VerticalAlignment="Top" Height="50" Margin="148,40,140,0" Width="404"/>
+        <Label x:Name="ErrorMoveLabel" Content="Label" HorizontalAlignment="Center" VerticalAlignment="Top" Height="50" Margin="148,80,140,0" Width="404"/>
         <DockPanel Name="MainDockPanel">
             <viewTablut:TablutBoard x:Name="tablutBoard" VerticalAlignment="Center" Margin="0,186,0,0" />
             <viewAdugo:AdugoBoard x:Name="adugoBoard" VerticalAlignment="Center" Margin="0,186,0,0" />

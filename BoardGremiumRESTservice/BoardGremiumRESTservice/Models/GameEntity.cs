@@ -34,10 +34,13 @@ namespace BoardGremiumRESTservice.Models
             RedHeuristics = string.Empty;
             BlackHeuristics = string.Empty;
             //CreationDate = new DateTime();
-            if (MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor).Equals(FieldType.RED_PAWN))
+            if (MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor).Equals(FieldType.RED_PAWN) ||
+                MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor).Equals(FieldType.JAGUAR_PAWN))
+                // in Tablut RED moves first, in Adugo JAGUAR moves first
             {
                 CurrentPlayer = MessagesConverterUtils.HUMAN_STRING;
-            }else
+            }
+            else
             {
                 CurrentPlayer = MessagesConverterUtils.BOT_STRING;
             }

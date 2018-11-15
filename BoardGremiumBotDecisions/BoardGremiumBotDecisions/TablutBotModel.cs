@@ -121,7 +121,7 @@ namespace BoardGremiumBotDecisions
                 //string message = "\"" + GameName + "|move " + selectedField.Y.ToString() + " " + selectedField.X.ToString()
                           //  + " " + selectedDirection.ToString().First() + " " + selectedNumOfFields.ToString() + "\"";
 
-                string message = "\"" + GameName + "|move " + selectedField.Y + " " + selectedField.X + " " + direction.ToString().First() + " " + numOfFields + "\"";
+                string message = "\"" + GameName + "|move " + selectedField.Y + " " + selectedField.X + " " + direction.ToString() + " " + numOfFields + "\"";
 
                 return message;
             }

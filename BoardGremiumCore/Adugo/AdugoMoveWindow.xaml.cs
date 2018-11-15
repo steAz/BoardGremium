@@ -25,6 +25,7 @@ namespace BoardGremiumCore.Adugo
         public AdugoMoveWindow()
         {
             InitializeComponent();
+            Direction = DirectionEnum.NONE;
         }
 
         private void AcceptMove_Click(object sender, RoutedEventArgs e)
@@ -51,14 +52,7 @@ namespace BoardGremiumCore.Adugo
 
         public bool IsFilled()
         {
-            if (Direction.Equals(null))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return !Direction.Equals(DirectionEnum.NONE);
         }
     }
 }

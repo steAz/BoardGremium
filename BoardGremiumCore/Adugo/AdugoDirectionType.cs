@@ -25,7 +25,8 @@ namespace BoardGremiumCore.Adugo
         UP_DOWN_UPLEFT_DOWNLEFT_LEFT,
         UP_LEFT,
         UP_RIGHT,
-        UPRIGHT_RIGHT, UPLEFT_LEFT, // TODO
+        UPRIGHT_RIGHT,
+        UPLEFT_LEFT,
         NONE
     }
 }

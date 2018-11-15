@@ -101,6 +101,7 @@
     <Compile Include="Adugo\AdugoField.cs" />
     <Compile Include="Adugo\AdugoGame.cs" />
     <Compile Include="Adugo\AdugoGameState.cs" />
+    <Compile Include="Adugo\AdugoMove.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="CommonAbstracts\BoardState.cs" />
     <Compile Include="Controllers\AdugoMoveController.cs" />

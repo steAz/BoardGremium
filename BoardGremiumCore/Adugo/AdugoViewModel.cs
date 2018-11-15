@@ -25,13 +25,14 @@ namespace BoardGremiumCore.Adugo
 
         public AdugoViewModel() { MyBoardState = new AdugoBoardState(AdugoUtils.BOARD_WIDTH, AdugoUtils.BOARD_HEIGHT); }
 
-        public AdugoViewModel(AdugoBoardState bs, FieldType firstPlayerPawn, string gameName, Client httpClient, Label playerTurnLabel, string gameMode)
+        public AdugoViewModel(AdugoBoardState bs, FieldType firstPlayerPawn, string gameName, Client httpClient, Label playerTurnLabel, string gameMode, Label errorMoveLabel)
         {
             GameInfos = new GameInfos()
             {
                 FirstPlayerPawn = firstPlayerPawn, //SecPlayerPawn is setting while setting FirstPlayerPawn in setter
                 SecPlayerPawn = (firstPlayerPawn == FieldType.JAGUAR_PAWN) ? FieldType.DOG_PAWN : FieldType.JAGUAR_PAWN,
                 PlayerTurnLabel = playerTurnLabel,
+                ErrorMoveLabel = errorMoveLabel,
                 Client = httpClient,
                 IsGameFinished = false,
                 GameName = gameName,
@@ -82,7 +83,7 @@ namespace BoardGremiumCore.Adugo
             }
             else
             {
-                //we can create another label with information about e.g not valid move
+                GameInfos.ErrorMoveLabel.Content = "Move is not correct.";
             }
         }
 
@@ -91,11 +92,11 @@ namespace BoardGremiumCore.Adugo
             var boardStateRepresentation = GameInfos.Client.SendGetCurrentBoardState(GameInfos.GameName);
             var currentBoardState = AdugoUtils.ConvertStringToTablutBoardState(boardStateRepresentation.Result);
 
-            for (int i = 0; i != MyBoardState.Width; ++i)
+            for (int x = 0; x != MyBoardState.Width; ++x)
             {
-                for (int j = 0; j != MyBoardState.Height; ++j)
+                for (int y = 0; y != MyBoardState.Height; ++y)
                 {
-                    MyBoardState.BoardFields[i][j].Type = currentBoardState.BoardFields[i][j].Type;
+                    MyBoardState.BoardFields[y][x].Type = currentBoardState.BoardFields[y][x].Type;
                 }
             }
 
@@ -105,7 +106,7 @@ namespace BoardGremiumCore.Adugo
         {
             if (GameInfos.Client.IsPlayerTurn(GameInfos.GameName))
             {
-                GameInfos.PlayerTurnLabel.Content = "Make your move, my friend";
+                GameInfos.PlayerTurnLabel.Content = "Make your move, my friend.";
             }
             else
             {

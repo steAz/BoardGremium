@@ -27,6 +27,7 @@ namespace BoardGremiumCore
         public MoveWindow()
         {
             InitializeComponent();
+            Direction = DirectionEnum.NONE;
         }
 
         private void AcceptMove_Click(object sender, RoutedEventArgs e)
@@ -62,7 +63,7 @@ namespace BoardGremiumCore
 
         public bool IsFilled()
         {
-            if(NumOfFields == 0 || Direction.Equals(null))
+            if(NumOfFields == 0 || Direction.Equals(DirectionEnum.NONE))
             {
                 return false;
             }else

@@ -20,7 +20,7 @@ namespace BoardGremiumRESTservice.Adugo
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    BoardFields[x, y] = new AdugoField(x, y, FieldType.EMPTY_FIELD, AdugoDirectionType.NONE);
+                    BoardFields[y, x] = new AdugoField(x, y, FieldType.EMPTY_FIELD, AdugoDirectionType.NONE);
                 }
             }
         }
@@ -28,7 +28,7 @@ namespace BoardGremiumRESTservice.Adugo
         /// returns adjecent Field object or null if there is no adjecent field in that direction
         /// </summary>
         /// <returns>adjecent field</returns>
-        public Field AdjecentField(AdugoField field, DirectionEnum direction)
+        public AdugoField AdjecentField(AdugoField field, DirectionEnum direction)
         {
             switch (direction)
             {

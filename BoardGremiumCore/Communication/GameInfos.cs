@@ -19,6 +19,7 @@ namespace BoardGremiumCore.Communication
         public bool IsBot2BotGame { get; set; }
         public bool GameFinishLogged { get; set; }
         public BotAlgorithmsParameters BotAlgParams { get; set; }
+        public Label ErrorMoveLabel { get; set; }
 
         public GameInfos()
         {

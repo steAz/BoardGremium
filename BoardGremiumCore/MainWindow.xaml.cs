@@ -198,8 +198,13 @@ namespace BoardGremiumCore
             {
                 LoadBoardForGame(GameSelectionCB.Text, out FieldType gamerPawns);
 
-                client = new TablutClient("http://localhost:54377");
-                var message = "\"" + CreatedGameNameTB.Text + "," + PawnsSelectionCB.Text.ToUpper() + "\"";
+                if (GameSelectionCB.Text.Equals("Tablut"))
+                    client = new TablutClient("http://localhost:54377");
+                else if(GameSelectionCB.Text.Equals("Adugo"))
+                    client = new AdugoClient("http://localhost:54377");
+                var message = "\"" + CreatedGameNameTB.Text + "," +
+                              PawnsSelectionCB.Text.ToUpper() + "," +
+                              GameSelectionCB.Text.ToUpper() + "\"";
                 var postGameResult = client.SendPostGame(message);
 
 

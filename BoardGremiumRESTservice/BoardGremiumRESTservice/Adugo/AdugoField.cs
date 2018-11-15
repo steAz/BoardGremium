@@ -13,7 +13,7 @@ namespace BoardGremiumRESTservice.Adugo
         {
             this.X = x;
             this.Y = y;
-            this.FieldType = type;
+            this.Type = type;
             this.DirectionType = directionType;
         }
 

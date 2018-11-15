@@ -12,27 +12,27 @@ namespace BoardGremiumRESTservice
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public Enum FieldType { get; set; }
+        public Enum Type { get; set; }
 
         public Field()
         {
             X = 0;
             Y = 0;
-            FieldType = null;
+            Type = null;
         }
 
         public Field(int x, int y)
         {
             this.X = x;
             this.Y = y;
-            this.FieldType = null;
+            this.Type = null;
         }
 
         public Field(int x, int y, Enum type)
         {
             this.X = x;
             this.Y = y;
-            this.FieldType = type;
+            this.Type = type;
         }
 
         //TODO throwing exception when value is below 0? (out of board)

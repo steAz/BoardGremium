@@ -22,14 +22,14 @@ namespace BoardGremiumRESTservice.Tablut
             game.currentBoardState = bs;
         }
 
-        public Boolean IsChosenMoveValid(TablutMove move, PlayerEnum currentPlayer)
+        public bool IsChosenMoveValid(TablutMove move, PlayerEnum currentPlayer)
         {
 
             Field field = game.currentBoardState.BoardFields[move.X,move.Y];
             FieldType currentFieldType;
             if(currentPlayer.Equals(PlayerEnum.HUMAN_PLAYER))
             {
-                currentFieldType = (FieldType)game.HumanPlayerFieldType;// change HUmanPlayerType to CreatorFieldType ?? - so we can play bot-bot or human-human
+                currentFieldType = (FieldType)game.HumanPlayerFieldType;
             }else
             {
                 currentFieldType = (FieldType)game.BotPlayerFieldType;
@@ -40,7 +40,7 @@ namespace BoardGremiumRESTservice.Tablut
             {
                 return false;
             } 
-            else if (!PawnsInSameTeam(currentFieldType, (FieldType)field.FieldType))
+            else if (!PawnsInSameTeam(currentFieldType, (FieldType)field.Type))
             {
                 return false;
             }
@@ -55,7 +55,7 @@ namespace BoardGremiumRESTservice.Tablut
             {
                 for (int j = 0; j < game.BoardWidth; j++)
                 {
-                    if (!fields[i, j].FieldType.Equals(FieldType.EMPTY_FIELD))
+                    if (!fields[i, j].Type.Equals(FieldType.EMPTY_FIELD))
                     {
                         result++;
                     }
@@ -82,7 +82,7 @@ namespace BoardGremiumRESTservice.Tablut
             {
                 for (int j = 0; j < game.BoardWidth; j++)
                 {
-                    if (oldBS.BoardFields[i, j].FieldType.Equals(takenType) && !newBS.BoardFields[i, j].FieldType.Equals(takenType))
+                    if (oldBS.BoardFields[i, j].Type.Equals(takenType) && !newBS.BoardFields[i, j].Type.Equals(takenType))
                     {
                         return newBS.BoardFields[i, j];
                     }

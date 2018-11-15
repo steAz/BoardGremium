@@ -11,7 +11,7 @@ namespace BoardGremiumRESTservice
         public int BoardHeight { get; }
         public BoardState currentBoardState { get; set; }
         public PlayerEnum currentPlayer { get; set; }
-        public Enum HumanPlayerFieldType { get; set; } //e.g whitePawn/blackPawn
+        public Enum HumanPlayerFieldType { get; set; } //e.g redPawn/blackPawn
         public Enum BotPlayerFieldType { get; set; }
 
         /// <summary>

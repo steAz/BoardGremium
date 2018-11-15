@@ -55,9 +55,12 @@ namespace BoardGremiumCore.Adugo
                     return new BitmapImage(new Uri(@"../../Adugo/directionImages/up_left.png", UriKind.Relative));
                 case UP_RIGHT:
                     return new BitmapImage(new Uri(@"../../Adugo/directionImages/up_right.png", UriKind.Relative));
+                case UPLEFT_LEFT:
+                    return new BitmapImage(new Uri(@"../../Adugo/directionImages/upleft_left.png", UriKind.Relative));
+                case UPRIGHT_RIGHT:
+                    return new BitmapImage(new Uri(@"../../Adugo/directionImages/upright_right.png", UriKind.Relative));
                 default:
                     return null;
-
             }
 
             throw new Exception("fail to convert adugo direction type to image source");

@@ -22,14 +22,16 @@ namespace BoardGremiumCore.Adugo
     /// </summary>
     public partial class AdugoBoard : UserControl
     {
+        public DispatcherTimer DTforUpdatingView { get; set; }
+
         public AdugoBoard()
         {
             InitializeComponent();
             //  DispatcherTimer setup
-            var dTForUpdatingView = new DispatcherTimer();
-            dTForUpdatingView.Tick += new EventHandler(DispatcherTimerForUpdatingTheView_Tick);
-            dTForUpdatingView.Interval = new TimeSpan(0, 0, 1);
-            dTForUpdatingView.Start();
+            DTforUpdatingView = new DispatcherTimer();
+            DTforUpdatingView.Tick += new EventHandler(DispatcherTimerForUpdatingTheView_Tick);
+            DTforUpdatingView.Interval = new TimeSpan(0, 0, 1);
+            DTforUpdatingView.Start();
 
         }
 

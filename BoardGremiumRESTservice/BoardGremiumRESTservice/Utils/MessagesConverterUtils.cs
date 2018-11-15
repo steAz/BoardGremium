@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BoardGremiumRESTservice;
+using BoardGremiumRESTservice.Adugo;
 using BoardGremiumRESTservice.Tablut;
 
 namespace BoardGremiumRESTservice.Utils
 {
     public static class MessagesConverterUtils
     {
+        public static string TABLUT_STRING = "TABLUT";
+        public static string ADUGO_STRING = "ADUGO";
 
         public static string RED_STRING = "RED";
         public static string BLACK_STRING = "BLACK";
@@ -18,21 +21,38 @@ namespace BoardGremiumRESTservice.Utils
         public static string HUMAN_STRING = "HUMAN";
         public static string BOT_STRING = "BOT";
 
-        public static char RED_CHAR = 'R';
-        public static char BLACK_CHAR = 'B';
-        public static char KING_CHAR = 'K';
-        public static char EMPTY_CHAR = 'E';
-        public static char JAGUAR_CHAR = 'J';
-        public static char DOG_CHAR = 'D';
+        public static string RED_CHAR = "R";
+        public static string BLACK_CHAR = "B";
+        public static string KING_CHAR = "K";
+        public static string EMPTY_CHAR = "E";
+        public static string JAGUAR_CHAR= "J";
+        public static string DOG_CHAR = "D";
+        public static string LOCKED_CHAR = "L";
 
-        public static string UP_CHAR = "U";
-        public static string DOWN_CHAR = "D";
-        public static string LEFT_CHAR = "L";
-        public static string RIGHT_CHAR = "R";
-        public static string UP_LEFT_CHAR = "UL";
-        public static string UP_RIGHT_CHAR = "UR";
-        public static string DOWN_LEFT_CHAR = "DL";
-        public static string DOWN_RIGHT_CHAR = "DR";
+        public static string UP_STRING = "UP";
+        public static string DOWN_STRING = "DOWN";
+        public static string LEFT_STRING = "LEFT";
+        public static string RIGHT_STRING = "RIGHT";
+
+        public static string ALL_DIRECTIONS_STRING = "AD";
+        public static string UP_UPLEFT_LEFT_STRING = "U_UL_L";
+        public static string UP_UPRIGHT_RIGHT_STRING = "U_UR_R";
+        public static string UP_LEFT_RIGHT_STRING = "U_L_R";
+        public static string UP_DOWN_LEFT_RIGHT_STRING = "U_D_L_R";
+        public static string UP_DOWN_LEFT_STRING = "U_D_L";
+        public static string UP_DOWN_RIGHT_STRING = "U_D_R";
+        public static string DOWN_DOWNLEFT_LEFT_STRING = "D_DL_L";
+        public static string DOWN_DOWNRIGHT_RIGHT_STRING = "D_DR_R";
+        public static string DOWN_LEFT_RIGHT_STRING = "D_L_R";
+        public static string DOWN_UPLEFT_LEFT_STRING = "D_UL_L";
+        public static string DOWN_UPRIGHT_RIGHT_STRING = "D_UR_R";
+        public static string DOWN_DOWNLEFT_DOWNRIGHT_LEFT_RIGHT_STRING = "D_DL_DR_L_R";
+        public static string UP_DOWN_UPRIGHT_DOWNRIGHT_RIGHT_STRING = "U_D_UR_DR_R";
+        public static string UP_DOWN_UPLEFT_DOWNLEFT_LEFT_STRING = "U_D_UL_DL_L";
+        public static string UP_LEFT_STRING = "U_L";
+        public static string UP_RIGHT_STRING = "U_R";
+        public static string UPRIGHT_RIGHT_STRING = "UR_R";
+        public static string UPLEFT_LEFT_STRING = "UL_L";
 
         public static string FIRST_JOINED_STRING = "First joined";
         public static string FIRST_NOT_JOINED_STRING = "First not joined";
@@ -131,7 +151,6 @@ namespace BoardGremiumRESTservice.Utils
 
         public static string ConvertTablutGameStateToString(TablutGameState tgs)
         {
-
             string result = "";
             if ((FieldType)tgs.game.HumanPlayerFieldType == FieldType.BLACK_PAWN)
             {
@@ -148,15 +167,15 @@ namespace BoardGremiumRESTservice.Utils
                 for(int j=0; j < boardWidth; j++)
                 {
                     Field f = tgs.game.currentBoardState.BoardFields[i, j];
-                    if ((FieldType)f.FieldType == FieldType.BLACK_PAWN)
+                    if ((FieldType)f.Type == FieldType.BLACK_PAWN)
                     {
                         result += BLACK_CHAR;
                     }
-                    else if ((FieldType)f.FieldType == FieldType.RED_PAWN)
+                    else if ((FieldType)f.Type == FieldType.RED_PAWN)
                     {
                         result += RED_CHAR;
                     }
-                    else if ((FieldType)f.FieldType == FieldType.KING)
+                    else if ((FieldType)f.Type == FieldType.KING)
                     {
                         result += KING_CHAR;
                     }
@@ -164,6 +183,110 @@ namespace BoardGremiumRESTservice.Utils
                     {
                         result += EMPTY_CHAR;
                     }
+                }
+            }
+            return result;
+        }
+
+        public static string ConvertAdugoGameStateToString(AdugoGameState ags)
+        {
+            var result = "";
+            if ((FieldType)ags.Game.HumanPlayerFieldType == FieldType.JAGUAR_PAWN)
+            {
+                result += JAGUAR_STRING + ",";
+            }
+            else
+            {
+                result += DOG_STRING + ",";
+            }
+            var boardWidth = ags.Game.BoardWidth;
+            var boardHeight = ags.Game.BoardHeight;
+            for (var y = 0; y < boardHeight; y++)
+            {
+                for (var x = 0; x < boardWidth; x++)
+                {
+                    var f = ags.Game.CurrentBoardState.BoardFields[y, x];
+                    switch ((FieldType)f.Type)
+                    {
+                        case FieldType.JAGUAR_PAWN:
+                            result += JAGUAR_CHAR;
+                            break;
+                        case FieldType.DOG_PAWN:
+                            result += DOG_CHAR;
+                            break;
+                        case FieldType.LOCKED_FIELD:
+                            result += LOCKED_CHAR;
+                            break;
+                        case FieldType.EMPTY_FIELD:
+                            result += EMPTY_CHAR;
+                            break;
+                    }
+
+                    result += '|'; // it separates FieldType from DirectionType
+                    switch (f.DirectionType)
+                    {
+                        case AdugoDirectionType.ALL_DIRECTIONS:
+                            result += ALL_DIRECTIONS_STRING;
+                            break;
+                        case AdugoDirectionType.DOWN_DOWNLEFT_DOWNRIGHT_LEFT_RIGHT:
+                            result += DOWN_DOWNLEFT_DOWNRIGHT_LEFT_RIGHT_STRING;
+                            break;
+                        case AdugoDirectionType.DOWN_DOWNLEFT_LEFT:
+                            result += DOWN_DOWNLEFT_LEFT_STRING;
+                            break;
+                        case AdugoDirectionType.DOWN_DOWNRIGHT_RIGHT:
+                            result += DOWN_DOWNRIGHT_RIGHT_STRING;
+                            break;
+                        case AdugoDirectionType.DOWN_LEFT_RIGHT:
+                            result += DOWN_LEFT_RIGHT_STRING;
+                            break;
+                        case AdugoDirectionType.DOWN_UPLEFT_LEFT:
+                            result += DOWN_UPLEFT_LEFT_STRING;
+                            break;
+                        case AdugoDirectionType.DOWN_UPRIGHT_RIGHT:
+                            result += DOWN_UPRIGHT_RIGHT_STRING;
+                            break;
+                        case AdugoDirectionType.UPLEFT_LEFT:
+                            result += UPLEFT_LEFT_STRING;
+                            break;
+                        case AdugoDirectionType.UPRIGHT_RIGHT:
+                            result += UPRIGHT_RIGHT_STRING;
+                            break;
+                        case AdugoDirectionType.UP_DOWN_LEFT:
+                            result += UP_DOWN_LEFT_STRING;
+                            break;
+                        case AdugoDirectionType.UP_DOWN_LEFT_RIGHT:
+                            result += UP_DOWN_LEFT_RIGHT_STRING;
+                            break;
+                        case AdugoDirectionType.UP_DOWN_RIGHT:
+                            result += UP_DOWN_RIGHT_STRING;
+                            break;
+                        case AdugoDirectionType.UP_DOWN_UPLEFT_DOWNLEFT_LEFT:
+                            result += UP_DOWN_UPLEFT_DOWNLEFT_LEFT_STRING;
+                            break;
+                        case AdugoDirectionType.UP_DOWN_UPRIGHT_DOWNRIGHT_RIGHT:
+                            result += UP_DOWN_UPRIGHT_DOWNRIGHT_RIGHT_STRING;
+                            break;
+                        case AdugoDirectionType.UP_LEFT:
+                            result += UP_LEFT_STRING;
+                            break;
+                        case AdugoDirectionType.UP_LEFT_RIGHT:
+                            result += UP_LEFT_RIGHT_STRING;
+                            break;
+                        case AdugoDirectionType.UP_RIGHT:
+                            result += UP_RIGHT_STRING;
+                            break;
+                        case AdugoDirectionType.UP_UPLEFT_LEFT:
+                            result += UP_UPLEFT_LEFT_STRING;
+                            break;
+                        case AdugoDirectionType.UP_UPRIGHT_RIGHT:
+                            result += UP_UPRIGHT_RIGHT_STRING;
+                            break;
+                        default:
+                            throw new NullReferenceException("There was field with NONE direction type while converting AdugoGameState to BoardRepresentation");
+                    }
+
+                    result += '%'; // it separates tuples (FieldType|DirectionType)
                 }
             }
             return result;
@@ -190,19 +313,19 @@ namespace BoardGremiumRESTservice.Utils
                 char character = enumerator.Current;
                 if (character.Equals(BLACK_CHAR))
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].FieldType = FieldType.BLACK_PAWN;
+                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.BLACK_PAWN;
                 }
                 else if (character.Equals(RED_CHAR))
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].FieldType = FieldType.RED_PAWN;
+                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.RED_PAWN;
                 }
                 else if (character.Equals(KING_CHAR))
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].FieldType = FieldType.KING;
+                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.KING;
                 }
                 else
                 {
-                    result.BoardFields[verticalIndex, horizontalIndex].FieldType = FieldType.EMPTY_FIELD;
+                    result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.EMPTY_FIELD;
                 }
 
                 horizontalIndex++;
@@ -221,6 +344,84 @@ namespace BoardGremiumRESTservice.Utils
             return new TablutGameState(playerType, result);
         }
 
+        public static AdugoGameState ConvertStringToAdugoGameState(string stringRepresentation, string playerPawnColor)
+        {
+            AdugoBoardState result = new AdugoBoardState(AdugoGameState.BoardWidth, AdugoGameState.BoardHeight);
+            string[] arguments = stringRepresentation.Split(',');
+            FieldType playerType;
+            if (playerPawnColor.Equals(JAGUAR_STRING))
+            {
+                playerType = FieldType.JAGUAR_PAWN;
+            }
+            else
+            {
+                playerType = FieldType.DOG_PAWN;
+            }
+            //var enumerator = stringRepresentation.GetEnumerator();
+            var enumerator = arguments[1].GetEnumerator();
+            int horizontalIndex = 0, verticalIndex = 0;
+            bool tupleInProgress = false;
+            string tupleFieldTypeDirectionType = string.Empty;
+            while (enumerator.MoveNext())
+            {
+                var character = enumerator.Current;
+                if (character == '%')
+                {
+                    tupleInProgress = false;
+                }
+
+                if (tupleInProgress)
+                {
+                    tupleFieldTypeDirectionType += enumerator; // building string: FieldType_CHAR|DirectionType_STRING
+                }
+                else // after building tuple, we can fill in AdugoField in BoardFields
+                {
+                    var tupleParams = tupleFieldTypeDirectionType.Split('|'); // 0 - FieldType_CHAR,  1 - DirectionType_STRING,
+                    var fieldTypeChar = tupleParams[0];
+                    var directionTypeString = tupleParams[1];
+
+                    if (fieldTypeChar.Equals(JAGUAR_CHAR))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.JAGUAR_PAWN;
+                    }
+                    else if (fieldTypeChar.Equals(DOG_CHAR))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.DOG_PAWN;
+                    }
+                    else if (fieldTypeChar.Equals(LOCKED_CHAR))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.LOCKED_FIELD;
+                    }
+                    else if (fieldTypeChar.Equals(EMPTY_CHAR))
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.EMPTY_FIELD;
+                    }
+
+                    if (directionTypeString.Equals(UP_UPRIGHT_RIGHT_STRING)) // TODO
+                    {
+                        result.BoardFields[verticalIndex, horizontalIndex].DirectionType =
+                            AdugoDirectionType.UP_UPRIGHT_RIGHT;
+                    }
+
+                    horizontalIndex++;
+                    if (horizontalIndex >= AdugoGameState.BoardWidth)
+                    {
+                        horizontalIndex = 0;
+                        verticalIndex++;
+                    }
+
+                    if (verticalIndex >= AdugoGameState.BoardHeight)
+                    {
+                        //throw new ArgumentOutOfRangeException("Exception thrown while parsing BoardState string representation - string is too long");
+                        break;
+                    }
+
+                    tupleInProgress = true; // new tuple will be built in the next iterations
+                }
+            }
+            return new AdugoGameState(playerType, result);
+        }
+
         //move syntax:
         //var message = "move " + selectedField.X.ToString() + " " + selectedField.Y.ToString()
         //                   + " " + selectedDirection.ToString().First() + " " + selectedNumOfFields.ToString();
@@ -229,9 +430,21 @@ namespace BoardGremiumRESTservice.Utils
             string[] moveParams = moveInfo.Split(' ');
             int y = Int32.Parse(moveParams[1]);
             int x = Int32.Parse(moveParams[2]);
-            DirectionEnum direction = DirectionFromChar(moveParams[3]);
+            DirectionEnum direction = DirectionFromString(moveParams[3]);
             int numOfFields = Int32.Parse(moveParams[4]);
             return new TablutMove(x, y, direction, numOfFields, gameState);
+        }
+
+        //move syntax:
+        //var message = "move " + selectedField.X.ToString() + " " + selectedField.Y.ToString()
+        //  + " " + selectedDirection.ToString()
+        public static AdugoMove ConvertStringToAdugoMove(string moveInfo, AdugoGameState gameState)
+        {
+            var moveParams = moveInfo.Split(' ');
+            var y = Int32.Parse(moveParams[1]);
+            var x = Int32.Parse(moveParams[2]);
+            var direction = DirectionFromString(moveParams[3]);
+            return new AdugoMove(x, y, direction, gameState);
         }
 
         public static PlayerEnum PlayerEnumFromString(string playerString)
@@ -245,43 +458,39 @@ namespace BoardGremiumRESTservice.Utils
             }
         }
 
-        private static DirectionEnum DirectionFromChar(string directionChar)
+        private static DirectionEnum DirectionFromString(string directionString)
         {
-            if(directionChar.Equals(UP_CHAR))
+            if(directionString.Equals(UP_STRING))
             {
                 return DirectionEnum.UP;
-            }else if (directionChar.Equals(DOWN_CHAR))
+            }else if (directionString.Equals(DOWN_STRING))
             {
                 return DirectionEnum.DOWN;
             }
-            else if (directionChar.Equals(LEFT_CHAR))
+            else if (directionString.Equals(LEFT_STRING))
             {
                 return DirectionEnum.LEFT;
             }
-            else if (directionChar.Equals(RIGHT_CHAR))
+            else if (directionString.Equals(RIGHT_STRING))
             {
                 return DirectionEnum.RIGHT;
             }
-            else if (directionChar.Equals(UP_LEFT_CHAR))
+            else if (directionString.Contains(UP_STRING))
             {
-                return DirectionEnum.UPLEFT;
+                if(directionString.Contains(LEFT_STRING))
+                    return DirectionEnum.UPLEFT;
+                else if(directionString.Contains(RIGHT_STRING))
+                    return DirectionEnum.UPRIGHT;
             }
-            else if (directionChar.Equals(UP_RIGHT_CHAR))
+            else if (directionString.Contains(DOWN_STRING))
             {
-                return DirectionEnum.UPRIGHT;
+                if(directionString.Contains(LEFT_STRING))
+                    return DirectionEnum.DOWNLEFT;
+                else if(directionString.Contains(RIGHT_STRING))
+                    return DirectionEnum.DOWNRIGHT;
             }
-            else if (directionChar.Equals(DOWN_LEFT_CHAR))
-            {
-                return DirectionEnum.DOWNLEFT;
-            }
-            else if (directionChar.Equals(DOWN_RIGHT_CHAR))
-            {
-                return DirectionEnum.DOWNRIGHT;
-            }
-            else
-            {
-                return DirectionEnum.NONE;
-            }
+
+            return DirectionEnum.NONE;
         }
     }
 }

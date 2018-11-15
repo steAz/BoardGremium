@@ -12,6 +12,7 @@ using System.Web.Http.Description;
 using BoardGremiumRESTservice.Models;
 using BoardGremiumRESTservice.Utils;
 using System.Net.Http.Headers;
+using BoardGremiumRESTservice.Adugo;
 using Newtonsoft.Json;
 using BoardGremiumRESTservice.Tablut;
 
@@ -414,9 +415,11 @@ namespace BoardGremiumRESTservice.Controllers
                 return BadRequest(ModelState);
             }
 
-            var gameParams = gameMessage.Split(','); // 0 - gameName,  1 - playerPawnColor
+            var gameParams = gameMessage.Split(','); // 0 - gameName,  1 - playerPawnColor,
+                                                     // 2 - gameType (Adugo or Tablut)
             var gameName = gameParams[0];
             var playerPawnColor = gameParams[1];
+            var gameType = gameParams[2];
 
 
             var allGameEntities = db.GameEntities.ToArray();
@@ -427,8 +430,21 @@ namespace BoardGremiumRESTservice.Controllers
             }
 
             FieldType playerType = MessagesConverterUtils.PlayerPawnFromMessage(playerPawnColor);
-            TablutGameState tgs = new TablutGameState(playerType);
-            string bsRepresentation = MessagesConverterUtils.ConvertTablutGameStateToString(tgs);
+            string bsRepresentation;
+            if (gameType == MessagesConverterUtils.TABLUT_STRING)
+            {
+                TablutGameState tgs = new TablutGameState(playerType);
+                bsRepresentation = MessagesConverterUtils.ConvertTablutGameStateToString(tgs);
+            }else if (gameType == MessagesConverterUtils.ADUGO_STRING)
+            {
+                var ags = new AdugoGameState(playerType);
+                bsRepresentation = MessagesConverterUtils.ConvertAdugoGameStateToString(ags);
+            }
+            else
+            {
+                throw new NullReferenceException("bsRepresentation variable has not been initialized in PostGameEntity method");
+            }
+
             GameEntity ge = new GameEntity(playerPawnColor, bsRepresentation, gameName);
             db.GameEntities.Add(ge);
             await db.SaveChangesAsync();

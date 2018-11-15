@@ -17,13 +17,14 @@ namespace BoardGremiumCore.Tablut
 
         public TablutViewModel() { MyBoardState = new BoardState(TablutUtils.BOARD_WIDTH, TablutUtils.BOARD_HEIGHT);  }
 
-        public TablutViewModel(BoardState bs, FieldType firstPlayerPawn, string gameName, Client httpClient, Label playerTurnLabel, string gameMode)
+        public TablutViewModel(BoardState bs, FieldType firstPlayerPawn, string gameName, Client httpClient, Label playerTurnLabel, string gameMode, Label errorMoveLabel)
         {
             GameInfos = new GameInfos()
             {
                 FirstPlayerPawn = firstPlayerPawn, //SecPlayerPawn is setting while setting FirstPlayerPawn in setter
                 SecPlayerPawn = (firstPlayerPawn == FieldType.RED_PAWN) ? FieldType.BLACK_PAWN : FieldType.RED_PAWN,
                 PlayerTurnLabel = playerTurnLabel,
+                ErrorMoveLabel = errorMoveLabel,
                 Client = httpClient,
                 IsGameFinished = false,
                 GameName = gameName,
@@ -73,7 +74,7 @@ namespace BoardGremiumCore.Tablut
         private void MakePlayerMove(Field selectedField, DirectionEnum selectedDirection, int selectedNumOfFields)
         {
             string message = "\"" +  GameInfos.GameName + "|move " + selectedField.Y.ToString() + " " + selectedField.X.ToString()
-                            + " " + selectedDirection.ToString().First() + " " + selectedNumOfFields.ToString() + "\"";
+                            + " " + selectedDirection.ToString() + " " + selectedNumOfFields.ToString() + "\"";
 
             var result = GameInfos.Client.SendPostMove(message);
 
@@ -84,7 +85,7 @@ namespace BoardGremiumCore.Tablut
                 UpdatePlayerTurnLabel();
             }else
             {
-                //we can create another label with information about e.g not valid move
+                GameInfos.ErrorMoveLabel.Content = "Move is not correct.";
             }
         }
 

@@ -34,14 +34,16 @@ namespace BoardGremiumCore
             {
                 case "Tablut":
                     DisplayedBoardState = TablutUtils.StartingPosition();
+                    adugoBoard.DTforUpdatingView.Stop();
                     MainDockPanel.Children.Remove(adugoBoard);
-                    TablutBoard = new TablutViewModel(DisplayedBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel, gameMode);
+                    TablutBoard = new TablutViewModel(DisplayedBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel, gameMode, ErrorMoveLabel);
                     tablutBoard.DataContext = TablutBoard;
                     break;
                 case "Adugo":
                     DisplayedAdugoBoardState = AdugoUtils.StartingPosition();
+                    tablutBoard.DTforUpdatingView.Stop();
                     MainDockPanel.Children.Remove(tablutBoard);
-                    AdugoBoard = new AdugoViewModel(DisplayedAdugoBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel, gameMode);
+                    AdugoBoard = new AdugoViewModel(DisplayedAdugoBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel, gameMode, ErrorMoveLabel);
                     adugoBoard.DataContext = AdugoBoard;
                     break;
             }

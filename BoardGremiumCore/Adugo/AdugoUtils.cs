@@ -92,21 +92,6 @@ namespace BoardGremiumCore.Adugo
             startingBoardState.BoardFields[5][3].DirectionType = AdugoDirectionType.UPLEFT_LEFT;
             startingBoardState.BoardFields[6][1].DirectionType = AdugoDirectionType.UP_RIGHT;
             startingBoardState.BoardFields[6][3].DirectionType = AdugoDirectionType.UP_LEFT;
-            //startingBoardState.BoardFields[0][4].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[0][6].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[1][3].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[1][4].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[1][5].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[2][3].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[2][4].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[2][5].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[2][6].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[3][3].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[3][4].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[3][5].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[4][3].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[4][4].Type = FieldType.RED_PAWN;
-            //startingBoardState.BoardFields[4][6].Type = FieldType.RED_PAWN;
             return startingBoardState;
         }
 

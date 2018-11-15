@@ -22,7 +22,7 @@ namespace BoardGremiumRESTservice.Models
                                             // AND IN UPPER LINE change 'IfModelChanges' to 'Always'
         }
 
-        public System.Data.Entity.DbSet<BoardGremiumRESTservice.Models.GameEntity> GameEntities { get; set; }
+        public DbSet<GameEntity> GameEntities { get; set; }
 
         public GameEntity GetGameByName(string gameName)
         {

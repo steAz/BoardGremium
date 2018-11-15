@@ -22,15 +22,16 @@ namespace BoardGremiumCore.Tablut
     public partial class TablutBoard : UserControl
     {
         bool StatisticsWindowCreated = false;
+        public DispatcherTimer DTforUpdatingView { get; set; }
 
         public TablutBoard()
         {
             InitializeComponent();
             //  DispatcherTimer setup
-            var dTForUpdatingView = new DispatcherTimer();
-            dTForUpdatingView.Tick += new EventHandler(DispatcherTimerForUpdatingTheView_Tick);
-            dTForUpdatingView.Interval = new TimeSpan(0, 0, 1);
-            dTForUpdatingView.Start();
+            DTforUpdatingView = new DispatcherTimer();
+            DTforUpdatingView.Tick += new EventHandler(DispatcherTimerForUpdatingTheView_Tick);
+            DTforUpdatingView.Interval = new TimeSpan(0, 0, 1);
+            DTforUpdatingView.Start();
 
         }
 
