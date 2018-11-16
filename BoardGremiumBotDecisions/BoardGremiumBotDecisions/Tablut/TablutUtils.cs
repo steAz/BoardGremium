@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BoardGremiumBotDecisions.AI;
+using BoardGremiumBotDecisions.AI.Tablut;
 
-namespace BoardGremiumBotDecisions
+namespace BoardGremiumBotDecisions.Tablut
 {
     public class TablutUtils
     {
@@ -27,34 +29,34 @@ namespace BoardGremiumBotDecisions
         public static int INITIAL_RED_PAWNS_NUMBER = 8;
 
 
-        public static bool PawnsInSameTeam(TablutFieldType t1, TablutFieldType t2)
+        public static bool PawnsInSameTeam(FieldType t1, FieldType t2)
         {
             if ((t1.Equals(t2)) ||
-               (t1.Equals(TablutFieldType.RED_PAWN) && t2.Equals(TablutFieldType.KING)) ||
-               (t1.Equals(TablutFieldType.KING) && t2.Equals(TablutFieldType.RED_PAWN)))
+               (t1.Equals(FieldType.RED_PAWN) && t2.Equals(FieldType.KING)) ||
+               (t1.Equals(FieldType.KING) && t2.Equals(FieldType.RED_PAWN)))
             {
                 return true;
             }
             else return false;
         }
 
-        public static TablutFieldType EnemyType(TablutFieldType playerType)
+        public static FieldType EnemyType(FieldType playerType)
         {
-            if(playerType.Equals(TablutFieldType.BLACK_PAWN))
+            if(playerType.Equals(FieldType.BLACK_PAWN))
             {
-                return TablutFieldType.RED_PAWN;
-            }else if(playerType.Equals(TablutFieldType.RED_PAWN) || playerType.Equals(TablutFieldType.KING))
+                return FieldType.RED_PAWN;
+            }else if(playerType.Equals(FieldType.RED_PAWN) || playerType.Equals(FieldType.KING))
             {
-                return TablutFieldType.BLACK_PAWN;
+                return FieldType.BLACK_PAWN;
             }else
             {
                 throw new ArgumentException("EMPTY_FIELD type in get EnemyType.");
             }
         }
 
-        public static int InitialNumberOfPawns(TablutFieldType forPlayer)
+        public static int InitialNumberOfPawns(FieldType forPlayer)
         {
-            if(forPlayer == TablutFieldType.BLACK_PAWN)
+            if(forPlayer == FieldType.BLACK_PAWN)
             {
                 return INITIAL_BLACK_PAWNS_NUMBER;
             }else

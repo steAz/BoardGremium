@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 
 namespace AbstractGame
 {
-    public enum TablutFieldType
+    public enum FieldType
     {
 
         EMPTY_FIELD,
         RED_PAWN,
         BLACK_PAWN,
-        KING
+        KING,
+        LOCKED_FIELD,
+        JAGUAR_PAWN,
+        DOG_PAWN,
     }
 }

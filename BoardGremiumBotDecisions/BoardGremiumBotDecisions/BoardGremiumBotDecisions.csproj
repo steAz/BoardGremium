@@ -61,24 +61,34 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractGame\BoardState.cs" />
-    <Compile Include="AbstractGame\Bot.cs" />
+    <Compile Include="AI\Bot.cs" />
     <Compile Include="AbstractGame\DirectionEnum.cs" />
     <Compile Include="AbstractGame\Field.cs" />
     <Compile Include="AbstractGame\Game.cs" />
     <Compile Include="AbstractGame\PlayerEnum.cs" />
     <Compile Include="AbstractGame\TablutFieldType.cs" />
+    <Compile Include="Adugo\AdugoBoardState.cs" />
+    <Compile Include="Adugo\AdugoBotClient.cs" />
+    <Compile Include="Adugo\AdugoBotModel.cs" />
+    <Compile Include="Adugo\AdugoDirectionType.cs" />
+    <Compile Include="Adugo\AdugoField.cs" />
+    <Compile Include="Adugo\AdugoGame.cs" />
+    <Compile Include="Adugo\AdugoUtils.cs" />
+    <Compile Include="AI\Adugo\AdugoBot.cs" />
     <Compile Include="BotAlgorithmParameters.cs" />
     <Compile Include="BotClient.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="MessagesConverter.cs" />
-    <Compile Include="MinMaxBot.cs" />
-    <Compile Include="NegaMaxBot.cs" />
+    <Compile Include="AI\Tablut\MinMaxBot.cs" />
+    <Compile Include="AI\Tablut\NegaMaxBot.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerResponseException.cs" />
-    <Compile Include="TablutBotModel.cs" />
-    <Compile Include="TablutGame.cs" />
-    <Compile Include="TablutUtils.cs" />
+    <Compile Include="BotModel.cs" />
+    <Compile Include="Tablut\TablutBotClient.cs" />
+    <Compile Include="Tablut\TablutBotModel.cs" />
+    <Compile Include="Tablut\TablutGame.cs" />
+    <Compile Include="Tablut\TablutUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -96,5 +106,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

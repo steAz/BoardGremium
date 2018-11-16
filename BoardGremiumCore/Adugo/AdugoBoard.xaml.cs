@@ -38,9 +38,9 @@ namespace BoardGremiumCore.Adugo
         private void DispatcherTimerForUpdatingTheView_Tick(object sender, EventArgs e)
         {
             AdugoViewModel vm = this.DataContext as AdugoViewModel;
-            //vm.UpdatePlayerTurnLabel();
-            //vm.MovePawn();
-            //vm.CheckIsGameWon();
+            vm.UpdatePlayerTurnLabel();
+            vm.MovePawn();
+            vm.CheckIsGameWon();
 
             //if (vm.GameInfos.IsGameFinished && !this.StatisticsWindowCreated)
             //{

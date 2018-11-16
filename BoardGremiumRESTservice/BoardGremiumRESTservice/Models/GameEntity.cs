@@ -20,10 +20,11 @@ namespace BoardGremiumRESTservice.Models
         public string BotAlgorithmParamsJSON { get; set; }
         public string RedHeuristics { get; set; } //comma-separated list of ints e.g 10,12,15,20 ...
         public string BlackHeuristics { get; set; }
+        public string GameType { get; set; }
         
         public GameEntity() { }
 
-        public GameEntity(string playerPawnColor, string boardStateRepresentation, string gameName)
+        public GameEntity(string playerPawnColor, string boardStateRepresentation, string gameName, string gameType)
         {
             this.PlayerPawnColor = playerPawnColor;
             this.BoardStateRepresentation = boardStateRepresentation;
@@ -31,6 +32,7 @@ namespace BoardGremiumRESTservice.Models
             this.IsFirstPlayerJoined = false;
             this.IsSecPlayerJoined = false;
             this.IsGameWon = false;
+            this.GameType = gameType;
             RedHeuristics = string.Empty;
             BlackHeuristics = string.Empty;
             //CreationDate = new DateTime();

@@ -240,7 +240,8 @@ namespace BoardGremiumCore
                     }
                     else if (GameSelectionCB.Text.Equals("Adugo"))
                     {
-
+                        gameWindow.AdugoBoard.GameInfos.BotAlgParams = botAlgParams;
+                        client.SetBotAlgorithms(CreatedGameNameTB.Text, botAlgParams);
                     }
                     gameWindow.Show();
 

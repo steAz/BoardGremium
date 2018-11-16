@@ -1,11 +1,12 @@
 ﻿using AbstractGame;
+using BoardGremiumBotDecisions.Tablut;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BoardGremiumBotDecisions
+namespace BoardGremiumBotDecisions.AI.Tablut
 {
 
 
@@ -93,9 +94,9 @@ namespace BoardGremiumBotDecisions
 
         public override int Heuristic(BoardState bs)
         {
-            TablutFieldType enemyType = (TablutFieldType)Game.HumanPlayerFieldType;
+            FieldType enemyType = (FieldType)Game.HumanPlayerFieldType;
             
-            if(enemyType == TablutFieldType.RED_PAWN)
+            if(enemyType == FieldType.RED_PAWN)
             {
                 return HeuristicForBlack(bs) - HeuristicForRed(bs);
             }else
@@ -108,7 +109,7 @@ namespace BoardGremiumBotDecisions
         {
             int resultBlack = 0;
 
-            resultBlack = TablutUtils.InitialNumberOfPawns(TablutFieldType.RED_PAWN) * 100 - (bs.NumberOfPawnsForPlayer(TablutFieldType.RED_PAWN) * 100); // the less enemy'pawns on the board, the better black's heuristic is
+            resultBlack = TablutUtils.InitialNumberOfPawns(FieldType.RED_PAWN) * 100 - (bs.NumberOfPawnsForPlayer(FieldType.RED_PAWN) * 100); // the less enemy'pawns on the board, the better black's heuristic is
 
             var kingField = bs.GetKingTablutField();
 
@@ -118,19 +119,19 @@ namespace BoardGremiumBotDecisions
             var fieldNextToKingDirectionDOWN = bs.AdjacentField(kingField, DirectionEnum.DOWN);
 
             int blacksNextToKing = 0;
-            if (fieldNextToKingDirectionUP != null && fieldNextToKingDirectionUP.Type == TablutFieldType.BLACK_PAWN)
+            if (fieldNextToKingDirectionUP != null && fieldNextToKingDirectionUP.Type == FieldType.BLACK_PAWN)
             {
                 blacksNextToKing++;
             }
-            if (fieldNextToKingDirectionDOWN != null && fieldNextToKingDirectionDOWN.Type == TablutFieldType.BLACK_PAWN)
+            if (fieldNextToKingDirectionDOWN != null && fieldNextToKingDirectionDOWN.Type == FieldType.BLACK_PAWN)
             {
                 blacksNextToKing++;
             }
-            if (fieldNextToKingDirectionLEFT != null && fieldNextToKingDirectionLEFT.Type == TablutFieldType.BLACK_PAWN)
+            if (fieldNextToKingDirectionLEFT != null && fieldNextToKingDirectionLEFT.Type == FieldType.BLACK_PAWN)
             {
                 blacksNextToKing++;
             }
-            if (fieldNextToKingDirectionRIGHT != null && fieldNextToKingDirectionRIGHT.Type == TablutFieldType.BLACK_PAWN)
+            if (fieldNextToKingDirectionRIGHT != null && fieldNextToKingDirectionRIGHT.Type == FieldType.BLACK_PAWN)
             {
                 blacksNextToKing++;
             }
@@ -151,7 +152,7 @@ namespace BoardGremiumBotDecisions
         protected int HeuristicForRed(BoardState bs)
         {
             var resultRed = 0;
-            resultRed = TablutUtils.InitialNumberOfPawns(TablutFieldType.BLACK_PAWN) * 100 - (bs.NumberOfPawnsForPlayer(TablutFieldType.BLACK_PAWN) * 100); // the less enemy'pawns on the board, the better black's heuristic is
+            resultRed = TablutUtils.InitialNumberOfPawns(FieldType.BLACK_PAWN) * 100 - (bs.NumberOfPawnsForPlayer(FieldType.BLACK_PAWN) * 100); // the less enemy'pawns on the board, the better black's heuristic is
 
             int minimumDistance = bs.ClosestCornerDistanceFromKing();
 

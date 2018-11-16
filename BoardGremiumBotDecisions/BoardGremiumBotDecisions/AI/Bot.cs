@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AbstractGame;
 
-namespace AbstractGame
+namespace BoardGremiumBotDecisions.AI
 {
     public class Bot
     {
@@ -16,6 +17,11 @@ namespace AbstractGame
         public virtual int Heuristic(BoardState bs)
         {
             return 0;
+        }
+
+        public Bot()
+        {
+
         }
 
         public Bot(Game game)

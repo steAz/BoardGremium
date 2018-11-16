@@ -1,4 +1,5 @@
 ﻿using AbstractGame;
+using BoardGremiumBotDecisions.Tablut;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,26 +10,38 @@ using System.Threading.Tasks;
 
 namespace BoardGremiumBotDecisions
 {
-    class BotClient : HttpClient
+    public abstract class BotClient : HttpClient
     {
-        private string AddressIP;
+        protected string AddressIP;
 
         private static string PostGameRoute = "/api/GameEntitys";
-        private static string PostMoveRoute = "/api/Move";
 
         public BotClient(string addressIP) : base()
         {
             this.AddressIP = addressIP;
         }
 
-        public async Task<string> SendPostMove(string message)
+        public abstract string GetWinnerColor(string gameName);
+        public abstract Task<string> SendPostMove(string message);
+
+
+        protected async Task<string> SendGetCurrentBoardState(string gameName)
         {
-            var content = new StringContent(message, Encoding.UTF8, "application/json");
-            var result = this.PostAsync(AddressIP + PostMoveRoute, content).Result;
-            string resultContent = await result.Content.ReadAsStringAsync();
-            Console.WriteLine(resultContent);
-            return resultContent;
+            string uri = AddressIP + GetCurrentBoardStateRoute(gameName);
+            var result = this.GetAsync(uri).Result;
+            if (result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                Console.WriteLine(resultContent);
+                return resultContent;
+            }
+            else
+            {
+                throw new HttpRequestException("Failed Status Code while getting CurrentBoardState");
+            }
         }
+
+        public abstract object HttpGet_CurrentBoardState(string gameName);
 
         public async Task<string> SendPostGame(string jsonMessage)
         {
@@ -40,7 +53,7 @@ namespace BoardGremiumBotDecisions
             return resultContent;
         }
 
-        private async Task<string> SendGetCurrentPlayer(string gameName)
+        protected async Task<string> SendGetCurrentPlayer(string gameName)
         {
             string uri = AddressIP + GetCurrentPlayerRoute(gameName);
             var result = this.GetAsync(uri).Result;
@@ -68,7 +81,7 @@ namespace BoardGremiumBotDecisions
             {
                 return false;
             }
-            else throw new HttpRequestException("Error with getting BotPawnColor as TablutFieldType");
+            else throw new HttpRequestException("Error with getting BotPawnColor as FieldType");
 
         }
 
@@ -88,77 +101,11 @@ namespace BoardGremiumBotDecisions
             }
         }
 
-        public TablutFieldType HttpGet_BotPawnColor(string gameName)
+        public FieldType HttpGet_BotPawnColor(string gameName)
         {
             var botPawnColorTask = SendGetBotPawnColor(gameName);
             var botPawnColorString = botPawnColorTask.Result;
             return MessagesConverter.PlayerPawnFromMessage(botPawnColorString);              
-        }
-
-        private async Task<string> HttpGet_FirstPlayerColor(string gameName)
-        {
-            string uri = AddressIP + GetFirstPlayerColorRoute(gameName);
-            var result = this.GetAsync(uri).Result;
-            if (result.IsSuccessStatusCode)
-            {
-                string resultContent = await result.Content.ReadAsStringAsync();
-                Console.WriteLine(resultContent);
-                return resultContent;
-            }
-            else
-            {
-                throw new HttpRequestException("Error with getting FirstPlayerColor");
-            }
-        }
-
-        private async Task<string> HttpGet_SecondPlayerColor(string gameName)
-        {
-            string uri = AddressIP + GetSecondPlayerColorRoute(gameName);
-            var result = this.GetAsync(uri).Result;
-            if (result.IsSuccessStatusCode)
-            {
-                string resultContent = await result.Content.ReadAsStringAsync();
-                Console.WriteLine(resultContent);
-                return resultContent;
-            }
-            else
-            {
-                throw new HttpRequestException("Error with getting FirstPlayerColor");
-            }
-        }
-
-        public string GetWinnerColor(string gameName)
-        {
-            var currentPlayerTask = SendGetCurrentPlayer(gameName);
-            var currentPlayerString = currentPlayerTask.Result;
-            if(currentPlayerString.Equals("HUMAN"))
-            {
-                var firstPlayerColorTask = HttpGet_FirstPlayerColor(gameName);
-                var firstPlayerColorString = firstPlayerColorTask.Result;
-                if(!firstPlayerColorString.Equals("RED") && !firstPlayerColorString.Equals("BLACK"))
-                {
-                    throw new HttpRequestException("Error with getting firstPlayerColor");
-                }else
-                {
-                    return firstPlayerColorString;
-                }
-            }else if(currentPlayerString.Equals("BOT"))
-            {
-                var secondPlayerColorTask = HttpGet_SecondPlayerColor(gameName);
-                var secondPlayerColorString = secondPlayerColorTask.Result;
-                if (!secondPlayerColorString.Equals("RED") && !secondPlayerColorString.Equals("BLACK"))
-                {
-                    throw new HttpRequestException("Error with getting secondPlayerColor");
-                }
-                else
-                {
-                    return secondPlayerColorString;
-                }
-            }
-            else
-            {
-                throw new HttpRequestException("Error with getting CurrentPlayer");
-            }
         }
 
         private async Task<string> SendGetIsFirstPlayerJoined(string gameName)
@@ -194,9 +141,9 @@ namespace BoardGremiumBotDecisions
             }
         }
 
-        private async Task<string> SendGetCurrentBoardState(string gameName)
+        private async Task<string> SendGetGameType(string gameName)
         {
-            string uri = AddressIP + GetCurrentBoardStateRoute(gameName);
+            string uri = AddressIP + GetGameTypeRoute(gameName);
             var result = this.GetAsync(uri).Result;
             if (result.IsSuccessStatusCode)
             {
@@ -206,15 +153,15 @@ namespace BoardGremiumBotDecisions
             }
             else
             {
-                throw new HttpRequestException("Failed Status Code while getting CurrentBoardState");
+                throw new HttpRequestException("Failed Status Code while getting GameType from Bot");
             }
         }
 
-        public BoardState HttpGet_CurrentBoardState(string gameName)
+        public string HttpGet_GameType(string gameName)
         {
-            var boardStateTask = SendGetCurrentBoardState(gameName);
-            var boardStateString = boardStateTask.Result;
-            return MessagesConverter.ConvertStringToTablutBoardState(boardStateString);
+            var gameTypeTask = SendGetGameType(gameName);
+            var gameTypeString = gameTypeTask.Result;
+            return gameTypeString;
         }
 
         private async Task<string> HttpGet_IsGameWon(string gameName)
@@ -291,7 +238,7 @@ namespace BoardGremiumBotDecisions
             return deserializedBotAlgParams;
         }
 
-        private async Task<string> HttpPost_SetHeuristic(string gameName, int heuristic, TablutFieldType pawnType)
+        private async Task<string> HttpPost_SetHeuristic(string gameName, int heuristic, FieldType pawnType)
         {
             string uri = AddressIP + PostHeuristicRoute(gameName, pawnType);
             var content = new StringContent(heuristic.ToString(), Encoding.UTF8, "application/json");
@@ -307,7 +254,7 @@ namespace BoardGremiumBotDecisions
             }
         }
 
-        public void SetHeuristic(string gameName, int heuristic, TablutFieldType pawnType)
+        public void SetHeuristic(string gameName, int heuristic, FieldType pawnType)
         {
             try
             {
@@ -340,6 +287,11 @@ namespace BoardGremiumBotDecisions
             return "/api/GameEntitys/" + gameName + "/CurrentBoardState";
         }
 
+        public string GetGameTypeRoute(string gameName)
+        {
+            return "/api/GameEntitys/" + gameName + "/GameType";
+        }
+
         public string GetIsGameWonRoute(string gameName)
         {
             return "/api/GameEntitys/" + gameName + "/IsWon";
@@ -365,15 +317,29 @@ namespace BoardGremiumBotDecisions
             return "/api/GameEntitys/" + gameName + "/BotAlgorithmParamsJSON";
         }
 
-        public string PostHeuristicRoute(string gameName, TablutFieldType botPawn)
+        public string PostHeuristicRoute(string gameName, FieldType botPawn)
         {
-            if(botPawn.Equals(TablutFieldType.RED_PAWN))
+            if(botPawn.Equals(FieldType.RED_PAWN))
             {
                 return PostRedHeuristicRoute(gameName);
-            }else
+            }else if (botPawn.Equals(FieldType.BLACK_PAWN))
             {
                 return PostBlackHeuristicRoute(gameName);
             }
+            else if (botPawn.Equals(FieldType.JAGUAR_PAWN)) // TODO
+            {
+                return PostRedHeuristicRoute(gameName);
+            }
+            else if(botPawn.Equals(FieldType.DOG_PAWN)) // TODO
+
+            {
+                return PostBlackHeuristicRoute(gameName);
+            }
+            else
+            {
+                throw new NullReferenceException("Cannot specific route for heuristic");
+            }
+
         }
 
         private string PostRedHeuristicRoute(string gameName)

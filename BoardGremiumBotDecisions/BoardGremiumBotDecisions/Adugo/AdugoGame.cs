@@ -1,10 +1,13 @@
-﻿using System;
+﻿using AbstractGame;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.XPath;
 
-namespace BoardGremiumRESTservice.Adugo
+namespace BoardGremiumBotDecisions.Adugo
 {
     public class AdugoGame
     {
@@ -12,8 +15,8 @@ namespace BoardGremiumRESTservice.Adugo
         public int BoardHeight { get; }
         public AdugoBoardState CurrentBoardState { get; set; }
         public PlayerEnum CurrentPlayer { get; set; }
-        public Enum HumanPlayerFieldType { get; set; } //e.g dogPawn/jaguarPawn
-        public Enum BotPlayerFieldType { get; set; }
+        public FieldType HumanPlayerFieldType { get; set; } //e.g dogPawn/jaguarPawn
+        public FieldType BotPlayerFieldType { get; set; }
 
 
         public AdugoGame(FieldType humanPawn, int boardWidth, int boardHeight)
@@ -24,7 +27,7 @@ namespace BoardGremiumRESTservice.Adugo
             this.HumanPlayerFieldType = humanPawn;
             if (humanPawn.Equals(FieldType.JAGUAR_PAWN))
                 this.BotPlayerFieldType = FieldType.DOG_PAWN;
-            else if(humanPawn.Equals(FieldType.DOG_PAWN))
+            else if (humanPawn.Equals(FieldType.DOG_PAWN))
                 this.BotPlayerFieldType = FieldType.JAGUAR_PAWN;
 
         }
@@ -105,9 +108,8 @@ namespace BoardGremiumRESTservice.Adugo
             return startingBoardState;
         }
 
-        public void MovePawnAndBeatIfNecessary(AdugoBoardState board, AdugoMove move, AdugoField fieldToBeat, AdugoField fieldToMove)
+        public void MovePawnAndBeatIfNecessary(AdugoBoardState board, Field field, DirectionEnum direction, AdugoField fieldToBeat, AdugoField fieldToMove)
         {
-            var field = move.ChosenField;
             var xCoordToMove = fieldToMove.X;
             var yCoordToMove = fieldToMove.Y;
             board.BoardFields[yCoordToMove, xCoordToMove].Type = field.Type; // pawn is on new field
@@ -120,7 +122,103 @@ namespace BoardGremiumRESTservice.Adugo
             }
         }
 
+        public List<AdugoBoardState> GetPossibleAdugoBoardStates(AdugoBoardState initial, FieldType playerFieldType)
+        {
+            var result = new List<AdugoBoardState>();
+            for (var y = 0; y < BoardHeight; y++)
+            {
+                for (var x = 0; x < BoardWidth; x++)
+                {
+                    if (initial.BoardFields[y, x].Type == playerFieldType)
+                    {
+                        result.AddRange(GetPossibleBoardStatesForPawn(initial, initial.BoardFields[y, x]));
+                    }
+                }
+            }
 
+            return result;
+        }
 
+        private List<AdugoBoardState> GetPossibleBoardStatesForPawn(AdugoBoardState initial, AdugoField pawn)
+        {
+            if ((FieldType)pawn.Type != FieldType.JAGUAR_PAWN &&
+                (FieldType)pawn.Type != FieldType.DOG_PAWN)
+            {
+                throw new ArgumentException("Field passed to GetPossibleAdugoBoardStatesForPawn is not pawn type");
+            }
+            var directions = Enum.GetValues(typeof(DirectionEnum));
+            var result = new List<AdugoBoardState>();
+
+            foreach (var direction in directions)
+            {
+                var oneResult = MoveInOneDirection(initial, pawn, (DirectionEnum) direction);
+                if (oneResult != null)
+                {
+                    result.Add(oneResult);
+                }
+            }
+
+            return result;
+        }
+        
+        private AdugoBoardState MoveInOneDirection(AdugoBoardState initialBS, AdugoField pawn, DirectionEnum direction)
+        {
+            AdugoBoardState currentBoardState = null;
+            if (IsChosenMoveValid(initialBS, pawn, direction, out var fieldToBeat, out var fieldToMove))
+            {
+                currentBoardState = (AdugoBoardState)initialBS.Clone();
+                var currentField = currentBoardState.BoardFields[pawn.Y, pawn.X];
+                MovePawnAndBeatIfNecessary(currentBoardState, currentField, direction, fieldToBeat, fieldToMove);
+            }
+
+            return currentBoardState;
+        }
+        
+        private static bool IsChosenMoveValid(AdugoBoardState currentBoardState, AdugoField chosenField, DirectionEnum direction, out AdugoField fieldToBeat, out AdugoField fieldToMove)
+        {
+            fieldToBeat = null;
+            fieldToMove = null;
+
+            if (!chosenField.DirectionType.ToString().Contains(direction.ToString()) &&
+                !chosenField.DirectionType.Equals(AdugoDirectionType.ALL_DIRECTIONS)) // if it's not possible to move in this direction from this place
+            {
+                return false;
+            }
+
+            var helpfulField = currentBoardState.AdjecentField(chosenField, direction);
+            if (helpfulField == null || !helpfulField.Type.Equals(FieldType.EMPTY_FIELD))
+            {
+                return false;
+            }
+            switch (chosenField.Type)
+            {
+                case FieldType.JAGUAR_PAWN when helpfulField.Type.Equals(FieldType.DOG_PAWN):
+                    {
+                        var adjacentToHelpfulField = currentBoardState.AdjecentField(fieldToMove, direction);
+                        if (adjacentToHelpfulField == null || !adjacentToHelpfulField.Type.Equals(FieldType.EMPTY_FIELD))
+                            return false;
+                        fieldToBeat = helpfulField; // Jaguar will beat dog
+                        fieldToMove = adjacentToHelpfulField; // Jaguar will go to empty field after dog
+                        return true;
+
+                    }
+                case FieldType.DOG_PAWN when (helpfulField.Type.Equals(FieldType.JAGUAR_PAWN) ||
+                                              helpfulField.Type.Equals(FieldType.DOG_PAWN) ||
+                                              helpfulField.Type.Equals(FieldType.LOCKED_FIELD)):
+                    return false; // DOG cannot move on JAGUAR or another DOG
+                default:
+                    {
+                        if (helpfulField.Type.Equals(FieldType.LOCKED_FIELD))
+                        {
+                            return false;
+                        }
+
+                        break;
+                    }
+            }
+
+            fieldToMove = helpfulField;
+            return true;
+        }
     }
 }

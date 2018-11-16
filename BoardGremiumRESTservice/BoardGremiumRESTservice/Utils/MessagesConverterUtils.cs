@@ -21,10 +21,13 @@ namespace BoardGremiumRESTservice.Utils
         public static string HUMAN_STRING = "HUMAN";
         public static string BOT_STRING = "BOT";
 
-        public static string RED_CHAR = "R";
-        public static string BLACK_CHAR = "B";
-        public static string KING_CHAR = "K";
-        public static string EMPTY_CHAR = "E";
+        public static char RED_CHAR = 'R';
+        public static char BLACK_CHAR = 'B';
+        public static char KING_CHAR = 'K';
+        public static char EMPTY_CHAR = 'E'; // these four are needed for converting from bs representation to tablutGameState
+
+        public static string EMPTY_STRING = "E";
+
         public static string JAGUAR_CHAR= "J";
         public static string DOG_CHAR = "D";
         public static string LOCKED_CHAR = "L";
@@ -219,7 +222,7 @@ namespace BoardGremiumRESTservice.Utils
                             result += LOCKED_CHAR;
                             break;
                         case FieldType.EMPTY_FIELD:
-                            result += EMPTY_CHAR;
+                            result += EMPTY_STRING;
                             break;
                     }
 
@@ -396,7 +399,7 @@ namespace BoardGremiumRESTservice.Utils
                     {
                         result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.LOCKED_FIELD;
                     }
-                    else if (fieldTypeChar.Equals(EMPTY_CHAR))
+                    else if (fieldTypeChar.Equals(EMPTY_STRING))
                     {
                         result.BoardFields[verticalIndex, horizontalIndex].Type = FieldType.EMPTY_FIELD;
                     }

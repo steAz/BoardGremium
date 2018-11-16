@@ -46,6 +46,10 @@ namespace BoardGremiumRESTservice.Adugo
             }
 
             var helpfulField = Game.CurrentBoardState.AdjecentField(move.ChosenField, move.Direction);
+            if (helpfulField == null || !helpfulField.Type.Equals(FieldType.EMPTY_FIELD))
+            {
+                return false;
+            }
             switch (currentFieldType)
             {
                 case FieldType.JAGUAR_PAWN when helpfulField.Type.Equals(FieldType.DOG_PAWN):

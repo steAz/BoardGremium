@@ -1,4 +1,5 @@
 ﻿using BoardGremiumBotDecisions;
+using BoardGremiumBotDecisions.Tablut;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,23 +24,23 @@ namespace AbstractGame
             {
                 for (int j = 0; j != this.Height; ++j)
                 {
-                    BoardFields[i, j] = new Field(j, i, TablutFieldType.EMPTY_FIELD);
+                    BoardFields[i, j] = new Field(j, i, FieldType.EMPTY_FIELD);
                 }
             }
         }
 
-        public int NumberOfPawnsForPlayer(TablutFieldType forPlayer)
+        public int NumberOfPawnsForPlayer(FieldType forPlayer)
         {
             int result = 0;
             for (int i = 0; i < Height; i++)
             {
                 for (int j = 0; j < Width; j++)
                 {
-                    if (!BoardFields[i, j].Type.Equals(TablutFieldType.EMPTY_FIELD))
+                    if (!BoardFields[i, j].Type.Equals(FieldType.EMPTY_FIELD))
                     {
                         if(TablutUtils.PawnsInSameTeam(BoardFields[i, j].Type, forPlayer))
                         {
-                            if(BoardFields[i, j].Type != TablutFieldType.KING) // counting without king to heuristic
+                            if(BoardFields[i, j].Type != FieldType.KING) // counting without king to heuristic
                                 result++;
                         }
                     }
@@ -54,7 +55,7 @@ namespace AbstractGame
             {
                 for (int j = 0; j < Width; j++)
                 {
-                    if (BoardFields[i, j].Type.Equals(TablutFieldType.KING))
+                    if (BoardFields[i, j].Type.Equals(FieldType.KING))
                     {
                         return BoardFields[i, j];
                     }

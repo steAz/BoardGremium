@@ -13,23 +13,23 @@ namespace AbstractGame
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public TablutFieldType Type { get; set; }
+        public FieldType Type { get; set; }
 
         public Field()
         {
             X = 0;
             Y = 0;
-            Type = TablutFieldType.EMPTY_FIELD;
+            Type = FieldType.EMPTY_FIELD;
         }
 
         public Field(int x, int y)
         {
             this.X = x;
             this.Y = y;
-            this.Type = TablutFieldType.EMPTY_FIELD;
+            this.Type = FieldType.EMPTY_FIELD;
         }
 
-        public Field(int x, int y, TablutFieldType type)
+        public Field(int x, int y, FieldType type)
         {
             this.X = x;
             this.Y = y;

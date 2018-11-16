@@ -13,10 +13,7 @@ namespace BoardGremiumCore.Adugo
         public static int BOARD_WIDTH = 5;
         public static int BOARD_HEIGHT = 8;
 
-        public static char RED_CHAR = 'R';
-        public static char BLACK_CHAR = 'B';
-        public static char KING_CHAR = 'K';
-        public static char EMPTY_CHAR = 'E';
+        public static string EMPTY_CHAR = "E";
         public static string JAGUAR_CHAR = "J";
         public static string DOG_CHAR = "D";
         public static string LOCKED_CHAR = "L";

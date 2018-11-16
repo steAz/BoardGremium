@@ -261,7 +261,7 @@ namespace BoardGremiumRESTservice.Controllers
             }
             else
             {
-                bool isWon = GameEntity.IsGameWon;
+                var isWon = GameEntity.IsGameWon;
 
                 var response = new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -371,6 +371,27 @@ namespace BoardGremiumRESTservice.Controllers
             }
         }
 
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/GameType")]
+        public HttpResponseMessage GetGameType(string gameName)
+        {
+            var GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            var gameType = GameEntity.GameType;
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(gameType)
+            };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+            return response;
+        }
+
         // PUT: api/GameEntitys/5
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutGameEntity(int id, GameEntity GameEntity)
@@ -445,7 +466,7 @@ namespace BoardGremiumRESTservice.Controllers
                 throw new NullReferenceException("bsRepresentation variable has not been initialized in PostGameEntity method");
             }
 
-            GameEntity ge = new GameEntity(playerPawnColor, bsRepresentation, gameName);
+            GameEntity ge = new GameEntity(playerPawnColor, bsRepresentation, gameName, gameType);
             db.GameEntities.Add(ge);
             await db.SaveChangesAsync();
 

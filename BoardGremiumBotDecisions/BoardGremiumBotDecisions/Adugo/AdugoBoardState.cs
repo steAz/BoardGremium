@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
+using AbstractGame;
 
-namespace BoardGremiumRESTservice.Adugo
+namespace BoardGremiumBotDecisions.Adugo
 {
     public class AdugoBoardState : ICloneable
     {
@@ -33,37 +35,37 @@ namespace BoardGremiumRESTservice.Adugo
             switch (direction)
             {
                 case DirectionEnum.UP:
-                {
-                    return field.Y == 0 ? null : BoardFields[field.Y - 1, field.X];
-                }
+                    {
+                        return field.Y == 0 ? null : BoardFields[field.Y - 1, field.X];
+                    }
                 case DirectionEnum.DOWN:
-                {
-                    return field.Y == Height - 1 ? null : BoardFields[field.Y + 1, field.X];
-                }
+                    {
+                        return field.Y == Height - 1 ? null : BoardFields[field.Y + 1, field.X];
+                    }
                 case DirectionEnum.LEFT:
-                {
-                    return field.X == 0 ? null : BoardFields[field.Y, field.X - 1];
-                }
+                    {
+                        return field.X == 0 ? null : BoardFields[field.Y, field.X - 1];
+                    }
                 case DirectionEnum.RIGHT:
-                {
-                    return field.X == Width - 1 ? null : BoardFields[field.Y, field.X + 1];
-                }
+                    {
+                        return field.X == Width - 1 ? null : BoardFields[field.Y, field.X + 1];
+                    }
                 case DirectionEnum.UPLEFT:
-                {
-                    return (field.Y == 0) || (field.X == 0) ? null : BoardFields[field.Y - 1, field.X - 1];
-                }
+                    {
+                        return (field.Y == 0) || (field.X == 0) ? null : BoardFields[field.Y - 1, field.X - 1];
+                    }
                 case DirectionEnum.UPRIGHT:
-                {
-                    return (field.Y == 0) || (field.X == Width - 1) ? null : BoardFields[field.Y - 1, field.X + 1];
-                }
+                    {
+                        return (field.Y == 0) || (field.X == Width - 1) ? null : BoardFields[field.Y - 1, field.X + 1];
+                    }
                 case DirectionEnum.DOWNRIGHT:
-                {
-                    return (field.Y == Height - 1) || (field.X == Width - 1) ? null : BoardFields[field.Y + 1, field.X + 1];
-                }
+                    {
+                        return (field.Y == Height - 1) || (field.X == Width - 1) ? null : BoardFields[field.Y + 1, field.X + 1];
+                    }
                 case DirectionEnum.DOWNLEFT:
-                {
-                    return (field.Y == Height - 1) || (field.X == 0) ? null : BoardFields[field.Y + 1, field.X - 1];
-                }
+                    {
+                        return (field.Y == Height - 1) || (field.X == 0) ? null : BoardFields[field.Y + 1, field.X - 1];
+                    }
             }
             return null;
         }
@@ -73,7 +75,7 @@ namespace BoardGremiumRESTservice.Adugo
         /// </summary>
         public object Clone()
         {
-            BoardState clone = new BoardState(Width, Height);
+            AdugoBoardState clone = new AdugoBoardState(Width, Height);
             for (int i = 0; i < Height; i++)
             {
                 for (int j = 0; j < Width; j++)
