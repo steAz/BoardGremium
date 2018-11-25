@@ -86,7 +86,7 @@ namespace BoardGremiumCore.Tablut
                 UpdatePlayerTurnLabel();
             }else
             {
-                GameInfos.ErrorMoveLabel.Content = "Move is not correct.";
+                GameInfos.ErrorMoveLabel.Content = "Move was not correct.";
                 GameInfos.ErrorMoveLabel.Visibility = Visibility.Visible;
             }
         }
@@ -112,10 +112,11 @@ namespace BoardGremiumCore.Tablut
             {
                 GameInfos.PlayerTurnLabel.Content = "Make your move, my friend";
                 GameInfos.PlayerTurnLabel.Visibility = Visibility.Visible;
+                GameInfos.ErrorMoveLabel.Visibility = Visibility.Hidden;
             }
             else
             {
-                GameInfos.PlayerTurnLabel.Content = "Enemy makes move.";
+                GameInfos.PlayerTurnLabel.Content = "Enemy is making move.";
                 GameInfos.PlayerTurnLabel.Visibility = Visibility.Visible;
             }
         }

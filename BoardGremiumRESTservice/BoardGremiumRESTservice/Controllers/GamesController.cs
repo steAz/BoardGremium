@@ -51,15 +51,13 @@ namespace BoardGremiumRESTservice.Controllers
             {
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
-            else
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                var response = new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(GameEntity.CurrentPlayer)
-                };
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-                return response;
-            }
+                Content = new StringContent(GameEntity.CurrentPlayer)
+            };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+            return response;
         }
 
         [ResponseType(typeof(string))]

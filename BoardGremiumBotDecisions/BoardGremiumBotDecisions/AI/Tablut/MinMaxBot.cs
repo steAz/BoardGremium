@@ -14,13 +14,6 @@ namespace BoardGremiumBotDecisions.AI.Tablut
     {
         public int MaxTreeDepth { get; set; }
 
-        public enum TraversingLevel
-        {
-            MAX,
-            MIN
-        }
-
-
         public MinMaxBot(Game game, int maxTreeDepth) :base(game)
         {
             MaxTreeDepth = maxTreeDepth;

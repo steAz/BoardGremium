@@ -43,28 +43,21 @@ namespace BoardGremiumRESTservice.Controllers
 
             if (!gameState.IsChosenMoveValid(move, currentPlayer, out var fieldToBeat, out var fieldToMove))
                 return BadRequest("Error 400 - Chosen move is not valid");
-          //  var oldBoardState = (AdugoBoardState)gameState.Game.CurrentBoardState.Clone();
-            ////perform move
+
             gameState.Game.MovePawnAndBeatIfNecessary(gameState.Game.CurrentBoardState, move, fieldToBeat, fieldToMove);
-            //if (gameState.game.IsGameWon(gameState.game.currentBoardState, currentPlayer))
-            //{
-            //    GameEntity.IsGameWon = true;
-            //    UpdateBoardStateRepresentation(GameEntity, gameState);
-            //    db.Entry(GameEntity).State = EntityState.Modified;
-            //    db.SaveChanges();
-            //    return Ok("ok");
-            //}
+            if (gameState.Game.IsGameWon(gameState.Game.CurrentBoardState, currentPlayer))
+            {
+                GameEntity.IsGameWon = true;
+                UpdateBoardStateRepresentation(GameEntity, gameState);
+                db.Entry(GameEntity).State = EntityState.Modified;
+                db.SaveChanges();
+                return Ok("ok");
+            }
             string callbackMessage;
             if (fieldToBeat != null)
             {
                 callbackMessage = "ok taken " + fieldToBeat.X + " " + fieldToBeat.Y;
             }
-            //if (gameState.NumberOfPawnsOnBS(oldBoardState) != gameState.NumberOfPawnsOnBS(gameState.game.currentBoardState))
-            //{
-            //    Field takenPawn = gameState.GetMissingPawnForPlayer
-            //        (oldBoardState, gameState.game.currentBoardState, GameEntity.GetEnemyPlayer());
-            //    callbackMessage = "ok taken " + takenPawn.X + " " + takenPawn.Y;
-            //}
             else
             {
                 callbackMessage = "ok";

@@ -81,10 +81,11 @@ namespace BoardGremiumCore.Adugo
                 MovePawn();
                 CheckIsGameWon();
                 UpdatePlayerTurnLabel();
+                GameInfos.ErrorMoveLabel.Visibility = Visibility.Hidden;
             }
             else
             {
-                GameInfos.ErrorMoveLabel.Content = "Move is not correct.";
+                GameInfos.ErrorMoveLabel.Content = "Move was not correct.";
                 GameInfos.ErrorMoveLabel.Visibility = Visibility.Visible;
             }
         }
@@ -114,7 +115,7 @@ namespace BoardGremiumCore.Adugo
             }
             else
             {
-                GameInfos.PlayerTurnLabel.Content = "Enemy makes move.";
+                GameInfos.PlayerTurnLabel.Content = "Enemy is making move.";
                 GameInfos.PlayerTurnLabel.Visibility = Visibility.Visible;
             }
         }

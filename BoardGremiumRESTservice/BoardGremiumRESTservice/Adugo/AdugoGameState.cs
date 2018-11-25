@@ -39,22 +39,36 @@ namespace BoardGremiumRESTservice.Adugo
                 currentFieldType = (FieldType)Game.BotPlayerFieldType;
             }
 
-            if (!move.ChosenField.DirectionType.ToString().Contains(move.Direction.ToString()) &&
-                !move.ChosenField.DirectionType.Equals(AdugoDirectionType.ALL_DIRECTIONS)) // if it's not possible to move in this direction from this place
+            
+            if (!move.ChosenField.DirectionType.Equals(AdugoDirectionType.ALL_DIRECTIONS)) // if it's not possible to move in this direction from this place
             {
-                return false;
+                var directionParams = move.ChosenField.DirectionType.ToString().Split('_');
+                if (!directionParams.Contains(move.Direction.ToString()))
+                {
+                    return false;
+                }
             }
 
             var helpfulField = Game.CurrentBoardState.AdjecentField(move.ChosenField, move.Direction);
-            if (helpfulField == null || !helpfulField.Type.Equals(FieldType.EMPTY_FIELD))
+            if (helpfulField == null) return false;
+            if (((move.ChosenField.X == 1 && move.ChosenField.Y == 3) || (move.ChosenField.X == 2 && move.ChosenField.Y == 3))
+                && (FieldType)move.ChosenField.Type == FieldType.JAGUAR_PAWN &&
+                (FieldType)helpfulField.Type == FieldType.DOG_PAWN && move.Direction == DirectionEnum.UP)
             {
-                return false;
+                Console.Write("XD");
             }
+
             switch (currentFieldType)
             {
                 case FieldType.JAGUAR_PAWN when helpfulField.Type.Equals(FieldType.DOG_PAWN):
                 {
-                    var adjacentToHelpfulField = Game.CurrentBoardState.AdjecentField(fieldToMove, move.Direction);
+                    var directionsFromHelpfulField =
+                        AdugoUtils.GetPossibleDirectionsFromDirectionType(helpfulField);
+                    if (!directionsFromHelpfulField.Contains(move.Direction))
+                    {
+                        return false;
+                    }
+                    var adjacentToHelpfulField = Game.CurrentBoardState.AdjecentField(helpfulField, move.Direction);
                     if (adjacentToHelpfulField == null || !adjacentToHelpfulField.Type.Equals(FieldType.EMPTY_FIELD))
                         return false;
                     fieldToBeat = helpfulField; // Jaguar will beat dog

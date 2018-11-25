@@ -61,6 +61,8 @@ namespace BoardGremiumRESTservice.Utils
         public static string FIRST_JOINED_STRING = "First joined";
         public static string FIRST_NOT_JOINED_STRING = "First not joined";
 
+        public static int INITIAL_DOG_PAWNS_NUMBER = 14;
+
         //message should be equal to "RED" or "BLACK"
         public static FieldType PlayerPawnFromMessage(string message)
         {

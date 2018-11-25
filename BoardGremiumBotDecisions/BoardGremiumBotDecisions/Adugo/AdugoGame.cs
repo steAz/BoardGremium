@@ -131,7 +131,7 @@ namespace BoardGremiumBotDecisions.Adugo
                 {
                     if (initial.BoardFields[y, x].Type == playerFieldType)
                     {
-                        result.AddRange(GetPossibleBoardStatesForPawn(initial, initial.BoardFields[y, x]));
+                        result.AddRange(GetPossibleAdugoBoardStatesForPawn(initial, initial.BoardFields[y, x]));
                     }
                 }
             }
@@ -139,7 +139,7 @@ namespace BoardGremiumBotDecisions.Adugo
             return result;
         }
 
-        private List<AdugoBoardState> GetPossibleBoardStatesForPawn(AdugoBoardState initial, AdugoField pawn)
+        private List<AdugoBoardState> GetPossibleAdugoBoardStatesForPawn(AdugoBoardState initial, AdugoField pawn)
         {
             if ((FieldType)pawn.Type != FieldType.JAGUAR_PAWN &&
                 (FieldType)pawn.Type != FieldType.DOG_PAWN)
@@ -176,25 +176,38 @@ namespace BoardGremiumBotDecisions.Adugo
         
         private static bool IsChosenMoveValid(AdugoBoardState currentBoardState, AdugoField chosenField, DirectionEnum direction, out AdugoField fieldToBeat, out AdugoField fieldToMove)
         {
+
             fieldToBeat = null;
             fieldToMove = null;
 
-            if (!chosenField.DirectionType.ToString().Contains(direction.ToString()) &&
-                !chosenField.DirectionType.Equals(AdugoDirectionType.ALL_DIRECTIONS)) // if it's not possible to move in this direction from this place
+            if (!chosenField.DirectionType.Equals(AdugoDirectionType.ALL_DIRECTIONS)) // if it's not possible to move in this direction from this place
             {
-                return false;
+                var directionParams = chosenField.DirectionType.ToString().Split('_');
+                if (!directionParams.Contains(direction.ToString()))
+                {
+                    return false;
+                }
             }
 
             var helpfulField = currentBoardState.AdjecentField(chosenField, direction);
-            if (helpfulField == null || !helpfulField.Type.Equals(FieldType.EMPTY_FIELD))
+            if (helpfulField == null) return false;
+            if (((chosenField.X == 1 && chosenField.Y == 3) || (chosenField.X == 2 && chosenField.Y == 3)) && chosenField.Type == FieldType.JAGUAR_PAWN &&
+                helpfulField.Type == FieldType.DOG_PAWN && direction == DirectionEnum.UP)
             {
-                return false;
+                Console.Write("XD");
             }
+
             switch (chosenField.Type)
             {
                 case FieldType.JAGUAR_PAWN when helpfulField.Type.Equals(FieldType.DOG_PAWN):
                     {
-                        var adjacentToHelpfulField = currentBoardState.AdjecentField(fieldToMove, direction);
+                        var directionsFromHelpfulField =
+                            AdugoUtils.GetPossibleDirectionsFromDirectionType(helpfulField);
+                        if (!directionsFromHelpfulField.Contains(direction))
+                        {
+                            return false;
+                        }
+                        var adjacentToHelpfulField = currentBoardState.AdjecentField(helpfulField, direction);
                         if (adjacentToHelpfulField == null || !adjacentToHelpfulField.Type.Equals(FieldType.EMPTY_FIELD))
                             return false;
                         fieldToBeat = helpfulField; // Jaguar will beat dog

@@ -13,7 +13,7 @@ namespace BoardGremiumBotDecisions.AI.Adugo
         public new AdugoBoardState TheBestBoardState { get; set; }
         public new List<AdugoBoardState> AllTheBestBoardStates { get; }
 
-        public int Heuristic(AdugoBoardState bs)
+        public virtual int Heuristic(AdugoBoardState bs)
         {
             return 0;
         }
@@ -26,7 +26,7 @@ namespace BoardGremiumBotDecisions.AI.Adugo
         /// <summary>
         /// The simplest implementation of makingMove - pics random possible move and returns it
         /// </summary>
-        public new AdugoBoardState MakeMove()
+        public new virtual AdugoBoardState MakeMove()
         {
             var possibleBoardStates = Game.GetPossibleAdugoBoardStates(Game.CurrentBoardState, Game.BotPlayerFieldType);
             var rnd = new Random();

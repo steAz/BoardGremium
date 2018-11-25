@@ -184,6 +184,38 @@ namespace BoardGremiumCore
             }
         }
 
+        protected async Task<string> HttpGet_FirstPlayerColor(string gameName)
+        {
+            string uri = AddressIP + GetFirstPlayerColorRoute(gameName);
+            var result = this.GetAsync(uri).Result;
+            if (result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                Console.WriteLine(resultContent);
+                return resultContent;
+            }
+            else
+            {
+                throw new HttpRequestException("Error with getting FirstPlayerColor");
+            }
+        }
+
+        protected async Task<string> HttpGet_SecondPlayerColor(string gameName)
+        {
+            string uri = AddressIP + GetSecondPlayerColorRoute(gameName);
+            var result = this.GetAsync(uri).Result;
+            if (result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                Console.WriteLine(resultContent);
+                return resultContent;
+            }
+            else
+            {
+                throw new HttpRequestException("Error with getting SecondPlayerColor");
+            }
+        }
+
         private async Task<string> HttpGet_Heuristics(string gameName, FieldType playerColor)
         {
             string uri = AddressIP;

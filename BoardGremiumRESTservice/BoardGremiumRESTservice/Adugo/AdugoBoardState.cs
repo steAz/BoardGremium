@@ -83,5 +83,40 @@ namespace BoardGremiumRESTservice.Adugo
             }
             return clone;
         }
+
+        public int NumberOfDogsOnBoard()
+        {
+            return BoardFields.Cast<AdugoField>().Count(field => field.Type.Equals(FieldType.DOG_PAWN));
+        }
+
+        public int NumOfEmptyFieldsNextToJaguar()
+        {
+            foreach (var field in BoardFields)
+            {
+                if (field.Type.Equals(FieldType.JAGUAR_PAWN))
+                {
+                    return this.GetNumOfEmptyFieldsNextToField(field);
+                }
+            }
+            throw new ArgumentException("Jaguar needs to be on te Board");
+        }
+
+        public int GetNumOfEmptyFieldsNextToField(AdugoField field)
+        {
+            var directions = AdugoUtils.GetPossibleDirectionsFromDirectionType(field);
+
+            var numOfEmptyFields = 0;
+            foreach (var direction in directions)
+            {
+                var adjacentField = this.AdjecentField(field, direction);
+
+                if (adjacentField.Type.Equals(FieldType.EMPTY_FIELD))
+                {
+                    numOfEmptyFields++;
+                }
+            }
+
+            return numOfEmptyFields;
+        }
     }
 }

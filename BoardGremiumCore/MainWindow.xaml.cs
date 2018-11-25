@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Games;
 using AbstractGame;
 using BoardGremiumCore.Communication.Adugo;
 using BoardGremiumCore.Communication.Tablut;
@@ -166,7 +165,7 @@ namespace BoardGremiumCore
             {
                 if (PawnsSelectionCB.Text == "Jaguar")
                     gamerPawns = FieldType.JAGUAR_PAWN;
-                else if (PawnsSelectionCB.Text == "Dogs")
+                else if (PawnsSelectionCB.Text == "Dog")
                     gamerPawns = FieldType.DOG_PAWN;
             }
 
@@ -261,7 +260,7 @@ namespace BoardGremiumCore
             else if(GameSelectionCB.SelectedItem.ToString().Contains("Adugo"))
             {
                 PawnsSelectionCB.Items.Add("Jaguar");
-                PawnsSelectionCB.Items.Add("Dogs");
+                PawnsSelectionCB.Items.Add("Dog");
             }
             FirstBotAlgoSelectionCB.Items.Add("MinMax");
             FirstBotAlgoSelectionCB.Items.Add("NegaMax");
@@ -292,6 +291,11 @@ namespace BoardGremiumCore
             FirstBotMaxTreeDepth.Items.Add("2");
             FirstBotMaxTreeDepth.Items.Add("3");
             FirstBotMaxTreeDepth.Items.Add("4");
+            if (GameSelectionCB.SelectedItem.ToString().Contains("Adugo"))
+            {
+                FirstBotMaxTreeDepth.Items.Add("5");
+                FirstBotMaxTreeDepth.Items.Add("6");
+            }
         }
 
         private void SecBotAlgoSelectionCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -302,6 +306,11 @@ namespace BoardGremiumCore
             SecBotMaxTreeDepth.Items.Add("2");
             SecBotMaxTreeDepth.Items.Add("3");
             SecBotMaxTreeDepth.Items.Add("4");
+            if (GameSelectionCB.SelectedItem.ToString().Contains("Adugo"))
+            {
+                SecBotMaxTreeDepth.Items.Add("5");
+                SecBotMaxTreeDepth.Items.Add("6");
+            }
         }
     }
 }

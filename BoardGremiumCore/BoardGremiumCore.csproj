@@ -186,12 +186,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Games\Games.csproj">
-      <Project>{ac839234-c761-4a06-a6f0-dae97a7a1290}</Project>
-      <Name>Games</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="viewObjects\Tablut.jpg" />
   </ItemGroup>
   <ItemGroup>

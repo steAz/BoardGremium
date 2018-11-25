@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractGame\BoardState.cs" />
+    <Compile Include="AI\Adugo\MinMaxAdugoBot.cs" />
     <Compile Include="AI\Bot.cs" />
     <Compile Include="AbstractGame\DirectionEnum.cs" />
     <Compile Include="AbstractGame\Field.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Adugo\AdugoGame.cs" />
     <Compile Include="Adugo\AdugoUtils.cs" />
     <Compile Include="AI\Adugo\AdugoBot.cs" />
+    <Compile Include="AI\TraversingLevel.cs" />
     <Compile Include="BotAlgorithmParameters.cs" />
     <Compile Include="BotClient.cs" />
     <Compile Include="GameState.cs" />

@@ -94,7 +94,7 @@ namespace BoardGremiumBotDecisions.Tablut
                     BoardState botDecision = Bot.MakeMove();
                     var moveMessage = MoveMessage(Bot.Game.currentBoardState, botDecision);
                     Console.WriteLine("MoveMessage: " + moveMessage);
-                    var result = BotClient.SendPostMove(moveMessage);
+                    BotClient.SendPostMove(moveMessage);
                     BotClient.SetHeuristic(GameName, Bot.Heuristic(botDecision), BotPawnColor);
                     if (BotClient.IsGameWon(GameName))
                     {

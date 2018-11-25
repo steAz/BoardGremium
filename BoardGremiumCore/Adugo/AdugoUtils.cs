@@ -11,7 +11,7 @@ namespace BoardGremiumCore.Adugo
     static public class AdugoUtils
     {
         public static int BOARD_WIDTH = 5;
-        public static int BOARD_HEIGHT = 8;
+        public static int BOARD_HEIGHT = 7;
 
         public static string EMPTY_CHAR = "E";
         public static string JAGUAR_CHAR = "J";

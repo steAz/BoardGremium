@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Web;
+using BoardGremiumRESTservice.Utils;
 
 namespace BoardGremiumRESTservice.Adugo
 {
@@ -120,7 +121,50 @@ namespace BoardGremiumRESTservice.Adugo
             }
         }
 
+        public bool IsGameWon(AdugoBoardState bs, PlayerEnum forPlayer)
+        {
+            if (forPlayer == PlayerEnum.HUMAN_PLAYER)
+            {
+                if ((FieldType)HumanPlayerFieldType == FieldType.JAGUAR_PAWN)
+                    return HasJaguarPlayerWon(bs);
+                return HasDogPlayerWon(bs);
+            }
+            else
+            {
+                if ((FieldType)BotPlayerFieldType == FieldType.JAGUAR_PAWN)
+                    return HasJaguarPlayerWon(bs);
+                return HasDogPlayerWon(bs);
+            }
+        }
+        private bool HasJaguarPlayerWon(AdugoBoardState bs)
+        {
+            var numOfDogsOnBoard = bs.NumberOfDogsOnBoard();
 
+            return numOfDogsOnBoard <= MessagesConverterUtils.INITIAL_DOG_PAWNS_NUMBER - 5;
+        }
+
+        private bool HasDogPlayerWon(AdugoBoardState bs)
+        {
+            var jaguarField = bs.BoardFields[4, 4];
+            bool jaguarFound = false;
+            for (int y = 0; y < bs.Height; y++)
+            {
+                for (int x = 0; x < bs.Width; x++)
+                {
+                    if ((FieldType)bs.BoardFields[y, x].Type == FieldType.JAGUAR_PAWN)
+                    {
+                        jaguarField = bs.BoardFields[y, x];
+                        jaguarFound = true;
+                        break;
+                    }
+                }
+                if (jaguarFound)
+                    break;
+            }
+
+            var numOfEmptyFieldsNextToJag = bs.NumOfEmptyFieldsNextToJaguar();
+            return numOfEmptyFieldsNextToJag == 0;
+        }
 
     }
 }

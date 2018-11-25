@@ -26,38 +26,6 @@ namespace BoardGremiumBotDecisions.Tablut
             return resultContent;
         }
 
-        private async Task<string> HttpGet_FirstPlayerColor(string gameName)
-        {
-            string uri = AddressIP + GetFirstPlayerColorRoute(gameName);
-            var result = this.GetAsync(uri).Result;
-            if (result.IsSuccessStatusCode)
-            {
-                string resultContent = await result.Content.ReadAsStringAsync();
-                Console.WriteLine(resultContent);
-                return resultContent;
-            }
-            else
-            {
-                throw new HttpRequestException("Error with getting FirstPlayerColor");
-            }
-        }
-
-        private async Task<string> HttpGet_SecondPlayerColor(string gameName)
-        {
-            string uri = AddressIP + GetSecondPlayerColorRoute(gameName);
-            var result = this.GetAsync(uri).Result;
-            if (result.IsSuccessStatusCode)
-            {
-                string resultContent = await result.Content.ReadAsStringAsync();
-                Console.WriteLine(resultContent);
-                return resultContent;
-            }
-            else
-            {
-                throw new HttpRequestException("Error with getting FirstPlayerColor");
-            }
-        }
-
         public override object HttpGet_CurrentBoardState(string gameName)
         {
             var boardStateTask = SendGetCurrentBoardState(gameName);
