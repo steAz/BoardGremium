@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,6 +16,8 @@ using System.Windows.Shapes;
 using AbstractGame;
 using BoardGremiumCore.Communication.Adugo;
 using BoardGremiumCore.Communication.Tablut;
+using BoardGremiumCore.Tablut;
+using Newtonsoft.Json;
 
 namespace BoardGremiumCore
 {
@@ -24,10 +27,8 @@ namespace BoardGremiumCore
     public partial class MainWindow : Window
     {
         private TextBoxOutputter outputter;
-        private BoardState currentBoardState;
+        private TablutBoardState _currentTablutBoardState;
         private TextBox debugBox;
-        Dictionary<Enum, string> ItemToGraphicsDict;
-        public Game game;
         private Client client;
         /// <summary>
         /// Mapping, where images are reflected to pawns
@@ -39,109 +40,7 @@ namespace BoardGremiumCore
             InitializeComponent();
         }
 
-        private void SetDictForGraphics(string redPawnPath, string blackPawnPath, string kingPath)
-        {
-            ItemToGraphicsDict = new Dictionary<Enum, string>
-            {
-                { FieldType.RED_PAWN, redPawnPath},
-                { FieldType.BLACK_PAWN, blackPawnPath},
-                { FieldType.KING, kingPath },
-                { FieldType.EMPTY_FIELD, null }
-            };
-        }
 
-        private Image GetImage(string imagePath)
-        {
-            Image image = new Image();
-            BitmapImage btImage = new BitmapImage();
-            btImage.BeginInit();
-            btImage.UriSource = new Uri(imagePath, UriKind.Relative);
-            btImage.EndInit();
-            image.Source = btImage;
-            return image;
-        }
-
-        private void PrepareGraphics(string boardPath)
-        {
-            Image boardImage = new Image { Stretch = Stretch.Fill, HorizontalAlignment = HorizontalAlignment.Left };
-            BitmapImage btImage = new BitmapImage();
-            btImage.BeginInit();
-            btImage.UriSource = new Uri(boardPath, UriKind.Relative);
-            btImage.EndInit();
-            boardImage.Source = btImage;
-            MainGrid.Children.Add(boardImage);
-        }
-
-        private void CheckerClick(object sender, EventArgs e)
-        {
-            BoardButton clicked = (BoardButton)sender;
-            MoveWindow mw = new MoveWindow();
-            mw.ShowDialog();
-        }
-
-        private Boolean IsChosenMoveValid(int numOfFields, DirectionEnum direction, Field field)
-        {
-            if (numOfFields <= 0)
-                return false;
-            else if (numOfFields > game.CalculateMaximumPossibleRange(game.currentBoardState, field, direction))
-                return false;
-            else if (((FieldType)game.HumanPlayerFieldType == FieldType.BLACK_PAWN && (FieldType)field.Type != FieldType.BLACK_PAWN)
-                || ((FieldType)game.HumanPlayerFieldType == FieldType.RED_PAWN && (FieldType)field.Type == FieldType.BLACK_PAWN))
-                return false;
-
-            return true;
-        }
-
-        private void ChangeBoardStateAfterMove(DirectionEnum direction, Field selectedField, int numOfFields)
-        {
-            int xCoord = 0;
-            int yCoord = 0;
-
-            switch (direction)
-            {
-                case DirectionEnum.UP:
-                    {
-                        yCoord -= numOfFields;
-                        break;
-                    }
-                case DirectionEnum.DOWN:
-                    {
-                        yCoord += numOfFields;
-                        break;
-                    }
-                case DirectionEnum.RIGHT:
-                    {
-                        xCoord += numOfFields;
-                        break;
-                    }
-                case DirectionEnum.LEFT:
-                    {
-                        xCoord -= numOfFields;
-                        break;
-                    }
-            }
-
-        }
-
-        static private DirectionEnum GetDirectionFromCode(string directionCode)
-        {
-            if (directionCode.Equals("L"))
-            {
-                return DirectionEnum.LEFT;
-            }
-            else if (directionCode.Equals("R"))
-            {
-                return DirectionEnum.RIGHT;
-            }
-            else if (directionCode.Equals("U"))
-            {
-                return DirectionEnum.UP;
-            }
-            else
-            {
-                return DirectionEnum.DOWN;
-            }
-        }
 
         private void LoadBoardForGame(string titleOfGame, out FieldType gamerPawns)
         {
@@ -157,7 +56,7 @@ namespace BoardGremiumCore
                     gamerPawns = FieldType.BLACK_PAWN;
 
 
-                //  currentBoardState = StartingPosition(9, 9);
+                //  _currentTablutBoardState = StartingPosition(9, 9);
                 //this.SetDictForGraphics(redPath, blackPath, kingPath);
                 //PrepareGraphics(boardPath);       
             }
@@ -190,17 +89,36 @@ namespace BoardGremiumCore
             MainGrid.Children.Add(debugBox);
         }
 
+        bool IsDigitsOnly(string str)
+        {
+            foreach (char c in str)
+            {
+                if (c < '0' || c > '9')
+                    return false;
+            }
+
+            return true;
+        }
+
         private void CreateGame_Click(object sender, RoutedEventArgs e)
         {
             if (GameSelectionCB.Text != "Select a game" &&
-                !CreatedGameNameTB.Text.Equals(String.Empty) && !CreatedGameNameTB.Text.Equals("'Write name of game here'"))
+                !CreatedGameNameTB.Text.Equals(String.Empty) && !CreatedGameNameTB.Text.Equals("'Write name of game here'")
+                && !ServerIpTb.Text.Equals("'Write server IP here'") && !ServerPortTb.Text.Equals("'Write server port here"))
             {
+                if (!IsDigitsOnly(ServerPortTb.Text))
+                {
+                    MessageBox.Show("Port needs to have only numbers");
+                    return;
+                }
+
+
                 LoadBoardForGame(GameSelectionCB.Text, out FieldType gamerPawns);
 
                 if (GameSelectionCB.Text.Equals("Tablut"))
-                    client = new TablutClient("http://localhost:54377");
+                    client = new TablutClient("http://" + ServerIpTb.Text + ":" + ServerPortTb.Text);
                 else if(GameSelectionCB.Text.Equals("Adugo"))
-                    client = new AdugoClient("http://localhost:54377");
+                    client = new AdugoClient("http://" + ServerIpTb.Text + ":" + ServerPortTb.Text);
                 var message = "\"" + CreatedGameNameTB.Text + "," +
                               PawnsSelectionCB.Text.ToUpper() + "," +
                               GameSelectionCB.Text.ToUpper() + "\"";
@@ -214,7 +132,6 @@ namespace BoardGremiumCore
                         Owner = this
                     };
 
-                    string botAlgorithms = string.Empty;
                     var botAlgParams = new BotAlgorithmsParameters
                     {
                         FirstBotAlgorithmName = FirstBotAlgoSelectionCB.Text,
@@ -252,6 +169,8 @@ namespace BoardGremiumCore
         private void GameSelectionCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PawnsSelectionCB.Items.Clear();
+            FirstBotAlgoSelectionCB.Items.Clear();
+            SecBotAlgoSelectionCB.Items.Clear();
             if(GameSelectionCB.SelectedItem.ToString().Contains("Tablut"))
             {
                 PawnsSelectionCB.Items.Add("Red");
@@ -310,6 +229,131 @@ namespace BoardGremiumCore
             {
                 SecBotMaxTreeDepth.Items.Add("5");
                 SecBotMaxTreeDepth.Items.Add("6");
+            }
+        }
+
+        private void JoinGame_Click(object sender, RoutedEventArgs e)
+        {
+            if (!CreatedGameNameTB.Text.Equals("'Write name of game here'")
+                && !ServerIpTb.Text.Equals("'Write server IP here'") &&
+                !ServerPortTb.Text.Equals("'Write server port here"))
+            {
+                if (!IsDigitsOnly(ServerPortTb.Text))
+                {
+                    MessageBox.Show("Port needs to have only numbers");
+                    return;
+                }
+
+                var gameName = CreatedGameNameTB.Text;
+                var uri = "http://" + ServerIpTb.Text + ":" + ServerPortTb.Text;
+                var gameType = GetGameType(uri + Client.GetGameTypeRoute(CreatedGameNameTB.Text)).Result;
+                //Console.WriteLine("Read: " + gameType);
+                if (gameType.Equals("Tablut")) //Tablut
+                {
+                    client = new TablutClient(uri);
+                }
+                else //Adugo
+                {
+                    client = new AdugoClient(uri);
+                }
+
+                //potrzeba gamerpawns i gameMode
+                var botAlgParams = BotAlgorithmsParams(gameName, uri);
+                var gameMode = botAlgParams.IsBot2BotGame ? "Bot vs Bot" : "Human vs Bot";
+                var playerPawnColorUri = uri + "/api/GameEntitys/" + gameName + "/FirstPlayerColor";
+                var firstPlayerColor = HttpGet_FirstPlayerColor(gameName, playerPawnColorUri).Result;
+                FieldType gamerPawns = TablutUtils.PlayerPawnFromMessage(firstPlayerColor);
+
+                var gameWindow = new GameWindow(gameType, gamerPawns, CreatedGameNameTB.Text, client, gameMode)
+                {
+                    Owner = this
+                };
+
+                if (gameType.Equals("Tablut"))
+                {
+                    gameWindow.TablutBoard.GameInfos.BotAlgParams = botAlgParams;
+                }
+                else if (gameType.Equals("Adugo"))
+                {
+                    gameWindow.AdugoBoard.GameInfos.BotAlgParams = botAlgParams;
+                }
+                gameWindow.Show();
+
+                Console.WriteLine(gameMode);
+            }
+        }
+
+        private async Task<string> GetGameType(string uri)
+        {
+            var client = new HttpClient();
+            // client.GetAsync(uri).Result;
+            var result = client.GetAsync(uri).Result;
+            if (result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                return resultContent;
+            }
+            else
+            {
+                Console.WriteLine("Error from server-side while getting gameType of game");
+                return "Error from server-side while getting gameType of game";
+            }
+        }
+
+        private async Task<string> HttpGet_BotAlgorithmsParamsJSON(string gameName, string uri)
+        {
+            var client = new HttpClient();
+            var result = client.GetAsync(uri).Result;
+            if (result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                //Console.WriteLine(resultContent);
+                return resultContent;
+            }
+            else
+            {
+                throw new HttpRequestException("Error while getting bot algorithm params JSON");
+            }
+        }
+
+        public string BotAlgorithmsParamsJSON(string gameName, string uri)
+        {
+            try
+            {
+                var serverResourceUri = uri + Client.GetBotAlgParamsJSONRoute(gameName);
+                var getResult = HttpGet_BotAlgorithmsParamsJSON(gameName, serverResourceUri);
+                return getResult.Result;
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("Error while getting bot algorithm params JSON");
+                Console.WriteLine(e.Message);
+                return null;
+            }
+
+        }
+
+
+        public BotAlgorithmsParameters BotAlgorithmsParams(string gameName, string uri)
+        {
+            var botAlgorithmsParamsJSON = BotAlgorithmsParamsJSON(gameName, uri);
+            var deserializedBotAlgParams = JsonConvert.DeserializeObject<BotAlgorithmsParameters>(botAlgorithmsParamsJSON);
+            return deserializedBotAlgParams;
+        }
+
+        private async Task<string> HttpGet_FirstPlayerColor(string gameName, string uri)
+        {
+            var client = new HttpClient();
+            var result = client.GetAsync(uri).Result;
+            if (result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                Console.WriteLine(resultContent);
+                return resultContent;
+            }
+            else
+            {
+                throw new HttpRequestException("Error with getting FirstPlayerColor");
             }
         }
     }

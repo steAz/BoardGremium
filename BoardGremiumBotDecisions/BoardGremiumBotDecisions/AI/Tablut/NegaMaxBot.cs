@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BoardGremiumBotDecisions.AI.Tablut;
+using BoardGremiumBotDecisions.Tablut;
 
 namespace BoardGremiumBotDecisions
 {
@@ -15,21 +16,21 @@ namespace BoardGremiumBotDecisions
 
         }
 
-        public int NegaMaxEvaluateState(BoardState currBoardState, int currDepth, int maxDepth)
+        public int NegaMaxEvaluateState(TablutBoardState currTablutBoardState, int currDepth, int maxDepth)
         {
             if (currDepth == maxDepth)
             {
-                return Heuristic(currBoardState);
+                return Heuristic(currTablutBoardState);
             }
 
             int bestHeuristic = 0;
 
-            List<BoardState> possibleBoardStates = null;
+            List<TablutBoardState> possibleBoardStates = null;
 
-            possibleBoardStates = Game.GetPossibleBoardStates(currBoardState, this.Game.BotPlayerFieldType);
+            possibleBoardStates = Game.GetPossibleBoardStates(currTablutBoardState, this.Game.BotPlayerFieldType);
             bestHeuristic = -80000;
             int prevBestHeuristic = -80000;
-            foreach (BoardState possibleBoardState in possibleBoardStates.AsEnumerable())
+            foreach (TablutBoardState possibleBoardState in possibleBoardStates.AsEnumerable())
             {
                 var heuristic = - NegaMaxEvaluateState(possibleBoardState, currDepth + 1, maxDepth);
 
@@ -40,13 +41,13 @@ namespace BoardGremiumBotDecisions
                     bestHeuristic = heuristic;
                     if (currDepth == 0)
                     {
-                        this.TheBestBoardState = (BoardState)possibleBoardState.Clone();
+                        this.TheBestTablutBoardState = (TablutBoardState)possibleBoardState.Clone();
                         this.TheBestDepth = currDepth;
                         if (bestHeuristic != prevBestHeuristic)
                         {
                             this.AllTheBestBoardStates.Clear();
                         }
-                        this.AllTheBestBoardStates.Add(TheBestBoardState);
+                        this.AllTheBestBoardStates.Add(TheBestTablutBoardState);
 
                     }
                 }
@@ -55,26 +56,26 @@ namespace BoardGremiumBotDecisions
             return bestHeuristic;
         }
 
-        public int NegaMaxEvaluateState2(BoardState currBoardState, int currDepth, int maxDepth, int pointOfView)
+        public int NegaMaxEvaluateState2(TablutBoardState currTablutBoardState, int currDepth, int maxDepth, int pointOfView)
         {
             if (currDepth == maxDepth)
             {
-                return pointOfView * Heuristic(currBoardState);
+                return pointOfView * Heuristic(currTablutBoardState);
             }
 
             int bestHeuristic = 0;
 
-            List<BoardState> possibleBoardStates = null;
+            List<TablutBoardState> possibleBoardStates = null;
             FieldType playerFieldType;
             if (pointOfView == 1)
                 playerFieldType = this.Game.BotPlayerFieldType;
             else
                 playerFieldType = this.Game.HumanPlayerFieldType;
 
-            possibleBoardStates = Game.GetPossibleBoardStates(currBoardState, playerFieldType);
+            possibleBoardStates = Game.GetPossibleBoardStates(currTablutBoardState, playerFieldType);
             bestHeuristic = -80000;
             int prevBestHeuristic = -80000;
-            foreach (BoardState possibleBoardState in possibleBoardStates.AsEnumerable().Reverse())
+            foreach (TablutBoardState possibleBoardState in possibleBoardStates.AsEnumerable().Reverse())
             {
                 var heuristic = - NegaMaxEvaluateState2(possibleBoardState, currDepth + 1, maxDepth, pointOfView * (-1));
 
@@ -85,13 +86,13 @@ namespace BoardGremiumBotDecisions
                     bestHeuristic = heuristic;
                     if (currDepth == 0)
                     {
-                        this.TheBestBoardState = (BoardState)possibleBoardState.Clone();
+                        this.TheBestTablutBoardState = (TablutBoardState)possibleBoardState.Clone();
                         this.TheBestDepth = currDepth;
                         if (bestHeuristic != prevBestHeuristic)
                         {
                             this.AllTheBestBoardStates.Clear();
                         }
-                        this.AllTheBestBoardStates.Add(TheBestBoardState);
+                        this.AllTheBestBoardStates.Add(TheBestTablutBoardState);
 
                     }
                 }
@@ -101,9 +102,9 @@ namespace BoardGremiumBotDecisions
 
         
 
-        public override BoardState MakeMove()
+        public override TablutBoardState MakeMove()
         {
-            NegaMaxEvaluateState2(Game.currentBoardState, 0, MaxTreeDepth, 1);
+            NegaMaxEvaluateState2(Game.CurrentTablutBoardState, 0, MaxTreeDepth, 1);
             Random rng = new Random();
             return this.AllTheBestBoardStates[rng.Next(AllTheBestBoardStates.Count)];
         }

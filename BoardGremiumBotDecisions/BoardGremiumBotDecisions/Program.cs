@@ -18,7 +18,17 @@ namespace BoardGremiumBotDecisions
         {          
             Console.Write("Enter game's name: ");
             var gameName = Console.ReadLine();
-            var gameType = new TablutBotClient("http://localhost:54377").HttpGet_GameType(gameName);
+            Console.Write("Enter server's IP: ");
+            var serverIP = Console.ReadLine();
+            Console.Write("Enter server's PORT: ");
+            var serverPORT = Console.ReadLine();
+            if (!IsDigitsOnly(serverPORT))
+            {
+                Console.WriteLine("Port needs to have only numbers, try again...");
+                Console.ReadKey();
+                return;
+            }
+            var gameType = new TablutBotClient("http://" + serverIP +":" + serverPORT).HttpGet_GameType(gameName);
 
             BotClient botClient;
             if (gameType == MessagesConverter.ADUGO_STRING)
@@ -51,6 +61,17 @@ namespace BoardGremiumBotDecisions
                 Console.WriteLine("Press key to exit");
                 Console.ReadKey();
             }             
+        }
+
+        static bool IsDigitsOnly(string str)
+        {
+            foreach (char c in str)
+            {
+                if (c < '0' || c > '9')
+                    return false;
+            }
+
+            return true;
         }
     }
 }

@@ -71,9 +71,9 @@ namespace BoardGremiumBotDecisions
             }
         }
 
-        public static BoardState ConvertStringToTablutBoardState(string stringRepresentation)
+        public static TablutBoardState ConvertStringToTablutBoardState(string stringRepresentation)
         {
-            BoardState result = new BoardState(TablutUtils.BOARD_WIDTH, TablutUtils.BOARD_HEIGHT);
+            TablutBoardState result = new TablutBoardState(TablutUtils.BOARD_WIDTH, TablutUtils.BOARD_HEIGHT);
             string[] arguments = stringRepresentation.Split(',');
             var enumerator = arguments[1].GetEnumerator();
 
@@ -107,7 +107,7 @@ namespace BoardGremiumBotDecisions
 
                 if (verticalIndex >= TablutUtils.BOARD_HEIGHT)
                 {
-                    //throw new ArgumentOutOfRangeException("Exception thrown while parsing BoardState string representation - string is too long");
+                    //throw new ArgumentOutOfRangeException("Exception thrown while parsing TablutBoardState string representation - string is too long");
                     break;
                 }
             }
@@ -270,7 +270,7 @@ namespace BoardGremiumBotDecisions
 
                     if (verticalIndex >= AdugoUtils.BOARD_HEIGHT)
                     {
-                        //throw new ArgumentOutOfRangeException("Exception thrown while parsing BoardState string representation - string is too long");
+                        //throw new ArgumentOutOfRangeException("Exception thrown while parsing TablutBoardState string representation - string is too long");
                         break;
                     }
 

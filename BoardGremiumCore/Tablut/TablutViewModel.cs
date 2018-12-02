@@ -13,12 +13,12 @@ namespace BoardGremiumCore.Tablut
 {
     public class TablutViewModel
     {
-        public BoardState MyBoardState { get; set; }
+        public TablutBoardState MyTablutBoardState { get; set; }
         public GameInfos GameInfos {get; set;}
 
-        public TablutViewModel() { MyBoardState = new BoardState(TablutUtils.BOARD_WIDTH, TablutUtils.BOARD_HEIGHT);  }
+        public TablutViewModel() { MyTablutBoardState = new TablutBoardState(TablutUtils.BOARD_WIDTH, TablutUtils.BOARD_HEIGHT);  }
 
-        public TablutViewModel(BoardState bs, FieldType firstPlayerPawn, string gameName, Client httpClient, Label playerTurnLabel, string gameMode, Label errorMoveLabel)
+        public TablutViewModel(TablutBoardState bs, FieldType firstPlayerPawn, string gameName, Client httpClient, Label playerTurnLabel, string gameMode, Label errorMoveLabel)
         {
             GameInfos = new GameInfos()
             {
@@ -32,7 +32,7 @@ namespace BoardGremiumCore.Tablut
                 IsBot2BotGame =  (gameMode == "Bot vs Bot") ? true : false,
                 GameFinishLogged = false,
             };
-            MyBoardState = bs;
+            MyTablutBoardState = bs;
             UpdatePlayerTurnLabel();
 
             
@@ -43,7 +43,7 @@ namespace BoardGremiumCore.Tablut
         {
             get
             {
-                return MyBoardState.BoardFields;
+                return MyTablutBoardState.BoardFields;
             }
         }
 
@@ -96,11 +96,11 @@ namespace BoardGremiumCore.Tablut
             var boardStateRepresentation = GameInfos.Client.SendGetCurrentBoardState(GameInfos.GameName); 
             var currentBoardState = TablutUtils.ConvertStringToTablutBoardState(boardStateRepresentation.Result);
 
-            for (int i = 0; i != MyBoardState.Width; ++i)
+            for (int i = 0; i != MyTablutBoardState.Width; ++i)
             {
-                for (int j = 0; j != MyBoardState.Height; ++j)
+                for (int j = 0; j != MyTablutBoardState.Height; ++j)
                 {
-                    MyBoardState.BoardFields[i][j].Type = currentBoardState.BoardFields[i][j].Type;
+                    MyTablutBoardState.BoardFields[i][j].Type = currentBoardState.BoardFields[i][j].Type;
                 }
             }
 

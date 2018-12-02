@@ -16,16 +16,16 @@ namespace BoardGremiumBotDecisions.Tablut
             FieldType humanPawnType;
             humanPawnType = botPawn.Equals(FieldType.RED_PAWN) ? FieldType.BLACK_PAWN : FieldType.RED_PAWN;
             var game = new TablutGame("", "", "", "", humanPawnType);
-            var currentBoardState = (BoardState)botClient.HttpGet_CurrentBoardState(gameName);
+            var currentBoardState = (TablutBoardState)botClient.HttpGet_CurrentBoardState(gameName);
 
-            game.currentBoardState = currentBoardState;
+            game.CurrentTablutBoardState = currentBoardState;
             Bot = TablutUtils.BotInstanceFromAlg(BotAlgorithm, game, isFirstPlayerJoined);
         }
 
         protected override void UpdateCurrentBoardState()
         { 
-            var bs = (BoardState)BotClient.HttpGet_CurrentBoardState(GameName);
-            this.Bot.Game.currentBoardState = bs;
+            var bs = (TablutBoardState)BotClient.HttpGet_CurrentBoardState(GameName);
+            this.Bot.Game.CurrentTablutBoardState = bs;
         }
 
         protected override void LogVictory()
@@ -34,7 +34,7 @@ namespace BoardGremiumBotDecisions.Tablut
             Console.WriteLine("Game has finished. " + winnerColor + " pawns won.");
         }
 
-        private string MoveMessage(BoardState previous, BoardState next)
+        private string MoveMessage(TablutBoardState previous, TablutBoardState next)
         {
             //This will be called only for bot player
             Field selectedField = null, targetField = null;
@@ -89,10 +89,10 @@ namespace BoardGremiumBotDecisions.Tablut
                 {
                     Console.WriteLine("Making move...");
                     UpdateCurrentBoardState();
-                    BotClient.SetHeuristic(GameName, Bot.Heuristic(Bot.Game.currentBoardState), BotPawnColor);
+                    BotClient.SetHeuristic(GameName, Bot.Heuristic(Bot.Game.CurrentTablutBoardState), BotPawnColor);
                     //wykonujemy ruch
-                    BoardState botDecision = Bot.MakeMove();
-                    var moveMessage = MoveMessage(Bot.Game.currentBoardState, botDecision);
+                    TablutBoardState botDecision = Bot.MakeMove();
+                    var moveMessage = MoveMessage(Bot.Game.CurrentTablutBoardState, botDecision);
                     Console.WriteLine("MoveMessage: " + moveMessage);
                     BotClient.SendPostMove(moveMessage);
                     BotClient.SetHeuristic(GameName, Bot.Heuristic(botDecision), BotPawnColor);

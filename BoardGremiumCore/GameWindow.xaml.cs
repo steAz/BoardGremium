@@ -22,7 +22,7 @@ namespace BoardGremiumCore
     /// </summary>
     public partial class GameWindow : Window
     {
-        public BoardState DisplayedBoardState;
+        public TablutBoardState DisplayedTablutBoardState;
         public AdugoBoardState DisplayedAdugoBoardState;
         public TablutViewModel TablutBoard;
         public AdugoViewModel AdugoBoard;
@@ -30,16 +30,17 @@ namespace BoardGremiumCore
         public GameWindow(string gameType, FieldType playerPawn, string gameName, Client httpClient, string gameMode)
         {
             InitializeComponent();
+            gameType = gameType.ToLower();
             switch (gameType)
             {
-                case "Tablut":
-                    DisplayedBoardState = TablutUtils.StartingPosition();
+                case "tablut":
+                    DisplayedTablutBoardState = TablutUtils.StartingPosition();
                     adugoBoard.DTforUpdatingView.Stop();
                     MainDockPanel.Children.Remove(adugoBoard);
-                    TablutBoard = new TablutViewModel(DisplayedBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel, gameMode, ErrorMoveLabel);
+                    TablutBoard = new TablutViewModel(DisplayedTablutBoardState, playerPawn, gameName, httpClient, PlayerTurnLabel, gameMode, ErrorMoveLabel);
                     tablutBoard.DataContext = TablutBoard;
                     break;
-                case "Adugo":
+                case "adugo":
                     DisplayedAdugoBoardState = AdugoUtils.StartingPosition();
                     tablutBoard.DTforUpdatingView.Stop();
                     MainDockPanel.Children.Remove(tablutBoard);

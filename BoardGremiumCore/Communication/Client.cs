@@ -16,12 +16,23 @@ namespace BoardGremiumCore
     {
         protected string AddressIP;
 
-        protected static string PostGameRoute = "/api/GameEntitys";
-
-
         public Client(string addressIP) : base()
         {
             this.AddressIP = addressIP;
+        }
+
+        private async Task<string> SendGetGameType(string gameName)
+        {
+            var gameTypeRoute = GetGameTypeRoute(gameName);
+            var uri = AddressIP + gameTypeRoute;
+            var result = GetAsync(uri).Result;
+            return null;
+        }
+
+        public string GetGameType(string gameName)
+        {
+            var result = SendGetGameType(gameName);
+            return "Tablut";
         }
 
         public abstract Task<string> SendPostMove(string message);
@@ -48,8 +59,8 @@ namespace BoardGremiumCore
                 return resultContent;
             }else
             {
-                Console.WriteLine("NOT FOUND");
-                return "NOT FOUND";
+                Console.WriteLine("Error from server-side while getting current player in client-side");
+                return "Error from server-side while getting current player in client-side";
             }
         }
 
@@ -66,7 +77,7 @@ namespace BoardGremiumCore
             }
             else
             {
-                throw new ServerResponseException("GET CurrentPlayer for game: " + gameName + " - server's response is not recognized");
+                throw new HttpRequestException("Error while finding out is player turn");
             }
         }
 
@@ -180,7 +191,7 @@ namespace BoardGremiumCore
                 return false;
             }else
             {
-                throw new ServerResponseException("GET IsGameWon for game: " + gameName + " - server's response is not recognized");
+                throw new HttpRequestException("Error while finding out if game is won");
             }
         }
 
@@ -196,7 +207,7 @@ namespace BoardGremiumCore
             }
             else
             {
-                throw new HttpRequestException("Error with getting FirstPlayerColor");
+                throw new HttpRequestException("Error while getting first player color");
             }
         }
 
@@ -266,15 +277,12 @@ namespace BoardGremiumCore
             return null;
         }
 
+        protected static string PostGameRoute = "/api/GameEntitys";
+
         public string GetCurrentPlayerRoute(string gameName)
         {
             return "/api/GameEntitys/" + gameName + "/CurrentPlayer";
         }
-
-        //public string PostMoveRoute(string gameName)
-        //{
-         //   return "/api/GameEntitys/" + gameName + "/Move";
-      //  }
 
         public string GetCurrentBoardStateRoute(string gameName)
         {
@@ -314,6 +322,16 @@ namespace BoardGremiumCore
         public string GetBlackHeuristicsRoute(string gameName)
         {
             return "/api/GameEntitys/" + gameName + "/BlackHeuristics";
+        }
+
+        public static string GetGameTypeRoute(string gameName)
+        {
+            return "/api/GameEntitys/" + gameName + "/GameType";
+        }
+
+        public static string GetBotAlgParamsJSONRoute(string gameName)
+        {
+            return "/api/GameEntitys/" + gameName + "/BotAlgorithmParamsJSON";
         }
     }
 }

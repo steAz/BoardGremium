@@ -5,16 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AbstractGame;
 
-namespace AbstractGame
+namespace BoardGremiumBotDecisions.Tablut
 {
-    public class BoardState : ICloneable
+    public class TablutBoardState : ICloneable
     {
         public Field[,] BoardFields { get; }
         public int Height { get; }
         public int Width { get; }
 
-        public BoardState(int width, int height)
+        public TablutBoardState(int width, int height)
         {
             BoardFields = new Field[height,width];
             this.Height = height;
@@ -144,11 +145,11 @@ namespace AbstractGame
         }
 
         /// <summary>
-        /// implementation of Deep copy of BoardState object
+        /// implementation of Deep copy of TablutBoardState object
         /// </summary>
         public object Clone()
         {
-            BoardState clone = new BoardState(Width, Height);
+            TablutBoardState clone = new TablutBoardState(Width, Height);
             for(int i=0; i < Height; i++)
             {
                 for(int j=0; j < Width; j++)

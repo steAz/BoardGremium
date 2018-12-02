@@ -70,7 +70,7 @@ namespace BoardGremiumBotDecisions.AI.Adugo
                     if (heuristic <= bestHeuristic)
                     {
                         bestHeuristic = heuristic;
-                        //this.TheBestBoardState = (BoardState)possibleBoardState.Clone();
+                        //this.TheBestTablutBoardState = (TablutBoardState)possibleBoardState.Clone();
                     }
                 }
             }

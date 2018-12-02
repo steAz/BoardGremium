@@ -64,6 +64,7 @@ namespace BoardGremiumRESTservice.Utils
         public static int INITIAL_DOG_PAWNS_NUMBER = 14;
 
         //message should be equal to "RED" or "BLACK"
+        //
         public static FieldType PlayerPawnFromMessage(string message)
         {
             if(RED_STRING.Equals(message))

@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-         xmlns:tablut="clr-namespace:BoardGremiumCore.Tablut"
         xmlns:chartingToolkit=
 	            "clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:boardGremiumCore="clr-namespace:BoardGremiumCore"
         mc:Ignorable="d"
         Title="StatisticsWindow" Height="715.189" Width="828.65">
     <Grid Name ="XD" Margin="0,0,76,-153">
@@ -27,7 +27,7 @@
                 <chartingToolkit:LineSeries   DependentValuePath="Value" 
 		    IndependentValuePath="Key" ItemsSource="{Binding Data}" 
 		    IsSelectionEnabled="True" Margin="0,-12,-41,-10"  d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True,
-             Type=tablut:ChartViewModel}"/>
+             Type=boardGremiumCore:ChartViewModel}"/>
             </chartingToolkit:Chart.Series>
             <chartingToolkit:Chart.LegendStyle>
                 <Style TargetType="Control">

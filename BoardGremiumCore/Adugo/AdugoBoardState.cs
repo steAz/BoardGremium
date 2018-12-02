@@ -31,7 +31,7 @@ namespace BoardGremiumCore.Adugo
         }
 
         /// <summary>
-        /// implementation of Deep copy of BoardState object
+        /// implementation of Deep copy of TablutBoardState object
         /// </summary>
         public object Clone()
         {

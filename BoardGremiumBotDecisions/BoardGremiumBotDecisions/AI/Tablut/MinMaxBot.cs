@@ -19,24 +19,24 @@ namespace BoardGremiumBotDecisions.AI.Tablut
             MaxTreeDepth = maxTreeDepth;
         }
 
-        private int MaxMinEvaluateState(BoardState currBoardState, int currDepth, int maxDepth, TraversingLevel typeOfLevel)
+        private int MaxMinEvaluateState(TablutBoardState currTablutBoardState, int currDepth, int maxDepth, TraversingLevel typeOfLevel)
         {
             if (currDepth == maxDepth)
             {
-                return Heuristic(currBoardState);
+                return Heuristic(currTablutBoardState);
             }
 
             //Console.WriteLine("dzwierzenie " + currDepth + "na typie " + typeOfLevel.ToString());
 
             int bestHeuristic = 0;
 
-            List<BoardState> possibleBoardStates = null;
+            List<TablutBoardState> possibleBoardStates = null;
             if (typeOfLevel == TraversingLevel.MAX)
             {
-                possibleBoardStates = Game.GetPossibleBoardStates(currBoardState, this.Game.BotPlayerFieldType);
+                possibleBoardStates = Game.GetPossibleBoardStates(currTablutBoardState, this.Game.BotPlayerFieldType);
                 bestHeuristic = -80000;
                 int prevBestHeuristic = -80000;
-                foreach (BoardState possibleBoardState in possibleBoardStates.AsEnumerable().Reverse())
+                foreach (TablutBoardState possibleBoardState in possibleBoardStates.AsEnumerable().Reverse())
                 {
                     var heuristic = MaxMinEvaluateState(possibleBoardState, currDepth + 1, maxDepth, GetNextTraversingLevel(typeOfLevel));
                     
@@ -47,13 +47,13 @@ namespace BoardGremiumBotDecisions.AI.Tablut
                         bestHeuristic = heuristic;
                         if(currDepth == 0)
                         {
-                            this.TheBestBoardState = (BoardState)possibleBoardState.Clone();
+                            this.TheBestTablutBoardState = (TablutBoardState)possibleBoardState.Clone();
                             this.TheBestDepth = currDepth;
                             if(bestHeuristic != prevBestHeuristic)
                             {
                                 this.AllTheBestBoardStates.Clear();
                             }
-                            this.AllTheBestBoardStates.Add(TheBestBoardState);
+                            this.AllTheBestBoardStates.Add(TheBestTablutBoardState);
 
                         }
                     }
@@ -61,17 +61,17 @@ namespace BoardGremiumBotDecisions.AI.Tablut
             }
             else if (typeOfLevel == TraversingLevel.MIN)
             {
-                possibleBoardStates = Game.GetPossibleBoardStates(currBoardState, this.Game.HumanPlayerFieldType);
+                possibleBoardStates = Game.GetPossibleBoardStates(currTablutBoardState, this.Game.HumanPlayerFieldType);
                 bestHeuristic = 80000;
 
-                foreach (BoardState possibleBoardState in possibleBoardStates)
+                foreach (TablutBoardState possibleBoardState in possibleBoardStates)
                 {
                     var heuristic = MaxMinEvaluateState(possibleBoardState, currDepth + 1, maxDepth, GetNextTraversingLevel(typeOfLevel));
 
                     if (heuristic <= bestHeuristic)
                     {
                         bestHeuristic = heuristic;
-                        //this.TheBestBoardState = (BoardState)possibleBoardState.Clone();
+                        //this.TheBestTablutBoardState = (TablutBoardState)possibleBoardState.Clone();
                     }
                 }
             }
@@ -85,7 +85,7 @@ namespace BoardGremiumBotDecisions.AI.Tablut
             else return TraversingLevel.MAX;
         }
 
-        public override int Heuristic(BoardState bs)
+        public override int Heuristic(TablutBoardState bs)
         {
             FieldType enemyType = (FieldType)Game.HumanPlayerFieldType;
             
@@ -98,11 +98,11 @@ namespace BoardGremiumBotDecisions.AI.Tablut
             }
         }
 
-        protected int HeuristicForBlack(BoardState bs)
+        protected int HeuristicForBlack(TablutBoardState bs)
         {
             int resultBlack = 0;
 
-            resultBlack = TablutUtils.InitialNumberOfPawns(FieldType.RED_PAWN) * 100 - (bs.NumberOfPawnsForPlayer(FieldType.RED_PAWN) * 100); // the less enemy'pawns on the board, the better black's heuristic is
+            resultBlack = TablutUtils.InitialNumberOfPawns(FieldType.RED_PAWN) * 100 - (bs.NumberOfPawnsForPlayer(FieldType.RED_PAWN) * 100); // the less enemy'pawns on the tablutBoard, the better black's heuristic is
 
             var kingField = bs.GetKingTablutField();
 
@@ -142,10 +142,10 @@ namespace BoardGremiumBotDecisions.AI.Tablut
             return resultBlack;
         }
 
-        protected int HeuristicForRed(BoardState bs)
+        protected int HeuristicForRed(TablutBoardState bs)
         {
             var resultRed = 0;
-            resultRed = TablutUtils.InitialNumberOfPawns(FieldType.BLACK_PAWN) * 100 - (bs.NumberOfPawnsForPlayer(FieldType.BLACK_PAWN) * 100); // the less enemy'pawns on the board, the better black's heuristic is
+            resultRed = TablutUtils.InitialNumberOfPawns(FieldType.BLACK_PAWN) * 100 - (bs.NumberOfPawnsForPlayer(FieldType.BLACK_PAWN) * 100); // the less enemy'pawns on the tablutBoard, the better black's heuristic is
 
             int minimumDistance = bs.ClosestCornerDistanceFromKing();
 
@@ -169,9 +169,9 @@ namespace BoardGremiumBotDecisions.AI.Tablut
             return resultRed;
         }
 
-        public override BoardState MakeMove()
+        public override TablutBoardState MakeMove()
         {
-            MaxMinEvaluateState(Game.currentBoardState, 0, MaxTreeDepth, TraversingLevel.MAX);  // on output BestBoardState is set
+            MaxMinEvaluateState(Game.CurrentTablutBoardState, 0, MaxTreeDepth, TraversingLevel.MAX);  // on output BestBoardState is set
             Console.WriteLine("best depth: " + this.TheBestDepth);
             Random rng = new Random();
             return this.AllTheBestBoardStates[rng.Next(AllTheBestBoardStates.Count)];

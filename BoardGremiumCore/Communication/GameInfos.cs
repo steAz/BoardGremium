@@ -14,7 +14,7 @@ namespace BoardGremiumCore.Communication
         public FieldType SecPlayerPawn { get; set; }
         public string GameName { get; set; }
         public Client Client { get; set; }
-        public Label PlayerTurnLabel { get; set; } //label displaying information about current player
+        public Label PlayerTurnLabel { get; set; }
         public bool IsGameFinished { get; set; }
         public bool IsBot2BotGame { get; set; }
         public bool GameFinishLogged { get; set; }

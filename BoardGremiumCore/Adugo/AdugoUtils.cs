@@ -288,7 +288,7 @@ namespace BoardGremiumCore.Adugo
 
                     if (verticalIndex >= BOARD_HEIGHT)
                     {
-                        //throw new ArgumentOutOfRangeException("Exception thrown while parsing BoardState string representation - string is too long");
+                        //throw new ArgumentOutOfRangeException("Exception thrown while parsing TablutBoardState string representation - string is too long");
                         break;
                     }
 

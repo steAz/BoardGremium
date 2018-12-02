@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace AbstractGame
 {
     /// <summary>
-    /// class representing single field on board
+    /// class representing single field on tablutBoard
     /// </summary>
     public class Field : ICloneable
     {
@@ -36,7 +36,7 @@ namespace AbstractGame
             this.Type = type;
         }
 
-        //TODO throwing exception when value is below 0? (out of board)
+        //TODO throwing exception when value is below 0? (out of tablutBoard)
         public void AddToX(int value)
         {
             X += value;

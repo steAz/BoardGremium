@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using BoardGremiumBotDecisions.Tablut;
 
 
 namespace AbstractGame
@@ -15,11 +16,11 @@ namespace AbstractGame
     {
         public int BoardWidth { get; }
         public int BoardHeight { get; }
-        public BoardState currentBoardState { get; set; }
+        public TablutBoardState CurrentTablutBoardState { get; set; }
         public PlayerEnum currentPlayer { get; set; }
         public FieldType HumanPlayerFieldType { get; set; } //e.g whitePawn/blackPawn
         public FieldType BotPlayerFieldType { get; set; }
-        //image of empty board
+        //image of empty tablutBoard
         public string BoardImageName { get; set; }
         /// <summary>
         /// dictionary holding mapping: boardItem -> itemGraphics e.g WHITE_PAWN -> pawn.jpg
@@ -37,20 +38,20 @@ namespace AbstractGame
             ItemToGraphicsDict = new Dictionary<Enum, string>();
         }
 
-        public abstract BoardState StartingPosition();
+        public abstract TablutBoardState StartingPosition();
         /// <summary>
         /// returns true if player has won the game, false otherwise
         /// </summary>
-        public abstract bool IsGameWon(BoardState bs, PlayerEnum forPlayer);
+        public abstract bool IsGameWon(TablutBoardState bs, PlayerEnum forPlayer);
         /// <summary>
         /// Method returns list of boardStates that could be obtained from initial boardState by performing one move
         /// </summary>
-        /// <param name="initial">initial BoardState</param>
+        /// <param name="initial">initial TablutBoardState</param>
         /// <returns></returns>
-        public abstract List<BoardState> GetPossibleBoardStates(BoardState initial, FieldType playerFieldType);
+        public abstract List<TablutBoardState> GetPossibleBoardStates(TablutBoardState initial, FieldType playerFieldType);
 
-        public abstract int CalculateMaximumPossibleRange(BoardState initial, Field pawn, DirectionEnum direction);
-        public abstract void MovePawn(BoardState board, Field field, DirectionEnum direction, int numberOfFields);
+        public abstract int CalculateMaximumPossibleRange(TablutBoardState initial, Field pawn, DirectionEnum direction);
+        public abstract void MovePawn(TablutBoardState tablutBoard, Field field, DirectionEnum direction, int numberOfFields);
 
 
     }

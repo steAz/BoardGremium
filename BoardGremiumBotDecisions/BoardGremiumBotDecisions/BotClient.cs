@@ -226,7 +226,7 @@ namespace BoardGremiumBotDecisions
             }
             else
             {
-                throw new ServerResponseException("GET IsGameWon for game: " + gameName + " - server's response is not recognized");
+                throw new HttpRequestException("Error while checking if game is won");
             }
         }
 
