@@ -30,6 +30,7 @@ namespace BoardGremiumBotDecisions.Adugo
 
             game.CurrentBoardState =  currentBoardState;
             Bot = AdugoUtils.BotInstanceFromAlg(BotAlgorithm, game, isFirstPlayerJoined);
+            
         }
 
         protected override void UpdateCurrentBoardState()

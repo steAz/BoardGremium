@@ -230,10 +230,10 @@ namespace BoardGremiumCore
         private async Task<string> HttpGet_Heuristics(string gameName, FieldType playerColor)
         {
             string uri = AddressIP;
-            if (playerColor == FieldType.RED_PAWN)
-                uri += GetRedHeuristicsRoute(gameName);
-            else
-                uri += GetBlackHeuristicsRoute(gameName);
+            if (playerColor == FieldType.RED_PAWN || playerColor == FieldType.JAGUAR_PAWN)
+                uri += GetRedJaguarHeuristicsRoute(gameName);
+            else if (playerColor == FieldType.DOG_PAWN || playerColor == FieldType.BLACK_PAWN)
+                uri += GetBlackDogHeuristicsRoute(gameName);
             var result = this.GetAsync(uri).Result;
             if (result.IsSuccessStatusCode)
             {
@@ -265,13 +265,53 @@ namespace BoardGremiumCore
             }
             catch (HttpRequestException e)
             {
-                Console.WriteLine("Error while setting bot algorithms");
-                Console.WriteLine(e.Message);            
-            }
-            catch (Exception e)
-            {
                 Console.WriteLine("Error probably occured while converting string of heuristics to list of heuristics");
-                Console.WriteLine(e.Message); 
+                Console.WriteLine(e.Message);
+            }
+
+            return null;
+        }
+
+        private async Task<string> HttpGet_TakenPawns(string gameName, FieldType playerColor)
+        {
+            string uri = AddressIP;
+            if (playerColor == FieldType.RED_PAWN || playerColor == FieldType.JAGUAR_PAWN)
+                uri += GetTakenPawnsByRedJaguarRoute(gameName);
+            else if (playerColor == FieldType.BLACK_PAWN)
+                uri += GetTakenPawnsByBlackRoute(gameName);
+            var result = this.GetAsync(uri).Result;
+            if (result.IsSuccessStatusCode)
+            {
+                string resultContent = await result.Content.ReadAsStringAsync();
+                return resultContent;
+            }
+            else
+            {
+                throw new HttpRequestException("Error while getting taken pawns");
+            }
+        }
+
+        public List<int> GetTakenPawns(string gameName, FieldType playerColor)
+        {
+            try
+            {
+                var takenPawnsTask = HttpGet_TakenPawns(gameName, playerColor);
+                var takenPawnsString = takenPawnsTask.Result; // example: 1,2,3 .. as strings
+                var liOfTakenPawns = new List<int>();
+                var tabOfTakenPawnsString = takenPawnsString.Split(','); // tab of these strings that were above
+                foreach (var takenPawnString in tabOfTakenPawnsString)
+                {
+                    if (Int32.TryParse(takenPawnString, out var takenPawnInt))
+                        liOfTakenPawns.Add(takenPawnInt);
+                }
+
+                return liOfTakenPawns; // list of taken pawns as ints
+
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("Error probably occured while converting string of taken pawns to list of taken pawns");
+                Console.WriteLine(e.Message);
             }
 
             return null;
@@ -314,14 +354,24 @@ namespace BoardGremiumCore
             return "/api/GameEntitys/" + gameName + "/SecondPlayerColor";
         }
 
-        public string GetRedHeuristicsRoute(string gameName)
+        public string GetRedJaguarHeuristicsRoute(string gameName)
         {
-            return "/api/GameEntitys/" + gameName + "/RedHeuristics";
+            return "/api/GameEntitys/" + gameName + "/RedJaguarHeuristics";
         }
 
-        public string GetBlackHeuristicsRoute(string gameName)
+        public string GetBlackDogHeuristicsRoute(string gameName)
         {
-            return "/api/GameEntitys/" + gameName + "/BlackHeuristics";
+            return "/api/GameEntitys/" + gameName + "/BlackDogHeuristics";
+        }
+
+        public string GetTakenPawnsByRedJaguarRoute(string gameName)
+        {
+            return "/api/GameEntitys/" + gameName + "/TakenRedJaguarPawns";
+        }
+
+        public string GetTakenPawnsByBlackRoute(string gameName)
+        {
+            return "/api/GameEntitys/" + gameName + "/TakenBlackPawns";
         }
 
         public static string GetGameTypeRoute(string gameName)

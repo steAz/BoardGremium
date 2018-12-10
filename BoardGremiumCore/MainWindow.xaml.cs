@@ -175,16 +175,22 @@ namespace BoardGremiumCore
             {
                 PawnsSelectionCB.Items.Add("Red");
                 PawnsSelectionCB.Items.Add("Black");
+                FirstBotAlgoSelectionCB.Items.Add("MinMax");
+                FirstBotAlgoSelectionCB.Items.Add("NegaMax");
+                SecBotAlgoSelectionCB.Items.Add("MinMax");
+                SecBotAlgoSelectionCB.Items.Add("NegaMax");
             }
             else if(GameSelectionCB.SelectedItem.ToString().Contains("Adugo"))
             {
                 PawnsSelectionCB.Items.Add("Jaguar");
                 PawnsSelectionCB.Items.Add("Dog");
+                FirstBotAlgoSelectionCB.Items.Add("MinMax");
+                FirstBotAlgoSelectionCB.Items.Add("AlphaBeta");
+                SecBotAlgoSelectionCB.Items.Add("MinMax");
+                SecBotAlgoSelectionCB.Items.Add("AlphaBeta");
             }
-            FirstBotAlgoSelectionCB.Items.Add("MinMax");
-            FirstBotAlgoSelectionCB.Items.Add("NegaMax");
-            SecBotAlgoSelectionCB.Items.Add("MinMax");
-            SecBotAlgoSelectionCB.Items.Add("NegaMax");
+            
+            
         }
 
         private void GameModeSelectionCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -214,6 +220,8 @@ namespace BoardGremiumCore
             {
                 FirstBotMaxTreeDepth.Items.Add("5");
                 FirstBotMaxTreeDepth.Items.Add("6");
+                FirstBotMaxTreeDepth.Items.Add("7");
+                FirstBotMaxTreeDepth.Items.Add("8");
             }
         }
 
@@ -229,6 +237,8 @@ namespace BoardGremiumCore
             {
                 SecBotMaxTreeDepth.Items.Add("5");
                 SecBotMaxTreeDepth.Items.Add("6");
+                SecBotMaxTreeDepth.Items.Add("7");
+                SecBotMaxTreeDepth.Items.Add("8");
             }
         }
 

@@ -358,11 +358,11 @@ namespace BoardGremiumBotDecisions
             {
                 return PostBlackHeuristicRoute(gameName);
             }
-            else if (botPawn.Equals(FieldType.JAGUAR_PAWN)) // TODO
+            else if (botPawn.Equals(FieldType.JAGUAR_PAWN)) // Jaguar has the same route as RED
             {
                 return PostRedHeuristicRoute(gameName);
             }
-            else if(botPawn.Equals(FieldType.DOG_PAWN)) // TODO
+            else if(botPawn.Equals(FieldType.DOG_PAWN)) // DOG has the same route as BLACK
 
             {
                 return PostBlackHeuristicRoute(gameName);
@@ -376,12 +376,12 @@ namespace BoardGremiumBotDecisions
 
         private string PostRedHeuristicRoute(string gameName)
         {
-            return "/api/Move/" + gameName + "/RedHeuristics";
+            return "/api/Move/" + gameName + "/RedJaguarHeuristics";
         }
 
         private string PostBlackHeuristicRoute(string gameName)
         {
-            return "/api/Move/" + gameName + "/BlackHeuristics";
+            return "/api/Move/" + gameName + "/BlackDogHeuristics";
         }
     }
 }

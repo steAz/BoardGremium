@@ -25,29 +25,32 @@ namespace BoardGremiumCore
             _data = new ObservableCollection<KeyValuePair<string, int>>();
         }
 
-
         public ChartViewModel()
         {
             ValueList = new List<KeyValuePair<string, int>>();
             _data = new ObservableCollection<KeyValuePair<string, int>>();
         }
 
-        public List<KeyValuePair<string, int>> MyValueList
+        public void DrawChartWithHeuristics(string gameName, FieldType colorOfPawn)
         {
-            get
+            var values = Client.GetHeuristics(gameName, colorOfPawn);
+            int i = 0;
+            _data.Clear();
+            foreach (var value in values)
             {
-                return ValueList;
+                _data.Add(new KeyValuePair<string, int>(i.ToString(), value));
+                i++;
             }
         }
 
-        public void UpdateDataForChart(string gameName, FieldType colorOfPawn)
+        public void DrawChartWithTakenPawns(string gameName, FieldType colorOfPawn)
         {
-            var heuristics = Client.GetHeuristics(gameName, colorOfPawn);
+            var values = Client.GetTakenPawns(gameName, colorOfPawn);
             int i = 0;
             _data.Clear();
-            foreach (var heuristic in heuristics)
+            foreach (var value in values)
             {
-                _data.Add(new KeyValuePair<string, int>(i.ToString(), heuristic));
+                _data.Add(new KeyValuePair<string, int>(i.ToString(), value));
                 i++;
             }
         }

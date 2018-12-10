@@ -68,7 +68,67 @@ namespace BoardGremiumRESTservice.Controllers
                     BoardState oldBoardState = (BoardState)gameState.game.currentBoardState.Clone();
                     //perform move
                     gameState.game.MovePawn(gameState.game.currentBoardState, move.ChosenField, move.Direction, move.NumOfFields);
-                    if(gameState.game.IsGameWon(gameState.game.currentBoardState, currentPlayer))
+
+                    if (currentPlayer == PlayerEnum.HUMAN_PLAYER)
+                    {
+                        var playerPawn = MessagesConverterUtils.PlayerPawnFromMessage(GameEntity.PlayerPawnColor);
+                        if (playerPawn.Equals(FieldType.RED_PAWN))
+                        {
+                            if (gameState.NumberOfPawnsOnBS(oldBoardState) != // if taken
+                                gameState.NumberOfPawnsOnBS(gameState.game.currentBoardState))
+                            {
+                                GameEntity.AddTakenPawnsByRedJaguar(true);
+                            }
+                            else
+                            {
+                                GameEntity.AddTakenPawnsByRedJaguar(false);
+                            }
+                        }
+                        else
+                        {
+                            if (gameState.NumberOfPawnsOnBS(oldBoardState) !=
+                                gameState.NumberOfPawnsOnBS(gameState.game.currentBoardState))
+                            {
+                                GameEntity.AddTakenPawnsByBlack(true);
+                            }
+                            else
+                            {
+                                GameEntity.AddTakenPawnsByBlack(false);
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        var enemyPawn = MessagesConverterUtils.EnemyPawnFromMessage(GameEntity.PlayerPawnColor);
+                        if (enemyPawn.Equals(FieldType.RED_PAWN))
+                        {
+                            if (gameState.NumberOfPawnsOnBS(oldBoardState) != // if taken
+                                gameState.NumberOfPawnsOnBS(gameState.game.currentBoardState))
+                            {
+                                GameEntity.AddTakenPawnsByRedJaguar(true);
+                            }
+                            else
+                            {
+                                GameEntity.AddTakenPawnsByRedJaguar(false);
+                            }
+                        }
+                        else
+                        {
+                            if (gameState.NumberOfPawnsOnBS(oldBoardState) !=
+                                gameState.NumberOfPawnsOnBS(gameState.game.currentBoardState))
+                            {
+                                GameEntity.AddTakenPawnsByBlack(true);
+                            }
+                            else
+                            {
+                                GameEntity.AddTakenPawnsByBlack(false);
+                            }
+
+                        }
+                    }
+
+                    if (gameState.game.IsGameWon(gameState.game.currentBoardState, currentPlayer))
                     {
                         GameEntity.IsGameWon = true;
                         UpdateBoardStateRepresentation(GameEntity, gameState);
@@ -81,6 +141,8 @@ namespace BoardGremiumRESTservice.Controllers
                     {
                         Field takenPawn = gameState.GetMissingPawnForPlayer
                             (oldBoardState, gameState.game.currentBoardState, GameEntity.GetEnemyPlayer());
+                        
+
                         callbackMessage = "ok taken " + takenPawn.X + " " + takenPawn.Y;
                     }
                     else
@@ -104,8 +166,8 @@ namespace BoardGremiumRESTservice.Controllers
 
         [ResponseType(typeof(string))]
         [HttpPost]
-        [Route("api/Move/{gameName}/RedHeuristics")]
-        public HttpResponseMessage PostRedHeuristics(string gameName, [FromBody] string redHeuristic)
+        [Route("api/Move/{gameName}/RedJaguarHeuristics")]
+        public HttpResponseMessage PostRedJaguarHeuristics(string gameName, [FromBody] string redHeuristic)
         {
             GameEntity GameEntity = db.GetGameByName(gameName);
             if (GameEntity == null)
@@ -128,8 +190,8 @@ namespace BoardGremiumRESTservice.Controllers
 
         [ResponseType(typeof(string))]
         [HttpPost]
-        [Route("api/Move/{gameName}/BlackHeuristics")]
-        public HttpResponseMessage PostBlackHeuristics(string gameName, [FromBody] string blackHeuristic)
+        [Route("api/Move/{gameName}/BlackDogHeuristics")]
+        public HttpResponseMessage PostBlackDogHeuristics(string gameName, [FromBody] string blackHeuristic)
         {
             GameEntity GameEntity = db.GetGameByName(gameName);
             if (GameEntity == null)

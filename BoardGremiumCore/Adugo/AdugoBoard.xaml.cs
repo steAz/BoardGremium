@@ -23,6 +23,7 @@ namespace BoardGremiumCore.Adugo
     public partial class AdugoBoard : UserControl
     {
         public DispatcherTimer DTforUpdatingView { get; set; }
+        bool StatisticsWindowCreated = false;
 
         public AdugoBoard()
         {
@@ -42,12 +43,12 @@ namespace BoardGremiumCore.Adugo
             vm.MovePawn();
             vm.CheckIsGameWon();
 
-            //if (vm.GameInfos.IsGameFinished && !this.StatisticsWindowCreated)
-            //{
-            //    this.StatisticsWindowCreated = true;
-            //    var statsWindow = new StatisticsWindow(vm.GameInfos, "Tablut");
-            //    statsWindow.Show();
-            //}
+            if (vm.GameInfos.IsGameFinished && !this.StatisticsWindowCreated)
+            {
+                this.StatisticsWindowCreated = true;
+                var statsWindow = new StatisticsWindow(vm.GameInfos, "Adugo");
+                statsWindow.Show();
+            }
 
             // Forcing the CommandManager to raise the RequerySuggested event
             CommandManager.InvalidateRequerySuggested();

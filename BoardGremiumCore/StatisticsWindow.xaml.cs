@@ -48,25 +48,56 @@ namespace BoardGremiumCore
                 this.LabelSecBotTreeDepth.Visibility = Visibility.Visible;
             }
 
-            InitializePlayerPawnsLabels(gameInfos.FirstPlayerPawn, gameInfos.SecPlayerPawn, gameInfos.IsBot2BotGame);
+            InitializePlayerPawnsLabelsAndButtons(gameInfos.FirstPlayerPawn, gameInfos.SecPlayerPawn, gameInfos.IsBot2BotGame, typeOfGame);
             this.Title = "Statistics of " + typeOfGame;
             this.ChartVM = new ChartViewModel(gameInfos.Client);
             lineChart.DataContext = ChartVM;
         }
 
-        private void InitializePlayerPawnsLabels(FieldType firstPlayerPawn, 
-                                        FieldType secPlayerPawn, bool isBot2BotGame)
+        private void InitializePlayerPawnsLabelsAndButtons(FieldType firstPlayerPawn, 
+                                        FieldType secPlayerPawn, bool isBot2BotGame, string typeOfGame)
         {
             string firstPlayerPawnString, secPlayerPawnString = string.Empty;
-            if (firstPlayerPawn == FieldType.RED_PAWN)
+            switch (firstPlayerPawn)
             {
-                firstPlayerPawnString = "Red";
-                secPlayerPawnString = "Black";
+                case FieldType.RED_PAWN:
+                    firstPlayerPawnString = "Red";
+                    secPlayerPawnString = "Black";
+                    FirstHeuristicsButton.Content = "Show red heuristics";
+                    SecHeuristicsButton.Content = "Show black heuristics";
+                    break;
+                case FieldType.BLACK_PAWN:
+                    firstPlayerPawnString = "Black";
+                    secPlayerPawnString = "Red";
+                    FirstHeuristicsButton.Content = "Show red heuristics";
+                    SecHeuristicsButton.Content = "Show black heuristics";
+                    break;
+                case FieldType.DOG_PAWN:
+                    firstPlayerPawnString = "Dog";
+                    secPlayerPawnString = "Jaguar";
+                    FirstHeuristicsButton.Content = "Show jaguar heuristics";
+                    SecHeuristicsButton.Content = "Show dog heuristics";
+                    break;
+                default:
+                    firstPlayerPawnString = "Jaguar";
+                    secPlayerPawnString = "Dog";
+                    FirstHeuristicsButton.Content = "Show jaguar heuristics";
+                    SecHeuristicsButton.Content = "Show dog heuristics";
+                    break;
             }
-            else
+
+            switch (typeOfGame)
             {
-                firstPlayerPawnString = "Black";
-                secPlayerPawnString = "Red";
+                case "Adugo":
+                    TakenPawnsByBlackButton.Visibility = Visibility.Hidden;
+                    TakenPawnsByRedJaguarButton.Content = "Show taken pawns by jaguar";
+                    break;
+                case "Tablut":
+                    TakenPawnsByRedJaguarButton.Content = "Show taken pawns by red";
+                    TakenPawnsByBlackButton.Content = "Show taken pawns by black";
+                    break;
+                default:
+                    throw new ArgumentException("Type of game has wrong value in StatisticsWindow");
             }
 
             if (isBot2BotGame)
@@ -76,23 +107,63 @@ namespace BoardGremiumCore
             }
             else
             {
-                this.LabelFirstBotParams.Content = secPlayerPawnString + " bot parameters"; // In TablutViewModel on HumanVsBot mode we keep botPawn as SecondPlayerPawn 
-                                                                                            //  and humanPawn as FirstPlayerPawnin
+                this.LabelFirstBotParams.Content = secPlayerPawnString + " bot parameters"; // In TablutViewModel on HumanVsBot mode we keep botPawn as SecondPlayerPawn                                                                                        //  and humanPawn as FirstPlayerPawnin
             }
         }
 
-        private void RedHeuristicsButton_Click(object sender, RoutedEventArgs e)
+        private void FirstHeuristicsButton_Click(object sender, RoutedEventArgs e)
         {
             ChartViewModel vm = lineChart.DataContext as ChartViewModel;
-            vm.UpdateDataForChart(this.GameName, FieldType.RED_PAWN);
-            lineChart.Title = "Red heuristics' chart";
+            vm.DrawChartWithHeuristics(this.GameName, FieldType.RED_PAWN);
+            switch (FirstHeuristicsButton.Content.ToString())
+            {
+                case "Show red heuristics":
+                    lineChart.Title = "Red heuristics' chart";
+                    break;
+                case "Show jaguar heuristics":
+                    lineChart.Title = "Jaguar heuristics' chart";
+                    break;
+                default:
+                    throw new ArgumentException("FirstHeuristicsButtonContent had wrong value in StatisticsWindow");
+            }
+
         }
 
-        private void BlackHeuristicsButton_Click(object sender, RoutedEventArgs e)
+        private void SecHeuristicsButton_Click(object sender, RoutedEventArgs e)
         {
             ChartViewModel vm = lineChart.DataContext as ChartViewModel;
-            vm.UpdateDataForChart(this.GameName, FieldType.BLACK_PAWN);
-            lineChart.Title = "Black heuristics' chart";
+            vm.DrawChartWithHeuristics(this.GameName, FieldType.BLACK_PAWN);
+            switch (SecHeuristicsButton.Content.ToString())
+            {
+                case "Show black heuristics":
+                    lineChart.Title = "Black heuristics' chart";
+                    break;
+                case "Show dog heuristics":
+                    lineChart.Title = "Dog heuristics' chart";
+                    break;
+            }
+        }
+
+        private void TakenPawnsByRedJaguarButton_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = lineChart.DataContext as ChartViewModel;
+            vm.DrawChartWithTakenPawns(this.GameName, FieldType.RED_PAWN);
+            switch (TakenPawnsByRedJaguarButton.Content.ToString())
+            {
+                case "Show taken pawns by red":
+                    lineChart.Title = "Taken pawns by red chart";
+                    break;
+                case "Show taken pawns by jaguar":
+                    lineChart.Title = "Taken pawns by jaguar chart";
+                    break;
+            }
+        }
+
+        private void TakenPawnsByBlackButton_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = lineChart.DataContext as ChartViewModel;
+            vm.DrawChartWithTakenPawns(this.GameName, FieldType.BLACK_PAWN);
+            lineChart.Title = "Taken pawns by black chart";
         }
     }
 }

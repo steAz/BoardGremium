@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\Adugo\AlfaBetaAdugoBot.cs" />
     <Compile Include="Tablut\TablutBoardState.cs" />
     <Compile Include="AI\Adugo\MinMaxAdugoBot.cs" />
     <Compile Include="AI\Bot.cs" />

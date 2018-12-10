@@ -31,7 +31,7 @@ namespace BoardGremiumBotDecisions.Adugo
         public static string RIGHT_STRING = "RIGHT";
 
         public static string MINMAX_ALG_STRING = "MinMax";
-        public static string NEGAMAX_ALG_STRING = "NegaMax";
+        public static string ALPHABETA_ALG_STRING = "AlphaBeta";
 
         public static bool PawnsInSameTeam(FieldType t1, FieldType t2)
         {
@@ -141,11 +141,12 @@ namespace BoardGremiumBotDecisions.Adugo
             if (algName.Contains(MINMAX_ALG_STRING))
             {
                 return new MinMaxAdugoBot(gameInstance, maxTreeDepth);
+                //return new AlfaBetaAdugoBot(gameInstance, maxTreeDepth);
             }
-            else if (algName.Contains(NEGAMAX_ALG_STRING)) // ALFABETA ...
+            else if (algName.Contains(ALPHABETA_ALG_STRING)) // ALFABETA ...
             {
-                //return new NegaMaxBot(gameInstance, maxTreeDepth);
-                return new MinMaxAdugoBot(gameInstance, maxTreeDepth);
+                return new AlfaBetaAdugoBot(gameInstance, maxTreeDepth);
+                //return new MinMaxAdugoBot(gameInstance, maxTreeDepth);
             }
             
             Console.WriteLine("Wrong format og botAlgorithm string representation");

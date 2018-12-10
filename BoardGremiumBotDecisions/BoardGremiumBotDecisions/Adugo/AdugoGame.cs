@@ -191,11 +191,6 @@ namespace BoardGremiumBotDecisions.Adugo
 
             var helpfulField = currentBoardState.AdjecentField(chosenField, direction);
             if (helpfulField == null) return false;
-            if (((chosenField.X == 1 && chosenField.Y == 3) || (chosenField.X == 2 && chosenField.Y == 3)) && chosenField.Type == FieldType.JAGUAR_PAWN &&
-                helpfulField.Type == FieldType.DOG_PAWN && direction == DirectionEnum.UP)
-            {
-                Console.Write("XD");
-            }
 
             switch (chosenField.Type)
             {
@@ -232,6 +227,51 @@ namespace BoardGremiumBotDecisions.Adugo
 
             fieldToMove = helpfulField;
             return true;
+        }
+
+        public bool IsGameWon(AdugoBoardState bs, PlayerEnum forPlayer)
+        {
+            if (forPlayer == PlayerEnum.HUMAN_PLAYER)
+            {
+                if ((FieldType)HumanPlayerFieldType == FieldType.JAGUAR_PAWN)
+                    return HasJaguarPlayerWon(bs);
+                return HasDogPlayerWon(bs);
+            }
+            else
+            {
+                if ((FieldType)BotPlayerFieldType == FieldType.JAGUAR_PAWN)
+                    return HasJaguarPlayerWon(bs);
+                return HasDogPlayerWon(bs);
+            }
+        }
+        private bool HasJaguarPlayerWon(AdugoBoardState bs)
+        {
+            var numOfDogsOnBoard = bs.NumberOfDogsOnBoard();
+
+            return numOfDogsOnBoard <= AdugoUtils.INITIAL_DOG_PAWNS_NUMBER - 5;
+        }
+
+        private bool HasDogPlayerWon(AdugoBoardState bs)
+        {
+            var jaguarField = bs.BoardFields[4, 4];
+            bool jaguarFound = false;
+            for (int y = 0; y < bs.Height; y++)
+            {
+                for (int x = 0; x < bs.Width; x++)
+                {
+                    if ((FieldType)bs.BoardFields[y, x].Type == FieldType.JAGUAR_PAWN)
+                    {
+                        jaguarField = bs.BoardFields[y, x];
+                        jaguarFound = true;
+                        break;
+                    }
+                }
+                if (jaguarFound)
+                    break;
+            }
+
+            var numOfEmptyFieldsNextToJag = bs.NumOfEmptyFieldsNextToJaguar();
+            return numOfEmptyFieldsNextToJag == 0;
         }
     }
 }

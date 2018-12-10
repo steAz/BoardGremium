@@ -37,6 +37,15 @@ namespace BoardGremiumBotDecisions.AI.Adugo
                 int prevBestHeuristic = -80000;
                 foreach (var possibleBoardState in possibleBoardStates.AsEnumerable())
                 {
+                    if (currDepth == 0)
+                    {
+                        if (Game.IsGameWon(possibleBoardState, PlayerEnum.BOT_PLAYER))
+                        {
+                            this.AllTheBestBoardStates.Clear();
+                            this.AllTheBestBoardStates.Add((AdugoBoardState)possibleBoardState.Clone());
+                            return 100000;
+                        }
+                    }
                     var heuristic = MaxMinEvaluateState(possibleBoardState, currDepth + 1, maxDepth, GetNextTraversingLevel(typeOfLevel));
 
                     if (heuristic >= bestHeuristic)
@@ -78,7 +87,7 @@ namespace BoardGremiumBotDecisions.AI.Adugo
             return bestHeuristic;
         }
 
-        private TraversingLevel GetNextTraversingLevel(TraversingLevel typeOfLevel)
+        protected TraversingLevel GetNextTraversingLevel(TraversingLevel typeOfLevel)
         {
             if (typeOfLevel == TraversingLevel.MAX) return TraversingLevel.MIN;
             else return TraversingLevel.MAX;

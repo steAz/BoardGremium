@@ -62,8 +62,8 @@ namespace BoardGremiumRESTservice.Controllers
 
         [ResponseType(typeof(string))]
         [HttpGet]
-        [Route("api/GameEntitys/{gameName}/RedHeuristics")]
-        public HttpResponseMessage GetRedHeuristics(string gameName)
+        [Route("api/GameEntitys/{gameName}/RedJaguarHeuristics")]
+        public HttpResponseMessage GetRedJaguarHeuristics(string gameName)
         {
             GameEntity GameEntity = db.GetGameByName(gameName);
             if (GameEntity == null)
@@ -74,7 +74,7 @@ namespace BoardGremiumRESTservice.Controllers
             {
                 var response = new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent(GameEntity.RedHeuristics)
+                    Content = new StringContent(GameEntity.RedJaguarHeuristics)
                 };
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
                 return response;
@@ -83,8 +83,8 @@ namespace BoardGremiumRESTservice.Controllers
 
         [ResponseType(typeof(string))]
         [HttpGet]
-        [Route("api/GameEntitys/{gameName}/BlackHeuristics")]
-        public HttpResponseMessage GetBlackHeuristics(string gameName)
+        [Route("api/GameEntitys/{gameName}/BlackDogHeuristics")]
+        public HttpResponseMessage GetBlackDogHeuristics(string gameName)
         {
             GameEntity GameEntity = db.GetGameByName(gameName);
             if (GameEntity == null)
@@ -95,7 +95,49 @@ namespace BoardGremiumRESTservice.Controllers
             {
                 var response = new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent(GameEntity.BlackHeuristics)
+                    Content = new StringContent(GameEntity.BlackDogHeuristics)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
+        }
+
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/TakenRedJaguarPawns")]
+        public HttpResponseMessage GetTakenRedJaguarPawns(string gameName)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(GameEntity.TakenPawnsByRedJaguar)
+                };
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                return response;
+            }
+        }
+
+        [ResponseType(typeof(string))]
+        [HttpGet]
+        [Route("api/GameEntitys/{gameName}/TakenBlackPawns")]
+        public HttpResponseMessage GetTakenBlackPawns(string gameName)
+        {
+            GameEntity GameEntity = db.GetGameByName(gameName);
+            if (GameEntity == null)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+            else
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(GameEntity.TakenPawnsByBlack)
                 };
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
                 return response;

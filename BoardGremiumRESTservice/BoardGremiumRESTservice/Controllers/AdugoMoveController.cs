@@ -45,6 +45,39 @@ namespace BoardGremiumRESTservice.Controllers
                 return BadRequest("Error 400 - Chosen move is not valid");
 
             gameState.Game.MovePawnAndBeatIfNecessary(gameState.Game.CurrentBoardState, move, fieldToBeat, fieldToMove);
+
+
+            if (currentPlayer == PlayerEnum.HUMAN_PLAYER)
+            {
+                var playerPawn = MessagesConverterUtils.PlayerPawnFromMessage(GameEntity.PlayerPawnColor);
+                if (playerPawn.Equals(FieldType.JAGUAR_PAWN)) // only write taken pawns by jaguar (dogs cannot beat jaguar)
+                {
+                    if (fieldToBeat != null) // if taken
+                    {
+                        GameEntity.AddTakenPawnsByRedJaguar(true);
+                    }
+                    else
+                    {
+                        GameEntity.AddTakenPawnsByRedJaguar(false);
+                    }
+                }
+            }
+            else
+            {
+                var enemyPawn = MessagesConverterUtils.EnemyPawnFromMessage(GameEntity.PlayerPawnColor);
+                if (enemyPawn.Equals(FieldType.JAGUAR_PAWN)) // only write taken pawns by jaguar (dogs cannot beat jaguar)
+                {
+                    if (fieldToBeat != null) // if taken
+                    {
+                        GameEntity.AddTakenPawnsByRedJaguar(true);
+                    }
+                    else
+                    {
+                        GameEntity.AddTakenPawnsByRedJaguar(false);
+                    }
+                }
+            }
+
             if (gameState.Game.IsGameWon(gameState.Game.CurrentBoardState, currentPlayer))
             {
                 GameEntity.IsGameWon = true;

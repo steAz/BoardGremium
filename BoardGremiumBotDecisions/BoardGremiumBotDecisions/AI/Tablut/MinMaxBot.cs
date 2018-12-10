@@ -38,6 +38,16 @@ namespace BoardGremiumBotDecisions.AI.Tablut
                 int prevBestHeuristic = -80000;
                 foreach (TablutBoardState possibleBoardState in possibleBoardStates.AsEnumerable().Reverse())
                 {
+                    if (currDepth == 0)
+                    {
+                        if (Game.IsGameWon(possibleBoardState, PlayerEnum.BOT_PLAYER))
+                        {
+                            this.AllTheBestBoardStates.Clear();
+                            this.AllTheBestBoardStates.Add((TablutBoardState) possibleBoardState.Clone());
+                            return 100000;
+                        }
+                    }
+
                     var heuristic = MaxMinEvaluateState(possibleBoardState, currDepth + 1, maxDepth, GetNextTraversingLevel(typeOfLevel));
                     
                     if (heuristic >= bestHeuristic)

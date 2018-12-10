@@ -7,21 +7,24 @@
 	            "clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:boardGremiumCore="clr-namespace:BoardGremiumCore"
         mc:Ignorable="d"
-        Title="StatisticsWindow" Height="715.189" Width="828.65">
-    <Grid Name ="XD" Margin="0,0,76,-153">
-        <Label Name="LabelGameMode" Content="GameMode" HorizontalAlignment="Left" Margin="23,27,0,0" VerticalAlignment="Top" Height="31" Width="85" RenderTransformOrigin="0.664,0.858"/>
-        <Label Name ="LabelBotParams" Content="Bots' configuration" HorizontalAlignment="Left" Margin="23,84,0,0" VerticalAlignment="Top" Height="31" Width="115"/>
-        <Label Name ="LabelFirstBotParams" Content="Bot parameters" HorizontalAlignment="Left" Margin="61,129,0,0" VerticalAlignment="Top"/>
-        <Label Name ="LabelSecBotParams" Content="Second bot parameters" HorizontalAlignment="Left" Visibility="Hidden" Margin="61,272,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.538,0.736"/>
-        <Label Name="LabelFirstBotAlgName" Content="First bot alg name" HorizontalAlignment="Left" Margin="97,169,0,0" VerticalAlignment="Top" Width="118"/>
-        <Label Name="LabelFirstBotTreeDepth" Content="First bot tree depth" HorizontalAlignment="Left" Margin="97,217,0,0" VerticalAlignment="Top" Width="118"/>
-        <Label Name="LabelSecBotAlgName" Content="Sec bot alg name" HorizontalAlignment="Left" Visibility="Hidden" Margin="97,313,0,0" VerticalAlignment="Top" Width="118"/>
-        <Label Name="LabelSecBotTreeDepth" Content="Sec bot tree depth" HorizontalAlignment="Left" Visibility="Hidden" Margin="97,362,0,0" VerticalAlignment="Top" Width="127"/>
+        Title="StatisticsWindow" Height="715.189" Width="828.65"
+        Background="Teal">
+    <Grid Margin="0,0,76,-153">
+        <Label Background="YellowGreen" Name="LabelGameMode" Content="GameMode" HorizontalAlignment="Left" Margin="23,27,0,0" VerticalAlignment="Top" Height="31" Width="85" RenderTransformOrigin="0.664,0.858"/>
+        <Label Background="YellowGreen" Name ="LabelBotParams" Content="Bots' configuration" HorizontalAlignment="Left" Margin="23,84,0,0" VerticalAlignment="Top" Height="31" Width="115"/>
+        <Label Background="YellowGreen" Name ="LabelFirstBotParams" Content="Bot parameters" HorizontalAlignment="Left" Margin="61,129,0,0" VerticalAlignment="Top"/>
+        <Label Background="YellowGreen" Name ="LabelSecBotParams" Content="Second bot parameters" HorizontalAlignment="Left" Visibility="Hidden" Margin="61,272,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.538,0.736"/>
+        <Label Background="YellowGreen" Name="LabelFirstBotAlgName" Content="First bot alg name" HorizontalAlignment="Left" Margin="97,169,0,0" VerticalAlignment="Top" Width="118"/>
+        <Label Background="YellowGreen" Name="LabelFirstBotTreeDepth" Content="First bot tree depth" HorizontalAlignment="Left" Margin="97,217,0,0" VerticalAlignment="Top" Width="118"/>
+        <Label Background="YellowGreen" Name="LabelSecBotAlgName" Content="Sec bot alg name" HorizontalAlignment="Left" Visibility="Hidden" Margin="97,313,0,0" VerticalAlignment="Top" Width="118"/>
+        <Label Background="YellowGreen" Name="LabelSecBotTreeDepth" Content="Sec bot tree depth" HorizontalAlignment="Left" Visibility="Hidden" Margin="97,362,0,0" VerticalAlignment="Top" Width="127"/>
 
 
-        <Button Name="RedHeuristicsButton" Content="Show red heuristics" HorizontalAlignment="Left" Margin="306,52,0,0" VerticalAlignment="Top" Width="113" Click="RedHeuristicsButton_Click"/>
-        <Button Name="BlackHeuristicsButton" Content="Show black heuristics" HorizontalAlignment="Left" Margin="306,90,0,0" VerticalAlignment="Top" Width="113" Click="BlackHeuristicsButton_Click"/>
-        <chartingToolkit:Chart  Name="lineChart" Title="Tytuł" 
+        <Button Background="YellowGreen" Name="FirstHeuristicsButton" Content="Show red heuristics" HorizontalAlignment="Left" Margin="254,65,0,0" VerticalAlignment="Top" Width="125" Click="FirstHeuristicsButton_Click"/>
+        <Button Background="YellowGreen" Name="SecHeuristicsButton" Content="Show black heuristics" HorizontalAlignment="Left" Margin="254,90,0,0" VerticalAlignment="Top" Width="125" Click="SecHeuristicsButton_Click"/>
+        <Button Background="YellowGreen" Name="TakenPawnsByRedJaguarButton" Content="Show taken pawns by red" HorizontalAlignment="Left" Margin="254,115,0,0" VerticalAlignment="Top" Width="150" Click="TakenPawnsByRedJaguarButton_Click"/>
+        <Button Background="YellowGreen" Name="TakenPawnsByBlackButton" Content="Show taken pawns by black" HorizontalAlignment="Left" Margin="254,140,0,0" VerticalAlignment="Top" Width="150" Click="TakenPawnsByBlackButton_Click"/>
+        <chartingToolkit:Chart  Background="YellowGreen" Name="lineChart" Title="Tytuł" 
 		VerticalAlignment="Top" Margin="433,67,23,0" Height="321">
             <chartingToolkit:Chart.Series>
                 <chartingToolkit:LineSeries   DependentValuePath="Value" 
